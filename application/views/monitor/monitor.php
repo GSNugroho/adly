@@ -260,6 +260,13 @@
                 <!-- /.tab-pane -->
                 <div class="tab-pane" id="tab_2">
                     <div class="form-group">
+                        <label for="Produk">Produk</label>
+                        <select class="form-control" name="produk" id="daftarProduk" style="width: 80%" >
+                            <option>Produk A</option>
+                            <option>Produk B</option>
+                            <option>Produk C</option>
+                        </select>
+                        <br>
                         <label for="Barang">Barang</label>
                         <select class="form-control" name="barang" id="daftarBarang" style="width: 80%;" >
                         <option value="0">Pilih</option>
