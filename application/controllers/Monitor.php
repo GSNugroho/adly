@@ -778,7 +778,7 @@ class Monitor extends CI_Controller {
 
 	function hapus_order(){
 		
-			$data = $this->input->post('id', TRUE);
+			$data = $this->input->post('val', TRUE);
 	
 		$this->M_monitor->tmp_order_delete($data);
 	}

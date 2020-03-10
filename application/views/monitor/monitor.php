@@ -451,16 +451,17 @@
                                     }
                     
                                 function hapus_order(val){
-                                    var id = val;
+                                    var data = 'val='+val;
                                     $.ajax({
                                         type: 'post',
                                         url: '<?php echo base_url('monitor/hapus_order')?>',
-                                        data: id,
+                                        data: data,
                                         success: function(){
                                             $('#tableOrder').DataTable().ajax.reload();
                                             console.log('YEEE');
                                         }
                                     })
+                                    // console.log(val);
                                 }
                                 
                     </script>
