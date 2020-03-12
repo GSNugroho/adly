@@ -13,7 +13,7 @@
           <div class="col-12">
             <!-- Custom Tabs -->
             <div class="card">
-            <form action="<?php echo base_url().'monitor/create_action';?>" method="post">
+            <!-- <form action="<?php //echo base_url().'monitor/create_action';?>" method="post"> -->
               <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3">Data Mitra</h3>
                 <ul class="nav nav-pills ml-auto p-2">
@@ -152,7 +152,7 @@
                             <td width='50%'>
                                 <div class="form-group">
                                     <label for="provinsi">Provinsi</label>
-                                    <select class="form-control" name="provinsi" id="provinsi2" style="width: 100%;">
+                                    <select class="form-control" name="provinsi" id="provinsi3" style="width: 100%;">
                                         <option value="0">Pilih</option>
                                     <?php
                                     foreach ($dd_pr as $row) {  
@@ -166,7 +166,7 @@
                             <td width='50%'>                               
                                 <div class="form-group">
                                     <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
-                                    <select class="form-control" name="almt_kt_outlet" id="almt_kt_outlet">
+                                    <select class="form-control" name="almt_kt_kirim" id="almt_kt_kirim">
                                         <option value="0">Pilih</option>
                                     </select>
                                 </div>
@@ -182,8 +182,12 @@
                   <div class="tab-pane" id="tab_4">
                     <div class="form-group">
                         <label for="pembayaran">Pembayaran</label><br>
-                        <input type="radio" name="sts_pmby" id="sts_pmby1" value="1"> DP
-                        <input type="radio" name="sts_pmby" id="sts_pmby2" value="2"> Lunas
+                        <!-- <input type="radio" name="sts_pmby" id="sts_pmby1" value="1"> DP
+                        <input type="radio" name="sts_pmby" id="sts_pmby2" value="2"> Lunas -->
+                        <select class="form-control" name="sts_pmby" id="sts_pmby" style="width: 80%">
+                            <option value="1">DP</option>
+                            <option value="2">Lunas</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="paket">Paket</label> <?php echo form_error('paket') ?>
@@ -207,10 +211,10 @@
                                 <div class="form-group">
                                     <label for="rekening">Bank</label>
                                     <select class="form-control" name="nm_bank" id="nm_bank" style="width: 100%;">
-                                        <option>BNI</option>
-                                        <option>BRI</option>
-                                        <option>BCA</option>
-                                        <option>Mandiri</option>
+                                        <option value="BNI">BNI</option>
+                                        <option value="BRI">BRI</option>
+                                        <option value="BCA">BCA</option>
+                                        <option value="Mandiri">Mandiri</option>
                                     </select>
                                 </div>
                             </td>
@@ -230,7 +234,7 @@
                             <td width='50%'>
                                 <div class="form-group">
                                     <label for="ekspedisi">Ekspedisi</label>
-                                    <select class="form-control" name="ekspedisi" style="width: 100%;">
+                                    <select class="form-control" name="ekspedisi" id="ekspedisi" style="width: 100%;">
                                         <option value="0">Pilih</option>
                                     <?php
                                     foreach ($dd_ek as $row) {  
@@ -249,7 +253,7 @@
                             </td>
                         </tr>
                     </table>
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="submit" class="btn btn-success" id="simpan" onclick="simpan()">Simpan</button>
                     <a href="<?php echo site_url('monitor') ?>" class="btn btn-danger">Batal</a>
                   </div>
                   <!-- /.tab-pane -->
@@ -257,7 +261,7 @@
                 <!-- /.tab-content -->
               </div><!-- /.card-body -->
             </div>
-            </form>
+            <!-- </form> -->
             <!-- ./card -->
           </div>
           <!-- /.col -->
@@ -327,6 +331,27 @@
                         html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
                     }
                     $('#almt_kt_outlet').html(html);
+                     
+                }
+            });
+        });
+    });
+            $(document).ready(function(){
+        $('#provinsi3').change(function(){
+            var id=$(this).val();
+            $.ajax({
+                url : "<?php echo base_url();?>monitor/get_kota",
+                method : "POST",
+                data : {id: id},
+                async : false,
+                dataType : 'json',
+                success: function(data){
+                    var html = '';
+                    var i;
+                    for(i=0; i<data.length; i++){
+                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                    }
+                    $('#almt_kt_kirim').html(html);
                      
                 }
             });
@@ -412,6 +437,61 @@
             }
         )
     })
+
+    function simpan(){
+        var nm_mitra = $('#nm_mitra').val();
+        var kt_lahir = $('#kt_lahir').val();
+        var tgl_lahir = $('#tgl_lahir').val();
+        var almt_rmh = $('#almt_rmh').val();
+        var almt_prov_rmh =$('#provinsi option:selected').val();
+        var almt_kt_rmh =$('#almt_kt_rmh option:selected').val();
+        var no_hp1 = $('#no_hp1').val();
+        var no_hp2 = $('#no_hp2').val();
+        var almt_outlet = $('#almt_outlet').val();
+        var almt_prov_outlet = $('#provinsi2 option:selected').val();
+        var almt_kt_outlet = $('#almt_kt_outlet option:selected').val();
+        var almt_kirim = $('#almt_kirim').val();
+        var almt_prov_kirim = $('#provinsi3 option:selected').val();
+        var almt_kt_kirim = $('#almt_kt_kirim option:selected').val();
+        // var radios = document.getElementsByName('sts_pmby');
+
+        // for (var i = 0, length = radios.length; i < length; i++) {
+        // if (radios[i].checked) {
+        //     // do whatever you want with the checked radio
+        //     // alert(radios[i].value);
+        //     var sts_pmby = radios[i].value;
+
+        //     // only one radio can be logically checked, don't check the rest
+        //     break;
+        // }
+
+        var sts_pmby = $('#sts_pmby option:selected').val();
+
+        var paket = $('#paket option:selected').val();
+        var jml_tarif = $('#jml_tarif').val();
+        var nm_bank = $('#nm_bank option:selected').val();
+        var rekening = $('#rekening').val();
+        var ats_nm_rekening = $('#ats_nm_rekening').val();
+        var ekspedisi = $('#ekspedisi option:selected').val();
+        var biaya_kirim = $('#biaya_kirim').val();
+
+        var dataString = 'nm_mitra='+nm_mitra+'&kt_lahir='+kt_lahir+'&tgl_lahir='+tgl_lahir+'&almt_rmh='+almt_rmh+
+        '&almt_prov_rmh='+almt_prov_rmh+'&almt_kt_rmh='+almt_kt_rmh+'&no_hp1='+no_hp1+'&no_hp2='+no_hp2+'&almt_outlet='+almt_outlet+
+        '&almt_prov_outlet='+almt_prov_outlet+'&almt_kt_outlet='+almt_kt_outlet+'&almt_kirim='+almt_kirim+'&almt_prov_kirim='+almt_prov_kirim+
+        '&almt_kt_kirim='+almt_kt_kirim+'&sts_pmby='+sts_pmby+'&paket='+paket+'&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+
+        '&ats_nm_rekening='+ats_nm_rekening+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim;
+
+        $.ajax({
+            type: 'post',
+            url: '<?php echo base_url('Monitor/create_action')?>',
+            data: dataString,
+            success: function(){
+                console.log('yee');
+                window.location.href = "<?php echo base_url('Monitor')?>";
+            }
+        })
+        // }
+    }
         </script>
         </body>
 </html>

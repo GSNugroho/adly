@@ -30,7 +30,10 @@
 	<link rel="stylesheet" href="<?php echo base_url('assets/datepicker/css/ilmudetil.css') ?>">
 	<link rel="stylesheet" href="<?php echo base_url('assets/datepicker/css/bootstrap-datetimepicker.css') ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/jquery-ui/themes/blitzer/jquery-ui.min.css') ?>" />
-    <script src="<?php echo base_url('assets/vendor/jquery/jquery.min.js')?>"></script>
+    <!-- <script src="<?php //echo base_url('assets/vendor/jquery/jquery.min.js')?>"></script> -->
+    <script src="<?php echo base_url('assets/datepicker/js/jquery-1.11.3.min.js') ?>"></script>
+    <script src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js')?>"></script>
+    <script src="<?php echo base_url('assets/swal/sweetalert2.all.min.js')?>"></script>
 
 				<div class="card shadow mb-4">
 					<div class="card-header py-3">
@@ -127,17 +130,8 @@
 						<thead>
 							<tr>
 								<th>Nama Mitra</th>
-								<th>Tanggal Lahir</th>
 								<th>Kota</th>
-								<th>Alamat Rumah</th>
-								<th>Alamat Outet</th>
-								<th>Alamat Kirim</th>
-								<th>Paket</th>
-								<th>Jumlah Transfer</th>
-								<th>Rekening</th>
-								<th>Atas Nama</th>
-								<th>Ekspedisi</th>
-								<th>Biaya Kirim</th>
+								<th>History</th>
 								<th style="width:13%;">Action</th>
 							</tr>
 							</thead>
@@ -164,10 +158,10 @@
                 <div class="card-header d-flex p-0">
                     <h3 class="card-title p-3">Data Order</h3>
                     <ul class="nav nav-pills ml-auto p-2">
-                      <li class="nav-item"><a class="nav-link" href="#tab_1" data-toggle="tab">Data Mitra</a></li>
+                      <li class="nav-item "><a class="nav-link" href="#tab_1" data-toggle="tab"></a></li>
                       <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Order</a></li>
-                      <li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">Pengiriman</a></li>
-                      <li class="nav-item"><a class="nav-link" href="#tab_4" data-toggle="tab">Jenis Pembayaran</a></li>
+                      <li class="nav-item"><a id="tab3" class="nav-link" href="#tab_3" >Pengiriman</a></li>
+                      <li class="nav-item"><a id="tab4" class="nav-link" href="#tab_4" >Jenis Pembayaran</a></li>
                       <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
                           Dropdown <span class="caret"></span>
@@ -186,35 +180,17 @@
                 <div class="tab-content">
                   <div class="tab-pane active" id="tab_1">
                     <div class="form-group">
-                        <label for="nm_mitra">Nama Mitra </label> <?php echo form_error('nm_mitra')?>
-                        <input class="form-control" type="text" name="nm_mitra" id="nm_mitra" style="width: 80%;" value="Mitra" disabled>
+                        <label for="nm_mitra">Nama Mitra </label> 
+                        <input class="form-control" type="text" name="nm_mitra" id="nm_mitra" style="width: 80%;" disabled>
                     </div>
-                    <!-- <table width='80%'>
-                        <tr>
-                            <td width='10%'>
-                            <div class="form-group">
-                                <label for="tgl_terima">Kota & Tanggal Lahir </label> <?php echo form_error('tgl_lahir') ?>
-                                    <input class="form-control" type="text" name="kt_lahir" id="kt_lahir" placeholder="Kota">
-                                </div>
-                            </td>
-                            <td width='40%'>
-                            <div class="form-group">
-                                <label style="height: 17px;"></label>
-                                <input class="form-control" type="text" name="tgl_lahir" id="tgl_lahir" placeholder="dd-mm-yyyy" >
-                            </div>
-                            </td>
-                        </tr>
-                    
-
-                    </table> -->
                     <div class="form-group">
-                        <label for="almt_rmh">Alamat Rumah</label> <?php echo form_error('almt_rmh') ?>
-                        <!-- <input class="form-control" type="text" name="almt_rmh" id="almt_rmh" style="width: 80%;"> -->
-                        <select class="form-control" style="width: 80%;">
+                        <label for="almt_rmh">Alamat Rumah</label> 
+                        <input class="form-control" type="text" name="almt_rmh" id="almt_rmh" style="width: 80%;" disabled>
+                        <!-- <select class="form-control" style="width: 80%;">
                             <option>Rumah</option>
                             <option>Outlet</option>
                             <option>Kirim</option>
-                        </select>
+                        </select> -->
                     </div>
                     <table width='80%'>
                         <!-- <tr>
@@ -224,11 +200,11 @@
                                     <select class="form-control" name="provinsi" id="provinsi" style="width: 100%;">
                                         <option value="0">Pilih</option>
                                     <?php
-                                    foreach ($dd_pr as $row) {  
-                                        echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
-                                        }
-                                        echo"
-                                    </select>"
+                                    // foreach ($dd_pr as $row) {  
+                                    //     echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                    //     }
+                                    //     echo"
+                                    // </select>"
                                     ?>
                                 <div>
                             </td>
@@ -245,7 +221,7 @@
                             <td width='50%'>
                                 <div class="form-group">
                                     <label for="no_hp1">Nomor Handphone</label>
-                                    <input class="form-control" name="no_hp1" id="no_hp1" style="width: 100%" value="08754728831" disabled>
+                                    <input class="form-control" name="no_hp1" id="no_hp1" style="width: 100%" disabled>
                                 </div>
                             </td>
                             <td width='50%'>
@@ -262,21 +238,27 @@
                     <div class="form-group">
                         <label for="Produk">Produk</label>
                         <select class="form-control" name="produk" id="daftarProduk" style="width: 80%" >
-                            <option>Produk A</option>
-                            <option>Produk B</option>
-                            <option>Produk C</option>
+                            <option value="0">Pilih</option>
+                            <?php
+                                    foreach ($dd_pro as $row) {  
+                                        echo "<option value='".$row->kd_produk."' >".$row->nm_produk."</option>";
+                                        }
+                                        echo"
+                                    </select>
+                                    " 
+                                    ?>
                         </select>
                         <br>
                         <label for="Barang">Barang</label>
                         <select class="form-control" name="barang" id="daftarBarang" style="width: 80%;" >
                         <option value="0">Pilih</option>
                                      <?php
-                                    foreach ($dd_bg as $row) {  
-                                        echo "<option value='".$row->kd_barang."' >".$row->nm_barang."</option>";
-                                        }
-                                        echo"
-                                    </select>
-                                    " 
+                                    // foreach ($dd_bg as $row) {  
+                                    //     echo "<option value='".$row->kd_barang."' >".$row->nm_barang."</option>";
+                                    //     }
+                                    //     echo"
+                                    // </select>
+                                    // " 
                                     ?>
                         </select>
                         <br>
@@ -310,8 +292,29 @@
                               </div>
                     </div>
                     <script>
+                        $(document).ready(function(){
+                            $('#daftarProduk').change(function(){
+                                var id=$(this).val();
+                                $.ajax({
+                                    url : "<?php echo base_url();?>monitor/get_jns_barang",
+                                    method : "POST",
+                                    data : {id: id},
+                                    async : false,
+                                    dataType : 'json',
+                                    success: function(data){
+                                        var html = '<option value="0">Pilih</option>';
+                                        var i;
+                                        for(i=0; i<data.length; i++){
+                                            html += '<option value="'+data[i].kd_barang+'">'+data[i].nm_barang+'</option>';
+                                        }
+                                        $('#daftarBarang').html(html);
+                                        
+                                    }
+                                });
+                            });
+                        });
                         function load(val) {
-                                   var table = $('#tableOrder').DataTable({
+                                   table = $('#tableOrder').DataTable({
                                         // columnDefs: [{
                                         //     orderable: false,
                                         //     // targets: [0, 1, 2, 3, 4]
@@ -436,12 +439,13 @@
                                         var brg = $('#daftarBarang option:selected').val();
                                         var harg = document.getElementById('inputHarga').value;
                                         var jml = $('#jml_barang').val();
+                                        var kd_mitra = $('#kd_mitra').val();
                                         // var idku = $('#inputIdkunj').val();
 
                                         // var dataString = 'poli=' + poli + '&diag=' + diag + '&tind=' + tind + '&harg=' + harg +
                                         //     '&idku=' + idku + '&pers=' + pers + '&jmlh=' + jmlh + '&tambah=' + tambah + '&usin=' + usin;
                                         
-                                        var dataString = 'brg='+brg+'&harg='+harg+'&jml='+jml;
+                                        var dataString = 'brg='+brg+'&harg='+harg+'&jml='+jml+'&kd_mitra='+kd_mitra;
                                         $.ajax({
                                             type: 'post',
                                             url: '<?php echo base_url('monitor/tambah_order')?>',
@@ -452,6 +456,9 @@
                                                 // $('.ui-autocomplete-input').focus().val('');
                                                 document.getElementById('inputHarga').value = "";
                                                 document.getElementById('jml_barang').value = "1";
+                                                // document.getElementById('tab3').data-toggle="tab"
+                                                $("#tab3").attr("data-toggle", "tab");
+                                                $("#tab4").attr("data-toggle", "tab");
                                                 console.log('YEEE');
                                             }
                                         });
@@ -462,6 +469,19 @@
                                     $.ajax({
                                         type: 'post',
                                         url: '<?php echo base_url('monitor/hapus_order')?>',
+                                        data: data,
+                                        success: function(){
+                                            $('#tableOrder').DataTable().ajax.reload();
+                                            console.log('YEEE');
+                                        }
+                                    })
+                                    // console.log(val);
+                                }
+                                function temp_hapus_order(val){
+                                    var data = 'val='+val;
+                                    $.ajax({
+                                        type: 'post',
+                                        url: '<?php echo base_url('monitor/temp_hapus_order')?>',
                                         data: data,
                                         success: function(){
                                             $('#tableOrder').DataTable().ajax.reload();
@@ -513,13 +533,13 @@
                             <td width='50%'>
                                 <div class="form-group">
                                     <label for="provinsi">Provinsi</label>
-                                    <select class="form-control" name="provinsi" id="provinsi2" style="width: 100%;">
+                                    <select class="form-control" name="provinsi" id="provinsi" style="width: 100%;">
                                         <option value="0">Pilih</option>
-                                    <!-- <?php
+                                     <?php
                                     foreach ($dd_pr as $row) {  
                                         echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
                                         }
-                                        echo" -->
+                                        echo" 
                                     </select>
                                     " 
                                     ?>
@@ -528,7 +548,7 @@
                             <td width='50%'>                               
                                 <div class="form-group">
                                     <label for="almt_kt_rmh">Kota</label>
-                                    <select class="form-control" name="almt_kt_outlet" id="almt_kt_outlet">
+                                    <select class="form-control" name="almt_kt_kirim" id="almt_kt_kirim">
                                         <option value="0">Pilih</option>
                                     </select>
                                 </div>
@@ -545,7 +565,7 @@
                 <div class="tab-pane" id="tab_4">
                     <div class="form-group">
                         <label for="jml_tarif">Jumlah Transfer</label>
-                        <input class="form-control" type="text" name="jml_tarif" id="jml_tarif" style="width: 80%;">
+                        <input class="form-control" type="text" name="jml_transfer" id="jml_transfer" style="width: 80%;">
                     </div>
                     <table width='80%'>
                         <tr>
@@ -553,10 +573,10 @@
                                 <div class="form-group">
                                     <label for="rekening">Bank</label>
                                     <select class="form-control" name="nm_bank" id="nm_bank" style="width: 100%;">
-                                        <option>BNI</option>
-                                        <option>BRI</option>
-                                        <option>BCA</option>
-                                        <option>Mandiri</option>
+                                        <option value="BNI">BNI</option>
+                                        <option value="BRI">BRI</option>
+                                        <option value="BCA">BCA</option>
+                                        <option value="Mandiri">Mandiri</option>
                                     </select>
                                 </div>
                             </td>
@@ -576,7 +596,7 @@
                             <td width='50%'>
                                 <div class="form-group">
                                     <label for="ekspedisi">Ekspedisi</label>
-                                    <select class="form-control" name="ekspedisi" style="width: 100%;">
+                                    <select class="form-control" name="ekspedisi" id="ekspedisi" style="width: 100%;">
                                         <option value="0">Pilih</option>
                                     <?php
                                     foreach ($dd_ek as $row) {  
@@ -590,17 +610,194 @@
                             </td>
                             <td width='50%'>             
                                 <div class="form-group">
-                                    <label for="biaya_kirim">Biaya Kirim</label>
-                                    <input class="form-control" type="text" name="biaya_kirim" id="biaya_kirim" style="width: 100%;">
+                                    <label for="biaya_kirim">Berat</label>
+                                    <input class="form-control" type="text" name="b_barang" id="b_barang" style="width: 100%;" placeholder="kg">
                                 </div>
                             </td>
                         </tr>
                     </table>
-                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <div class="form-group">
+                            <label for="biaya_kirim">Biaya Kirim</label>
+                            <input class="form-control" type="text" name="biaya_kirim" id="biaya_kirim" style="width: 80%;">
+                        </div>
+                    <div class="form-group">
+                        <label for="keterangan">Keterangan</label>
+                        <input class="form-control" type="text" name="keterangan" id="keterangan" style="width: 80%;">
+                    </div>
+                    <input type="hidden" id="kd_mitra">
+                    <input type="hidden" id="almt_outlet">
+                    <button type="submit" class="btn btn-success" onclick="alert()">Simpan</button>
                     <button type="button" class="btn btn-secondary" onclick="tutup()">Batal</button>
                   <script>
-					  function tutup() {
+                      function alert(){
+                        
+                          $.ajax({
+                              url: "<?php echo base_url('Monitor/get_temp')?>",
+                              dataType: 'json',
+                              success: function(data){
+                                var rinci = '';
+                                  var i;
+                                  for(i=0; i<data.length; i++){
+                                      rinci += '<tr><td>'+data[i].nm_barang+'</td><td>'+data[i].jml_barang+'</td></tr>';
+                                    //   rinci += 'a';
+                                  };
+                                //   console.log(rinci);
+                                Swal.fire({
+                                        title: "Rincian Order",
+                                        html: '<table><tr><td align="left">Nama Mitra</td><td>:</td><td align="left">'+document.getElementById('nm_mitra').value+
+                                        '</td></tr><tr><td align="left">Alamat Kirim</td><td>:</td><td align="left">'+document.getElementById('almt_rmh').value+
+                                        '</td></tr><tr><td align="left">No. HP</td><td>:</td><td align="left"> '+document.getElementById('no_hp1').value+
+                                        '</td></tr><tr><td align="left">No. HP</td><td>:</td><td align="left"> '+document.getElementById('no_hp2').value+
+                                        '</td></tr><tr><td align="left">Produk</td><td>:</td><td align="left"> '+$('#daftarProduk option:selected').val()+
+                                        '</td></tr><tr><td align="left">Rincian Order</td><td>:</td><td align="left"> '+
+                                        '<table border="1"><tr><td>Nama</td><td>Jumlah</td></tr>'+rinci+'</table></td></tr><tr><td align="left">Keterangan</td><td>:</td><td align="left">'+
+                                        document.getElementById('keterangan').value+'</td></tr><tr><td align="left">Ekspedisi</td><td>:</td><td align="left"> '+$('#ekspedisi option:selected').text()+
+                                        '</td></tr></table>',
+                                        showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Kirim'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            console.log('Sukses');
+                                            simpan_order_mitra();
+                                        }
+                                        })
+                              }
+                          });
+                      }
+
+                      function form_validation(){
+                         var almt_kirim = $('#almt_kirim').val();
+                         if (almt_kirim == "") {
+                            alert("Alamat kirim harus di isi");
+                            return false;
+                        }
+                      }
+
+                      function simpan_order_mitra(){
+                          if(form_validation() == false){
+
+                          }else{
+                        var kd_mitra = $('#kd_mitra').val();
+                        var nm_mitra = $('#nm_mitra').val();
+                        var almt_rmh = $('#almt_rmh').val();
+                        var no_hp1 = $('#no_hp1').val();
+                        var no_hp2 = $('#no_hp2').val();
+                        var almt_kirim = $('#almt_kirim').val();
+                        var provinsi = $('#provinsi option:selected').val();
+                        var almt_kt_kirim = $('#almt_kt_kirim option:selected').val();
+                        var jml_transfer = $('#jml_transfer').val();
+                        var nm_bank = $('#nm_bank option:selected').val();
+                        var rekening = $('#rekening').val();
+                        var ats_nm_rekening = $('#ats_nm_rekening').val();
+                        var ekspedisi = $('#ekspedisi option:selected').val();
+                        var b_barang = $('#b_barang').val();
+                        var biaya_kirim = $('#biaya_kirim').val();
+                        var keterangan = $('#keterangan').val();
+                        // var 
+                        var dataString = 'kd_mitra='+kd_mitra+'&nm_mitra='+nm_mitra+'&almt_rmh='+almt_rmh+
+                        '&no_hp1='+no_hp1+'&no_hp2='+no_hp2+'&almt_kirim='+almt_kirim+'&provinsi='+provinsi+
+                        '&almt_kt_kirim='+almt_kt_kirim+'&jml_transfer='+jml_transfer+'&nm_bank='+nm_bank+
+                        '&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening+'&ekspedisi='+ekspedisi+
+                        '&b_barang='+b_barang+'&biaya_kirim='+biaya_kirim+'&keterangan='+keterangan;
+
+                        $.ajax({
+                            type: 'post',
+                            url: '<?php echo base_url('Monitor/tambah_mitra_order')?>',
+                            data: dataString,
+                            success: function(){
+                                document.getElementById('almt_kirim').value = "";
+                                    document.getElementById('almt_kirim').disabled = false;
+                                    document.getElementById('jml_transfer').value = "";
+                                    document.getElementById('rekening').value = "";
+                                    document.getElementById('ats_nm_rekening').value = "";
+                                    document.getElementById('ekspedisi').value = "";
+                                    document.getElementById('b_barang').value = "";
+                                    document.getElementById('biaya_kirim').value = "";
+                                    document.getElementById('keterangan').value = "";
+                                    document.getElementById('daftarProduk').value = "";
+                                    document.getElementById('daftarBarang').value = "";
+                                    document.getElementById('jml_barang').value = "";
+                                    document.getElementById("cek1").checked = false;
+                                    document.getElementById("cek2").checked = false;
+                                    // $(".nav-item:first-child").addClass("active");
+                                    $('.nav-pills a:first').tab('show');
+                                    $("#tab3").attr("data-toggle", "");
+                                    $("#tab4").attr("data-toggle", "");
+                                    $('#exampleModal').modal('hide');
+                                    Swal.fire(
+                                        'Sukses',
+                                        'Order berhasil disimpan',
+                                        'success'
+                                    )
+                            }
+                        })
+                      }
+                      }
+
+                      $('#exampleModal').on('show.bs.modal', function(event) {
+                                    var button = $(event.relatedTarget)
+                                    var recipient = button.data('whatever')
+                                    var modal = $(this);
+                                    var dataString = 'id=' + recipient;
+
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "<?php echo base_url('Monitor/get_dtorder_mitra')?>",
+                                        dataType: "json",
+                                        data: dataString,
+                                        success: function(data) {
+                                            $('#nm_mitra').val(data[0]['nm_mitra']);
+                                            $('#almt_rmh').val(data[0]['almt_rmh']);
+                                            $('#no_hp1').val(data[0]['no_hp1']);
+                                            $('#no_hp2').val(data[0]['no_hp2']);
+                                            $('#kd_mitra').val(data[0]['kd_mitra']);
+                                            $('#almt_outlet').val(data[0]['almt_outlet']);
+                                            // $('#inputDiagnosis').val(data['nama_indonesia']);
+                                            // $('#inputIdkunj').val(data['id_kunjungan']);
+                                            // $('#inputPetrs').val(data['id_petugas']);
+                                            // param = data['id_kunjungan'];
+                                        },
+                                        error: function(err) {
+                                            console.log(err);
+                                        }
+                                    });
+                                });
+                                function tutup() {
+                                    table.destroy();
+                                    val = $('#kd_mitra').val();
+                                    var data = 'val='+val;
+                                    $.ajax({
+                                        type: 'post',
+                                        url: '<?php echo base_url('monitor/hapus_order')?>',
+                                        data: data,
+                                        success: function(){
+                                            
+                                            console.log('YEEE');
+                                        }
+                                    });
                                     
+                                    
+                                    document.getElementById('almt_kirim').value = "";
+                                    document.getElementById('almt_kirim').disabled = false;
+                                    document.getElementById('jml_transfer').value = "";
+                                    document.getElementById('rekening').value = "";
+                                    document.getElementById('ats_nm_rekening').value = "";
+                                    document.getElementById('ekspedisi').value = "";
+                                    document.getElementById('b_barang').value = "";
+                                    document.getElementById('biaya_kirim').value = "";
+                                    document.getElementById('keterangan').value = "";
+                                    document.getElementById('daftarProduk').value = "";
+                                    document.getElementById('daftarBarang').value = "";
+                                    document.getElementById('jml_barang').value = "";
+                                    document.getElementById("cek1").checked = false;
+                                    document.getElementById("cek2").checked = false;
+                                    // $(".nav-item:first-child").addClass("active");
+                                    // $('.nav-item a[href="#tab1"]').tab('show');
+                                    $('.nav-pills a:first').tab('show');
+                                    $("#tab3").attr("data-toggle", "");
+                                    $("#tab4").attr("data-toggle", "");
                                     $('#exampleModal').modal('hide');
                                 }
 				  </script>
@@ -637,7 +834,7 @@
 
 	
 	<script src="<?php echo base_url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
-	<script src="<?php echo base_url('assets/datepicker/js/jquery-1.11.3.min.js') ?>"></script>
+	
     <script src="<?php echo base_url('assets/js/jquery-ui.min.js') ?>"></script>
 
 	<!-- Core plugin JavaScript-->
@@ -694,17 +891,8 @@
          //{ data: 'no' },
         //  { data: 'kd_inv' },
          { data: 'nm_mitra' },
-		 { data: 'tgl_lahir'},
          { data: 'almt_kt_rmh' },
-         { data: 'almt_rmh' },
-         { data: 'almt_outlet' },
-         { data: 'almt_kirim' },
-         { data: 'paket' },
-         { data: 'jml_tarif' },
-         { data: 'rekening' },
-         { data: 'ats_nm_rekening' },
-         { data: 'ekspedisi' },
-         { data: 'biaya_kirim' },
+         { data: 'history' },
 		 { data: 'action'}
       ]
 	});
@@ -802,6 +990,50 @@
                             $("#dynamic-tabs").tabs();
                         });
 
+            $(document).ready(function(){
+            $('#provinsi').change(function(){
+                var id=$(this).val();
+                $.ajax({
+                    url : "<?php echo base_url();?>monitor/get_kota",
+                    method : "POST",
+                    data : {id: id},
+                    async : false,
+                    dataType : 'json',
+                    success: function(data){
+                        var html = '';
+                        var i;
+                        for(i=0; i<data.length; i++){
+                            html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                        }
+                        $('#almt_kt_kirim').html(html);
+                        
+                    }
+                });
+            });
+        });
+        $(document).ready(function(){
+        $('#cek1').change(
+            function(){
+                if($(this).is(':checked')){
+                    var almt = document.getElementById('almt_rmh').value;
+                    document.getElementById('almt_kirim').value = almt;
+                    document.getElementById('almt_kirim').disabled  = true;
+                }
+            }
+        )
+    })
+    //kirim
+    $(document).ready(function(){
+        $('#cek2').change(
+            function(){
+                if($(this).is(':checked')){
+                    var almt = document.getElementById('almt_outlet').value;
+                    document.getElementById('almt_kirim').value = almt;
+                    document.getElementById('almt_kirim').disabled  = true;
+                }
+            }
+        )
+    })
 	</script>
 
 	</body>

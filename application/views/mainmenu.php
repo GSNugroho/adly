@@ -59,12 +59,24 @@
 		<div class="sidebar-heading">
         Mitra
 		</div>
-		<!-- Barang -->
+		<!-- Mitra -->
 		<li class="nav-item">
         <a class="nav-link" href="<?php echo base_url('monitor')?>">
           <i class="fas fa-boxes"></i>
           <span>Data Mitra</span></a>
-		</li>
+    </li>
+    <?php if($this->session->userdata('level')=='3'):?>
+    <hr class="sidebar-divider">
+		<div class="sidebar-heading">
+        Order
+		</div>
+		<!-- Order -->
+		<li class="nav-item">
+        <a class="nav-link" href="<?php echo base_url('order')?>">
+          <i class="fas fa-boxes"></i>
+          <span>Data Order</span></a>
+    </li>
+    <?php endif;?>
 		
 		<!-- Mutasi -->
 		<!-- <li class="nav-item">

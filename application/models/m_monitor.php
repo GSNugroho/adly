@@ -3,10 +3,14 @@ class M_monitor extends CI_Model{
 
 	public $table = 'adilaya_dt_mitra';
 	// public $tbaset = 'aset_barang';
-	public $id = 'kd_tmp_order';
+	public $id = 'kd_mitra';
+	public $id2 = 'kd_order';
+	public $id3 = 'id';
 	// public $id_a = 'vc_nm_barang';
 	// public $order = 'DESC';
 	public $table2 = 'tmp_order';
+	public $table3 = 'adilaya_dt_mitra_order';
+	public $table4 = 'adilaya_dt_mitra_order_detail';
 	
 	function __construct()
 	{
@@ -34,8 +38,21 @@ class M_monitor extends CI_Model{
 		$this->db->insert($this->table2, $data);
 	}
 
+	function insert_order($data){
+		$this->db->insert($this->table3, $data);
+	}
+
+	function insertdetail($detail){
+		$this->db->insert($this->table4, $detail);
+	}
+
 	function insertaset($dataaset){
 		$this->db->insert($this->tbaset, $dataaset);
+	}
+
+	function update_dtmitra_order($id, $data){
+		$this->db->where('kd_order', $id);
+		$this->db->update($this->table3, $data);
 	}
 
 	function update($id, $data){
@@ -60,6 +77,14 @@ class M_monitor extends CI_Model{
 	function tmp_order_delete($id){
 		$this->db->where($this->id, $id);
 		$this->db->delete($this->table2);
+	}
+	function tmp_order_deletes($id){
+		$this->db->where($this->id3, $id);
+		$this->db->delete($this->table2);
+	}
+	function adilaya_order_delete($id){
+		$this->db->where($this->id2, $id);
+		$this->db->delete($this->table3);
 	}
 	
 	function jumlah_data(){
@@ -90,6 +115,30 @@ class M_monitor extends CI_Model{
 		$query = $this->db->query("SELECT * FROM a_barang ORDER BY kd_barang asc");
 		return $query->result();
 	}
+	function get_produk(){
+		$query = $this->db->query("SELECT * FROM adilaya_produk ORDER BY kd_produk asc");
+		return $query->result();
+	}
+	function get_temp(){
+		$query = $this->db->query("SELECT kd_tmp_order, nm_barang, jml_barang, kd_mitra, tmp_order.harga_barang as harga_barang FROM tmp_order JOIN a_barang ON tmp_order.kd_barang = a_barang.kd_barang ORDER BY kd_tmp_order asc");
+		return $query->result();
+	}
+	function get_dt_mitra_order($id){
+		$query = $this->db->query("SELECT kd_mitra, no_hp1, no_hp2, nm_mitra, almt_rmh, almt_outlet, almt_kirim FROM adilaya_dt_mitra  WHERE kd_mitra = '".$id."'");
+		return $query->result_array();
+	}
+	function cek_kd_or($id){
+		$query = $this->db->query("SELECT DISTINCT kd_tmp_order FROM tmp_order WHERE kd_mitra = '".$id."'");
+		return $query->row();
+	}
+	function cek_row($i, $j){
+		$query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order WHERE kd_mitra = '".$i."' AND kd_order = '".$j."'");
+		return $query->row();
+	}
+	function get_history($id){
+		$query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order JOIN a_ekspedisi ON ekspedisi = kd_ekspedisi WHERE kd_mitra = '".$id."'");
+		return $query->result();
+	}
 	function get_harga_brg($kd_barang){
 		$query = $this->db->query("SELECT harga_barang FROM a_barang WHERE kd_barang = '".$kd_barang."'");
 		return $query->row();
@@ -102,16 +151,20 @@ class M_monitor extends CI_Model{
 		$query = $this->db->query("SELECT * FROM kota WHERE id_provinsi_fk = '".$id."'");
 		return $query->result();
 	}
+	function get_jns_barang($id){
+		$query = $this->db->query("SELECT * FROM a_barang WHERE id_produk = '".$id."'");
+		return $query->result();
+	}
 	function get_kode(){
 		$query = $this->db->query('SELECT MAX(kd_mitra) AS maxkode FROM adilaya_dt_mitra');
 		return $query->result();
 	}
 	function get_kode_order(){
-		$query = $this->db->query('SELECT MAX(kd_tmp_order) AS maxkode FROM tmp_order');
+		$query = $this->db->query('SELECT MAX(kd_order) AS maxkode FROM adilaya_dt_mitra_order');
 		return $query->result();
 	}
-	function get_k_aset($id, $th){
-		$query = $this->db->query("SELECT MAX(vc_nm_barang) AS maxkode FROM aset_barang WHERE aset_barang.vc_nm_barang LIKE '%".$id."%'AND aset_barang.vc_nm_barang LIKE '%".$th."%'");
+	function get_all_harga($id){
+		$query = $this->db->query("SELECT kd_tmp_order, kd_barang, jml_barang, kd_mitra, harga_barang FROM tmp_order WHERE kd_mitra='".$id."'");
 		return $query->result();
 	}
 	function get_no_aset(){
@@ -153,7 +206,8 @@ class M_monitor extends CI_Model{
 		almt_kirim, 
 		nm_paket, 
 		jml_tarif, 
-		rekening, 
+		rekening,
+		sts_pmby, 
 		ats_nm_rekening, 
 		nama_ekspedisi, 
 		biaya_kirim 
@@ -168,22 +222,19 @@ class M_monitor extends CI_Model{
 		return $query->result();
 	}
 
-	function get_total_dt_or(){
-		$query = $this->db->query("SELECT count(*) as allcount FROM tmp_order JOIN a_barang ON tmp_order.kd_barang = a_barang.kd_barang");
+	function get_total_dt_or($kd_mitra){
+		$query = $this->db->query("SELECT count(*) as allcount FROM tmp_order JOIN a_barang ON tmp_order.kd_barang = a_barang.kd_barang WHERE kd_mitra='".$kd_mitra."'");
 		return $query->result();
 	}
-	function get_total_fl_or($searchQuery){
-		$query = $this->db->query("SELECT count(*) as allcount FROM tmp_order JOIN a_barang ON tmp_order.kd_barang = a_barang.kd_barang WHERE 1=1".$searchQuery);
+	function get_total_fl_or($searchQuery, $kd_mitra){
+		$query = $this->db->query("SELECT count(*) as allcount FROM tmp_order JOIN a_barang ON tmp_order.kd_barang = a_barang.kd_barang WHERE kd_mitra='".$kd_mitra."' ".$searchQuery);
 		return $query->result();
 	}
-	function get_total_ft_or($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage){
+	function get_total_ft_or($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage, $kd_mitra){
 		$query = $this->db->query("select TOP ".$rowperpage."
-		kd_tmp_order, nm_barang, jml_barang, kd_mitra, tmp_order.harga_barang as harga_barang
+		id, kd_tmp_order, nm_barang, jml_barang, kd_mitra, tmp_order.harga_barang as harga_barang
 		FROM tmp_order JOIN a_barang ON tmp_order.kd_barang = a_barang.kd_barang
-		WHERE 1=1 ".$searchQuery." and kd_tmp_order NOT IN (
-			SELECT TOP ".$baris." kd_tmp_order FROM tmp_order JOIN a_barang ON tmp_order.kd_barang = a_barang.kd_barang
-			WHERE 1=1".$searchQuery." order by ".$columnName." ".$columnSortOrder.") 
-		order by ".$columnName." ".$columnSortOrder);
+		WHERE kd_mitra='".$kd_mitra."' ".$searchQuery." order by ".$columnName." ".$columnSortOrder);
 		return $query->result();
 	}
 }

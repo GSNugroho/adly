@@ -13,7 +13,11 @@ class Monitor extends CI_Controller {
  
 	public function index(){
 		$data = array(
-			'dd_bg' => $this->M_monitor->get_barang()
+			'dd_bg' => $this->M_monitor->get_barang(),
+			'dd_ek' => $this->M_monitor->get_ekspedisi(),
+			'dd_temp' => $this->M_monitor->get_temp(),
+			'dd_pr' => $this->M_monitor->get_provinsi(),
+			'dd_pro' => $this->M_monitor->get_produk()
 		);
 		$this->load->view('monitor/monitor', $data);
 		}
@@ -64,6 +68,7 @@ class Monitor extends CI_Controller {
 			// $this->M_monitor->insertaset($dataaset);
 			$this->session->set_flashdata('message','Data Barang Berhasil Ditambahkan');
 			redirect(site_url('Monitor'));
+			header(site_url('Monitor'));
 		}
 	// }
 
@@ -407,28 +412,32 @@ class Monitor extends CI_Controller {
 				</a>
 				';
 			}elseif($this->session->userdata('level')=='3'){
-				$button = '
-				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info" style="width: 100%;">
-				Info
-				</a>
-				<button value="'.$row->kd_mitra.'" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-whatever="'.$row->kd_mitra.'" onclick="load(this.value)">Order</button>
-				';
+				$history = '<a href="monitor/history/'.$row->kd_mitra.'" class="btn btn-success" style="width: 100%;">
+				History
+				</a>';
+				if($row->sts_pmby == 1){
+					$button = '
+					<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info" style="width: 100%;">
+					Info
+					</a>
+					<button value="'.$row->kd_mitra.'" class="btn btn-warning" style="width: 100%;" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-backdrop="static" data-whatever="'.$row->kd_mitra.'" disabled>Order</button>
+					';
+				}else{
+					$button = '
+					<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info" style="width: 100%;">
+					Info
+					</a>
+					<button value="'.$row->kd_mitra.'" class="btn btn-warning" style="width: 100%;" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-backdrop="static" data-whatever="'.$row->kd_mitra.'" onclick="load(this.value)">Order</button>
+					';
+				}
+				
 			}
 			// onclick="load(this.value)"
 		$data[] = array( 
 			// "kd_inv"=>$row->kd_inv,
 			"nm_mitra"=>$row->nm_mitra,
-			"tgl_lahir"=>date('d-m-Y', strtotime($row->tgl_lahir)),
-			"almt_rmh"=>$row->almt_rmh,
 			"almt_kt_rmh"=>$row->nama_kota,
-			"almt_outlet"=>$row->almt_outlet,
-			"almt_kirim"=>$row->almt_kirim,
-			"paket"=>$row->nm_paket,
-			"jml_tarif"=>$row->jml_tarif,
-			"rekening"=>$row->rekening,
-			"ats_nm_rekening"=>$row->ats_nm_rekening,
-			"ekspedisi"=>$row->nama_ekspedisi,
-			"biaya_kirim"=>$row->biaya_kirim,
+			"history"=>$history,
 			"action"=>$button
 		);
 		}
@@ -448,7 +457,18 @@ class Monitor extends CI_Controller {
         $id=$this->input->post('id');
         $data=$this->M_monitor->get_kota($id);
         echo json_encode($data);
-    }
+	}
+
+	function get_jns_barang(){
+        $id=$this->input->post('id');
+        $data=$this->M_monitor->get_jns_barang($id);
+        echo json_encode($data);
+	}
+	
+	function get_temp(){
+		$data = $this->M_monitor->get_temp();
+		echo json_encode($data);
+	}
 	
 	function dt_dp(){
 		## Read value
@@ -641,7 +661,7 @@ class Monitor extends CI_Controller {
 				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info" style="width: 100%;">
 				Info
 				</a>
-				<button value="'.$row->kd_mitra.'" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-whatever="'.$row->kd_mitra.'" >Order</button>
+				<button value="'.$row->kd_mitra.'" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-backdrop="static" data-whatever="'.$row->kd_mitra.'" >Order</button>
 				';
 			}
 			// onclick="load(this.value)"
@@ -683,6 +703,7 @@ class Monitor extends CI_Controller {
 		$columnName = $_POST['columns'][$columnIndex]['data']; // Column name
 		$columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
 		$searchValue = $_POST['search']['value']; // Search value
+		$kd_mitra = $_POST['kd_mitra'];
 
 		## Search 
 		$searchQuery = " ";
@@ -699,7 +720,7 @@ class Monitor extends CI_Controller {
 		// }
 
 		## Total number of records without filtering
-		$sel = $this->M_monitor->get_total_dt_or();
+		$sel = $this->M_monitor->get_total_dt_or($kd_mitra);
 		// $records = sqlsrv_fetch_array($sel);
 		foreach($sel as $row){
 			$totalRecords = $row->allcount;
@@ -707,7 +728,7 @@ class Monitor extends CI_Controller {
 		
 
 		## Total number of record with filtering
-		$sel = $this->M_monitor->get_total_fl_or($searchQuery);
+		$sel = $this->M_monitor->get_total_fl_or($searchQuery, $kd_mitra);
 		// $records = sqlsrv_fetch_assoc($sel);
 		foreach($sel as $row){
 			$totalRecordwithFilter = $row->allcount;
@@ -715,7 +736,7 @@ class Monitor extends CI_Controller {
 		
 
 		## Fetch records
-		$empQuery = $this->M_monitor->get_total_ft_or($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage);
+		$empQuery = $this->M_monitor->get_total_ft_or($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage, $kd_mitra);
 		$empRecords = $empQuery;
 		$data = array();
 
@@ -724,7 +745,7 @@ class Monitor extends CI_Controller {
 
 			 $button = '
 				
-				<button value="'.$row->kd_tmp_order.'" class="btn btn-danger" data-whatever="'.$row->kd_tmp_order.'" onclick="hapus_order(this.value)">Hapus</button>
+				<button value="'.$row->id.'" class="btn btn-danger"  data-whatever="'.$row->kd_tmp_order.'" onclick="temp_hapus_order(this.value)">Hapus</button>
 				';
 		$data[] = array( 
 			// "kd_inv"=>$row->kd_inv,
@@ -748,6 +769,13 @@ class Monitor extends CI_Controller {
 		echo json_encode($response);
 	}
 
+	function get_dtorder_mitra(){
+		$id = $this->input->get('id', TRUE);
+		$row = $this->M_monitor->get_dt_mitra_order($id);
+
+		echo json_encode($row);
+	}
+
 	function get_harga_barang(){
 		// if(isset($_POST['id_tindakan'])) {
 			$kd_barang = $_POST['kd_barang'];
@@ -761,27 +789,86 @@ class Monitor extends CI_Controller {
 		// }
 	}
 
+	function tambah_mitra_order(){
+		$kd_mitra = $this->input->post('kd_mitra', TRUE);
+		$data = $this->M_monitor->get_all_harga($kd_mitra);
+		$total = 0;
+		foreach($data as $row){
+			$total = $total + ($row->harga_barang * $row->jml_barang);
+			$ko = $row->kd_tmp_order;
+			$detail = array(
+				"kd_order" => $row->kd_tmp_order,
+				"kd_barang"=> $row->kd_barang,
+				"jml_barang"=> $row->jml_barang
+			);
+			$this->M_monitor->insertdetail($detail);
+		}
+		date_default_timezone_set("Asia/Jakarta");
+		$data = array(
+			"total_order"=> $total,
+			"dt_trans"=> date('Y-m-d H:i:s'),
+			"almt_kirim"=> $this->input->post('almt_kirim', TRUE),
+			"almt_kt_kirim"=> $this->input->post('almt_kt_kirim', TRUE),
+			"jml_transfer"=> $this->input->post('jml_transfer', TRUE),
+			"nm_bank"=> $this->input->post('nm_bank', TRUE),
+			"rekening"=> $this->input->post('rekening', TRUE),
+			"ats_nm_rekening"=> $this->input->post('ats_nm_rekening', TRUE),
+			"ekspedisi"=> $this->input->post('ekspedisi', TRUE),
+			"b_barang"=> $this->input->post('b_barang', TRUE),
+			"biaya_kirim"=> $this->input->post('biaya_kirim', TRUE),
+			"ket"=> $this->input->post('keterangan', TRUE),
+		);
+		$this->M_monitor->tmp_order_delete($kd_mitra);
+		$this->M_monitor->update_dtmitra_order($ko, $data);
+	}
+
 	function tambah_order(){
-		$kd = 'MT000001';
 		$id = '1';
-		$kd_or = 'OR000001';
+		$kd_mt = $this->input->post('kd_mitra', TRUE);
+		$cek = $this->M_monitor->cek_kd_or($kd_mt);
+		if($cek){
+			$kd_tmp_order = $cek->kd_tmp_order;
+		}else{
+			$kd_tmp_order = $this->kode_OR();
+		}
 		$data = array(
 			"kd_barang" => $this->input->post('brg', TRUE),
 			"jml_barang" => $this->input->post('jml', TRUE),
 			"harga_barang" => $this->input->post('harg', TRUE),
-			"kd_mitra" => $kd,
-			"kd_tmp_order" => $this->kode_OR(),
-			"id" => $id
+			"kd_mitra" => $kd_mt,
+			"kd_tmp_order" => $kd_tmp_order
+			
 		);
+		$data_in = array(
+			"kd_mitra" => $kd_mt,
+			"kd_order" => $kd_tmp_order
+		);
+
+		$cek_row = $this->M_monitor->cek_row($kd_mt, $kd_tmp_order);
+		if($cek_row == false){
+			$this->M_monitor->insert_order($data_in);
+		}
 		$this->M_monitor->tmp_order_insert($data);
 	}
 
 	function hapus_order(){
 		
 			$data = $this->input->post('val', TRUE);
-	
+			$cek = $this->M_monitor->cek_kd_or($data);
+			if($cek){
+				$kd_tmp_order = $cek->kd_tmp_order;
+			}else{
+				$kd_tmp_order = $this->kode_OR();
+			}
 		$this->M_monitor->tmp_order_delete($data);
+		$this->M_monitor->adilaya_order_delete($kd_tmp_order);
 	}
+
+	function temp_hapus_order(){
+		$data = $this->input->post('val', TRUE);
+		$this->M_monitor->tmp_order_deletes($data);
+	}
+
 	function kode_OR(){
         $kode = $this->M_monitor->get_kode_order();
         foreach($kode as $row){
@@ -795,5 +882,19 @@ class Monitor extends CI_Controller {
         $kodebaru = $char.sprintf("%06s", $noUrut);
         return $kodebaru;
 	}
+
+	function history($id){
+		$row = $this->M_monitor->get_by_id($id);
+		if($row){
+			$data = array(
+				'dthis' => $this->M_monitor->get_history($id),
+				'nm_mitra' => set_value('nm_mitra', $row->nm_mitra)
+			);
+		}
+		
+		$this->load->view('monitor/history', $data);
+	}
+
+	
 }
 ?>
