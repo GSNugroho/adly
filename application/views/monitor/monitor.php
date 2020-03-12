@@ -85,17 +85,10 @@
                                 <thead>
                                     <tr>
                                         <th>Nama Mitra</th>
-                                        <th>Tanggal Lahir</th>
+                                        <th>Tanggal Join</th>
+                                        <th>Tanggal Pelunasan</th>
                                         <th>Kota</th>
-                                        <th>Alamat Rumah</th>
-                                        <th>Alamat Outet</th>
-                                        <th>Alamat Kirim</th>
                                         <th>Paket</th>
-                                        <th>Jumlah Transfer</th>
-                                        <th>Rekening</th>
-                                        <th>Atas Nama</th>
-                                        <th>Ekspedisi</th>
-                                        <th>Biaya Kirim</th>
                                         <th style="width:13%;">Action</th>
                                     </tr>
                                 </thead>
@@ -106,17 +99,10 @@
                                 <thead>
                                     <tr>
                                         <th>Nama Mitra</th>
-                                        <th>Tanggal Lahir</th>
+                                        <th>Tanggal Join</th>
+                                        <th>Tanggal Pelunasan</th>
                                         <th>Kota</th>
-                                        <th>Alamat Rumah</th>
-                                        <th>Alamat Outet</th>
-                                        <th>Alamat Kirim</th>
                                         <th>Paket</th>
-                                        <th>Jumlah Transfer</th>
-                                        <th>Rekening</th>
-                                        <th>Atas Nama</th>
-                                        <th>Ekspedisi</th>
-                                        <th>Biaya Kirim</th>
                                         <th style="width:13%;">Action</th>
                                     </tr>
                                 </thead>
@@ -964,17 +950,10 @@
                                         //{ data: 'no' },
                                         //  { data: 'kd_inv' },
                                         { data: 'nm_mitra' },
-                                        { data: 'tgl_lahir'},
+                                        { data: 'dt_create'},
+                                        { data: 'dt_pelunasan' },
                                         { data: 'almt_kt_rmh' },
-                                        { data: 'almt_rmh' },
-                                        { data: 'almt_outlet' },
-                                        { data: 'almt_kirim' },
                                         { data: 'paket' },
-                                        { data: 'jml_tarif' },
-                                        { data: 'rekening' },
-                                        { data: 'ats_nm_rekening' },
-                                        { data: 'ekspedisi' },
-                                        { data: 'biaya_kirim' },
                                         { data: 'action'}
                                     ],
                                     "destroy": true,

@@ -12,6 +12,7 @@ class Order extends CI_Controller{
 	
 	public function read($id){
 		$data = array(
+			"mitra" => $this->M_order->dt_mitra_order($id),
 			"drior" => $this->M_order->rincian_order($id)
 		);
 		$this->load->view('order/order_rincian', $data);

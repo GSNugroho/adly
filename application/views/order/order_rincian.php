@@ -31,22 +31,33 @@
     <div class="card-body">
     <h2></h2>
     <!-- <a href="<?php echo site_url('monitor')?>" class="btn btn-danger">Kembali</a> -->
-    <!-- Nama Mitra : <?php //echo $nm_mitra?> -->
+    
+    <?php
+        if($mitra){
+            echo '<table><tr><td>Nama Mitra</td><td>:</td><td>'.$mitra->nm_mitra.'</td></tr>
+            <tr><td>Alamat Kirim</td><td>:</td><td>'.$mitra->almt_kirim.'</td></tr>
+            <tr><td>Kota</td><td>:</td><td>'.$mitra->nama_kota.'</td></tr>
+            <tr><td>Ekspedisi</td><td>:</td><td>'.$mitra->ekspedisi.'</td></tr></table>';
+            
+        }
+    ?>
     <table class="table table-bordered dataTable">
         <tr>
             <th>Nama Barang</th>
             <th>Harga Barang</th>
             <th>Jumlah</th>
             <th>Satuan</th>
+            <th>Sub Total</th>
         </tr>
         <?php 
         if($drior){
             $total = 0;
             foreach($drior as $row){
-                echo '<tr><td>'.$row->nm_barang.'</td><td align="right">Rp '.number_format($row->harga_barang,2,',','.').'</td><td align="right">'.$row->jml_barang.'</td><td>'.$row->satuan.'</td></tr>';
+                $sub = $row->harga_barang*$row->jml_barang;
+                echo '<tr><td>'.$row->nm_barang.'</td><td align="right">Rp '.number_format($row->harga_barang,2,',','.').'</td><td align="right">'.$row->jml_barang.'</td><td>'.$row->satuan.'</td><td align="right">Rp '.number_format($sub,2,',','.').'</td></tr>';
                 $total = $total+($row->harga_barang*$row->jml_barang);
             };
-            echo '<tr><td>Total :</td><td align="right">Rp '.number_format($total,2,',','.').'</td><td></td><td></td></tr>';
+            echo '<tr><td colspan="4" align="right">Total :</td><td align="right">Rp '.number_format($total,2,',','.').'</td></tr>';
         }else{
             echo 'Tidak ada data';
         }

@@ -150,6 +150,15 @@ class Monitor extends CI_Controller {
 				redirect(base_url('Monitor'));
 	}
 
+	function pelunasan($id){
+		$data = array(
+			'dt_pelunasan'=>date('Y-m-d'),
+			'sts_pmby'=> 2
+		);
+		$this->M_monitor->update($id, $data);
+		redirect(base_url('Monitor'));
+	}
+
 	
 
 	function delete($id){
@@ -357,8 +366,7 @@ class Monitor extends CI_Controller {
 		 }
 		if($searchValue != ''){
 		$searchQuery .= " and (
-		nm_mitra like '%".$searchValue."%' or  
-		atas_nama like '%".$searchValue."%' ) ";
+		nm_mitra like '%".$searchValue."%' ) ";
 		}
 
 		## Total number of records without filtering
@@ -534,14 +542,17 @@ class Monitor extends CI_Controller {
 				';
 			}elseif($this->session->userdata('level')=='2'){
 				$button = '
-				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info" style="width: 100%; color: white">
-				Info
+				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info btn-circle" color: white">
+				<i class="fas fa-info-circle"></i>
 				</a>
-				<a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning" style="width: 100%; color: white">
-				Edit
+				<a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning btn-circle" color: white">
+				<i class="fas fa-edit"></i>
 				</a>
-				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger" style="width: 100%; color: white">
-				Hapus
+				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
+				<i class="fas fa-trash"></i>
+				</a>
+				<a href="monitor/pelunasan/'.$row->kd_mitra.'" class="btn btn-success btn-circle" color: white">
+				<i class="fas fa-edit"></i>
 				</a>
 				';
 			}elseif($this->session->userdata('level')=='3'){
@@ -552,21 +563,19 @@ class Monitor extends CI_Controller {
 				<button value="'.$row->kd_mitra.'" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-whatever="'.$row->kd_mitra.'" >Order</button>
 				';
 			}
+			if($row->dt_pelunasan == null){
+				$pel = '-';
+			}else{
+				$pel = date('d-m-Y', strtotime($row->dt_pelunasan));
+			}
 			// onclick="load(this.value)"
 		$data[] = array( 
 			// "kd_inv"=>$row->kd_inv,
 			"nm_mitra"=>$row->nm_mitra,
-			"tgl_lahir"=>date('d-m-Y', strtotime($row->tgl_lahir)),
-			"almt_rmh"=>$row->almt_rmh,
+			"dt_create"=>date('d-m-Y', strtotime($row->dt_create)),
+			"dt_pelunasan"=>$pel,
 			"almt_kt_rmh"=>$row->nama_kota,
-			"almt_outlet"=>$row->almt_outlet,
-			"almt_kirim"=>$row->almt_kirim,
 			"paket"=>$row->nm_paket,
-			"jml_tarif"=>$row->jml_tarif,
-			"rekening"=>$row->rekening,
-			"ats_nm_rekening"=>$row->ats_nm_rekening,
-			"ekspedisi"=>$row->nama_ekspedisi,
-			"biaya_kirim"=>$row->biaya_kirim,
 			"action"=>$button
 		);
 		}
@@ -664,21 +673,19 @@ class Monitor extends CI_Controller {
 				<button value="'.$row->kd_mitra.'" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-backdrop="static" data-whatever="'.$row->kd_mitra.'" >Order</button>
 				';
 			}
+			if($row->dt_pelunasan == null){
+				$pel = '-';
+			}else{
+				$pel = date('d-m-Y', strtotime($row->dt_pelunasan));
+			}
 			// onclick="load(this.value)"
 		$data[] = array( 
 			// "kd_inv"=>$row->kd_inv,
 			"nm_mitra"=>$row->nm_mitra,
-			"tgl_lahir"=>date('d-m-Y', strtotime($row->tgl_lahir)),
-			"almt_rmh"=>$row->almt_rmh,
+			"dt_create"=>date('d-m-Y', strtotime($row->dt_create)),
+			"dt_pelunasan"=>$pel,
 			"almt_kt_rmh"=>$row->nama_kota,
-			"almt_outlet"=>$row->almt_outlet,
-			"almt_kirim"=>$row->almt_kirim,
 			"paket"=>$row->nm_paket,
-			"jml_tarif"=>$row->jml_tarif,
-			"rekening"=>$row->rekening,
-			"ats_nm_rekening"=>$row->ats_nm_rekening,
-			"ekspedisi"=>$row->nama_ekspedisi,
-			"biaya_kirim"=>$row->biaya_kirim,
 			"action"=>$button
 		);
 		}

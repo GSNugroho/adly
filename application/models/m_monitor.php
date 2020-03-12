@@ -210,7 +210,9 @@ class M_monitor extends CI_Model{
 		sts_pmby, 
 		ats_nm_rekening, 
 		nama_ekspedisi, 
-		biaya_kirim 
+		biaya_kirim,
+		dt_create,
+		dt_pelunasan
 		FROM adilaya_dt_mitra 
 		JOIN kota on almt_kt_rmh = id_kota
 		JOIN adilaya_paket on paket = kd_paket

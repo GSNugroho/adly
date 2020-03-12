@@ -39,5 +39,13 @@ class M_order extends CI_Model{
         $query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order_detail JOIN a_barang ON adilaya_dt_mitra_order_detail.kd_barang = a_barang.kd_barang WHERE kd_order = '".$id."'");
         return $query->result();
     }
+    function dt_mitra_order($id){
+        $query = $this->db->query("SELECT nm_mitra, adilaya_dt_mitra_order.almt_kirim as almt_kirim, kota.nama_kota as nama_kota, a_ekspedisi.nama_ekspedisi as ekspedisi FROM adilaya_dt_mitra_order
+        JOIN adilaya_dt_mitra ON adilaya_dt_mitra_order.kd_mitra = adilaya_dt_mitra.kd_mitra
+        JOIN kota ON adilaya_dt_mitra_order.almt_kt_kirim = kota.id_kota
+        JOIN a_ekspedisi ON adilaya_dt_mitra_order.ekspedisi = a_ekspedisi.kd_ekspedisi
+        WHERE kd_order = '".$id."'");
+        return $query->row();
+    }
 }
 ?>
