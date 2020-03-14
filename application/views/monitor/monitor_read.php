@@ -31,6 +31,8 @@
     <div class="card-body">
     <h2></h2>
     <a href="<?php echo site_url('monitor')?>" class="btn btn-danger">Kembali</a>
+    <br>
+    <br>
     <table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 80%">
       <tr><td>Nama Mitra</td><td>:</td><td><?php echo $nm_mitra; ?></td></tr>
       <tr><td>Kota, Tanggal Lahir</td><td>:</td><td><?php echo $kt_lahir; ?>, <?php echo $tgl_lahir;?></td></tr>

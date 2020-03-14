@@ -6,6 +6,7 @@ class Monitor extends CI_Controller {
 			// if ((!empty($_SESSION['nmUser'])) && (!empty($_SESSION['unameApp'])) && (!empty($_SESSION['passwrdApp'])) && (!empty($_SESSION['nik'])) /*&& (!empty($_SESSION['gugus']))*/) {
 			$this->load->model('M_monitor');
 			$this->load->library('form_validation');
+			$this->load->helper('form');
 			// }else {
 			// 	echo redirect(base_url('../'));
 			// }
@@ -34,6 +35,17 @@ class Monitor extends CI_Controller {
 		);
 		 $this->load->view('monitor/monitor_form', $data);
 	}
+
+	public function validasi_input_mitra(){
+		$this->form_validation->set_error_delimiters('', '');
+		$this->form_validation->set_rules('nm_mitra','Nama mitra', 'required');
+		$this->form_validation->set_rules('kt_lahir','Kota Kelahiran', 'required');
+		$this->form_validation->set_rules('tgl_lahir','Tanggal Lahir','required');
+		if ($this->form_validation->run() == FALSE) {
+			echo validation_errors();
+		} 
+	}
+
 	public function create_action(){
 			$aktif = 1;
 			if($this->input->post('cek') == 1){
@@ -72,25 +84,6 @@ class Monitor extends CI_Controller {
 			redirect(site_url('Monitor'));
 			header(site_url('Monitor'));
 		}
-	// }
-
-	// public function _rules()
-	// {
-	// 	$this->form_validation->set_rules('nm_inv', 'Nama Barang', 'trim|required');
-	// 	$this->form_validation->set_rules('kondisi', 'Kondisi Barang', 'trim|required');
-	// 	$this->form_validation->set_rules('merk', 'Merk', 'trim|required');
-	// 	$this->form_validation->set_rules('satuan', 'Satuan', 'trim|required');
-	// 	$this->form_validation->set_rules('jmlh', 'Jumlah', 'trim|required');
-	// 	$this->form_validation->set_rules('tgl_terima', 'Tanggal Terima', 'trim|required');
-	// 	$this->form_validation->set_rules('status', 'Status', 'trim|required');
-	// 	$this->form_validation->set_rules('kd_bantu', 'Jenis Barang', 'trim|required');
-	// 	$this->form_validation->set_rules('id_ruang', 'Ruang', 'trim|required');
-	// 	$this->form_validation->set_rules('jns_brg', 'Jenis Tipe', 'trim|required');
-	// 	$this->form_validation->set_rules('nm_pengg', 'Nama Pengguna', 'trim|required');
-	// 	$this->form_validation->set_rules('tipe_aset', 'Jenis Aset', 'trim|required');
-
-	// 	$this->form_validation->set_error_delimiters('<i class="fa fa-fw fa-info-circle text-danger"></i><span class="text-danger">', '</span>');
-	// }
 	
 	function update($id){
 		$row = $this->M_monitor->get_by_id($id);
