@@ -68,6 +68,19 @@ class M_monitor extends CI_Model{
 		$query = $this->db->query("SELECT * FROM adilaya_dt_mitra WHERE kd_mitra = '".$id."'");
 		return $query->row();
 	}
+
+	function get_by_id_read($id){
+		$query =$this->db->query("SELECT adilaya_dt_mitra.nm_mitra as nm_mitra, adilaya_dt_mitra.kt_lahir as kt_lahir, adilaya_dt_mitra.tgl_lahir as tgl_lahir, adilaya_dt_mitra.dt_create as tgl_join, adilaya_dt_mitra.almt_rmh as almt_rmh, provinsi1.nama_provinsi as provinsi1, kota1.nama_kota as kota1 , adilaya_dt_mitra.no_hp1 as no_hp, adilaya_dt_mitra.almt_outlet as almt_outlet, provinsi2.nama_provinsi as provinsi2, kota2.nama_kota as kota2, adilaya_produk.nm_produk as nm_produk, adilaya_paket.nm_paket as paket FROM adilaya_dt_mitra
+		JOIN kota as kota1 ON adilaya_dt_mitra.almt_kt_rmh = kota1.id_kota AND adilaya_dt_mitra.almt_kt_outlet = kota1.id_kota
+		JOIN kota as kota2 ON adilaya_dt_mitra.almt_kt_outlet = kota2.id_kota AND adilaya_dt_mitra.almt_kt_rmh = kota2.id_kota
+		JOIN provinsi as provinsi1 ON kota1.id_provinsi_fk = provinsi1.id_provinsi AND kota2.id_provinsi_fk = provinsi1.id_provinsi
+		JOIN provinsi as provinsi2 ON kota2.id_provinsi_fk = provinsi2.id_provinsi AND kota1.id_provinsi_fk = provinsi2.id_provinsi
+		JOIN adilaya_paket ON adilaya_dt_mitra.paket = adilaya_paket.kd_paket
+		JOIN a_ekspedisi ON adilaya_dt_mitra.ekspedisi = a_ekspedisi.kd_ekspedisi
+		JOIN adilaya_produk ON adilaya_dt_mitra.nm_produk = adilaya_produk.kd_produk
+		WHERE dt_aktif = '1' AND adilaya_dt_mitra.kd_mitra = '".$id."'");
+		return $query->row();
+	}
 	
 	function delete($id){
 		$this->db->where($this->id, $id);
@@ -116,7 +129,7 @@ class M_monitor extends CI_Model{
 		return $query->result();
 	}
 	function get_produk(){
-		$query = $this->db->query("SELECT * FROM adilaya_produk ORDER BY kd_produk asc");
+		$query = $this->db->query("SELECT * FROM adilaya_produk ORDER BY nm_produk asc");
 		return $query->result();
 	}
 	function get_temp(){
@@ -124,7 +137,7 @@ class M_monitor extends CI_Model{
 		return $query->result();
 	}
 	function get_dt_mitra_order($id){
-		$query = $this->db->query("SELECT kd_mitra, no_hp1, no_hp2, nm_mitra, almt_rmh, almt_outlet, almt_kirim FROM adilaya_dt_mitra  WHERE kd_mitra = '".$id."'");
+		$query = $this->db->query("SELECT kd_mitra, no_hp1, no_hp2, nm_mitra, almt_rmh, almt_outlet, almt_kirim, nm_produk FROM adilaya_dt_mitra  WHERE kd_mitra = '".$id."'");
 		return $query->result_array();
 	}
 	function cek_kd_or($id){
@@ -152,7 +165,11 @@ class M_monitor extends CI_Model{
 		return $query->result();
 	}
 	function get_jns_barang($id){
-		$query = $this->db->query("SELECT * FROM a_barang WHERE id_produk = '".$id."'");
+		$query = $this->db->query("SELECT * FROM a_barang WHERE id_produk = '".$id."' ORDER BY nm_barang asc");
+		return $query->result();
+	}
+	function get_jns_paket($id){
+		$query = $this->db->query("SELECT * FROM adilaya_paket WHERE kd_produk = '".$id."' ");
 		return $query->result();
 	}
 	function get_kode(){
@@ -188,11 +205,11 @@ class M_monitor extends CI_Model{
 		return $query->result();
 	}
 	function get_total_dt(){
-		$query = $this->db->query("SELECT count(*) as allcount FROM adilaya_dt_mitra");
+		$query = $this->db->query("SELECT count(*) as allcount FROM adilaya_dt_mitra WHERE 1=1 AND dt_aktif = '1'");
 		return $query->result();
 	}
 	function get_total_fl($searchQuery){
-		$query = $this->db->query("SELECT count(*) as allcount FROM adilaya_dt_mitra WHERE 1=1".$searchQuery);
+		$query = $this->db->query("SELECT count(*) as allcount FROM adilaya_dt_mitra WHERE 1=1 AND dt_aktif = '1' ".$searchQuery);
 		return $query->result();
 	}
 	function get_total_ft($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage){
@@ -217,9 +234,9 @@ class M_monitor extends CI_Model{
 		JOIN kota on almt_kt_rmh = id_kota
 		JOIN adilaya_paket on paket = kd_paket
 		JOIN a_ekspedisi on ekspedisi = kd_ekspedisi
-		WHERE 1=1 ".$searchQuery." and kd_mitra NOT IN (
+		WHERE 1=1 AND dt_aktif = '1' ".$searchQuery." and kd_mitra NOT IN (
 			SELECT TOP ".$baris." kd_mitra FROM adilaya_dt_mitra 
-			WHERE 1=1".$searchQuery." order by ".$columnName." ".$columnSortOrder.") 
+			WHERE 1=1 AND dt_aktif = '1' ".$searchQuery." order by ".$columnName." ".$columnSortOrder.") 
 		order by ".$columnName." ".$columnSortOrder);
 		return $query->result();
 	}

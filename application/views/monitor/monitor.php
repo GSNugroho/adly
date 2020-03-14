@@ -75,21 +75,37 @@
                     <?php if($this->session->userdata('level')=='2'):?>
                     <div id="dynamic-tabs">
                         <ul>
+                            <li class="tabs" data-source="<?php echo base_url('monitor/dt_mt_hri')?>" data-table="mthri-table"><a href="#tab-mthri">Hari ini</a>
+                            </li>
                             <li class="tabs" data-source="<?php echo base_url('monitor/dt_dp')?>" data-table="dp-table"><a href="#tab-dp">DP</a>
                             </li>
                             <li class="tabs" data-source="<?php echo base_url('monitor/dt_lunas')?>" data-table="lunas-table"><a href="#tab-lunas">Lunas</a>
                             </li>
                         </ul>
+                        <div id="tab-mthri" class="table-responsive">
+                            <table id="mthri-table" class="table table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Mitra</th>
+                                        <th>Tanggal Join</th>
+                                        <th>Tanggal Lunas</th>
+                                        <th>Kota</th>
+                                        <th>Paket</th>
+                                        <th style="width:16%;">Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                         <div id="tab-dp" class="table-responsive">
                             <table id="dp-table" class="table table-bordered" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th>Nama Mitra</th>
                                         <th>Tanggal Join</th>
-                                        <th>Tanggal Pelunasan</th>
+                                        <th>Tanggal Lunas</th>
                                         <th>Kota</th>
                                         <th>Paket</th>
-                                        <th style="width:13%;">Action</th>
+                                        <th style="width:16%;">Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -100,7 +116,7 @@
                                     <tr>
                                         <th>Nama Mitra</th>
                                         <th>Tanggal Join</th>
-                                        <th>Tanggal Pelunasan</th>
+                                        <th>Tanggal Lunas</th>
                                         <th>Kota</th>
                                         <th>Paket</th>
                                         <th style="width:13%;">Action</th>
@@ -272,33 +288,34 @@
                                         <tr>
                                             <th colspan="3" style="text-align:right">Total:</th>
                                             <th></th>
+                                            <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
                               </div>
                     </div>
                     <script>
-                        $(document).ready(function(){
-                            $('#daftarProduk').change(function(){
-                                var id=$(this).val();
-                                $.ajax({
-                                    url : "<?php echo base_url();?>monitor/get_jns_barang",
-                                    method : "POST",
-                                    data : {id: id},
-                                    async : false,
-                                    dataType : 'json',
-                                    success: function(data){
-                                        var html = '<option value="0">Pilih</option>';
-                                        var i;
-                                        for(i=0; i<data.length; i++){
-                                            html += '<option value="'+data[i].kd_barang+'">'+data[i].nm_barang+'</option>';
-                                        }
-                                        $('#daftarBarang').html(html);
+                        // $(document).ready(function(){
+                        //     $('#daftarProduk').change(function(){
+                        //         var id=$(this).val();
+                        //         $.ajax({
+                        //             url : "<?php echo base_url();?>monitor/get_jns_barang",
+                        //             method : "POST",
+                        //             data : {id: id},
+                        //             async : false,
+                        //             dataType : 'json',
+                        //             success: function(data){
+                        //                 var html = '<option value="0">Pilih</option>';
+                        //                 var i;
+                        //                 for(i=0; i<data.length; i++){
+                        //                     html += '<option value="'+data[i].kd_barang+'">'+data[i].nm_barang+'</option>';
+                        //                 }
+                        //                 $('#daftarBarang').html(html);
                                         
-                                    }
-                                });
-                            });
-                        });
+                        //             }
+                        //         });
+                        //     });
+                        // });
                         function load(val) {
                                    table = $('#tableOrder').DataTable({
                                         // columnDefs: [{
@@ -389,12 +406,12 @@
                                                 data: 'jml_barang'
                                             },
                                             {
-                                                data: 'harga'
-                                                //  render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
+                                                data: 'harga',
+                                                 render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
                                             },
                                             {
-                                                data: 'harga_total'
-                                                // render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
+                                                data: 'harga_total',
+                                                render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
                                             },
                                             {
                                                 data: 'aksi'
@@ -634,7 +651,7 @@
                                         '</td></tr><tr><td align="left">Alamat Kirim</td><td>:</td><td align="left">'+document.getElementById('almt_rmh').value+
                                         '</td></tr><tr><td align="left">No. HP</td><td>:</td><td align="left"> '+document.getElementById('no_hp1').value+
                                         '</td></tr><tr><td align="left">No. HP</td><td>:</td><td align="left"> '+document.getElementById('no_hp2').value+
-                                        '</td></tr><tr><td align="left">Produk</td><td>:</td><td align="left"> '+$('#daftarProduk option:selected').val()+
+                                        '</td></tr><tr><td align="left">Produk</td><td>:</td><td align="left"> '+$('#daftarProduk option:selected').html()+
                                         '</td></tr><tr><td align="left">Rincian Order</td><td>:</td><td align="left"> '+
                                         '<table border="1"><tr><td>Nama</td><td>Jumlah</td></tr>'+rinci+'</table></td></tr><tr><td align="left">Keterangan</td><td>:</td><td align="left">'+
                                         document.getElementById('keterangan').value+'</td></tr><tr><td align="left">Ekspedisi</td><td>:</td><td align="left"> '+$('#ekspedisi option:selected').text()+
@@ -740,10 +757,28 @@
                                             $('#no_hp2').val(data[0]['no_hp2']);
                                             $('#kd_mitra').val(data[0]['kd_mitra']);
                                             $('#almt_outlet').val(data[0]['almt_outlet']);
-                                            // $('#inputDiagnosis').val(data['nama_indonesia']);
-                                            // $('#inputIdkunj').val(data['id_kunjungan']);
-                                            // $('#inputPetrs').val(data['id_petugas']);
-                                            // param = data['id_kunjungan'];
+                                            // document.getElementById("daftarProduk").selectedIndex = data[0]['nm_produk'];
+                                            $('#daftarProduk').val(data[0]['nm_produk']);
+                                            $('#daftarProduk').prop('disabled', 'disabled');
+                                                if($('#daftarProduk').val() !== 0){
+                                                    var id=$('#daftarProduk').val();
+                                                    $.ajax({
+                                                        url : "<?php echo base_url();?>monitor/get_jns_barang",
+                                                        method : "POST",
+                                                        data : {id: id},
+                                                        async : false,
+                                                        dataType : 'json',
+                                                        success: function(data){
+                                                            var html = '<option value="0">Pilih</option>';
+                                                            var i;
+                                                            for(i=0; i<data.length; i++){
+                                                                html += '<option value="'+data[i].kd_barang+'">'+data[i].nm_barang+'</option>';
+                                                            }
+                                                            $('#daftarBarang').html(html);
+                                                            
+                                                        }
+                                                    });
+                                                }
                                         },
                                         error: function(err) {
                                             console.log(err);
@@ -965,7 +1000,7 @@
                                     table.draw(true);
                                 });
                             }
-                            initiateTable("dp-table", "<?php echo base_url('monitor/dt_dp')?>");
+                            initiateTable("mthri-table", "<?php echo base_url('monitor/dt_mt_hri')?>");
                             $("#dynamic-tabs").tabs();
                         });
 

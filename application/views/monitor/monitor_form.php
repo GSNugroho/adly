@@ -8,6 +8,7 @@
         <script src="<?php echo base_url('assets/datepicker/js/jquery-1.11.3.min.js')?>"></script>
         <script src="<?php echo base_url('assets/datepicker/js/bootstrap.min.js')?>"></script>
         <script src="<?php echo base_url('assets/datepicker/js/bootstrap-datetimepicker.js')?>"></script>
+        <script src="<?php echo base_url('assets/swal/sweetalert2.all.min.js')?>"></script>
 
         <div class="row">
           <div class="col-12">
@@ -190,17 +191,25 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="paket">Paket</label> <?php echo form_error('paket') ?>
+                        <label for="nm_produk">Nama Produk</label>
+                        <select class="form-control" name="nm_produk" id="nm_produk" style="width: 80%">
+                            <option value="0">Pilih</option>
+                            <?php
+                            foreach ($dd_pro as $row) {  
+                                echo "<option value='".$row->kd_produk."' >".$row->nm_produk."</option>";
+                                }
+                                echo"
+                            </select>"
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="paket">Paket</label> 
                         <select class="form-control" name="paket" id="paket" style="width: 80%">
                             <option value="0">Pilih</option>
-                        <?php
-                        foreach ($dd_pk as $row) {  
-                            echo "<option value='".$row->kd_paket."' >".$row->nm_paket."</option>";
-                            }
-                            echo"
-                        </select>"
-                    ?>
+                        </select>
                     </div>
+
                     <div class="form-group">
                         <label for="jml_tarif">Jumlah Transfer</label>
                         <input class="form-control" type="text" name="jml_tarif" id="jml_tarif" style="width: 80%;">
@@ -253,7 +262,11 @@
                             </td>
                         </tr>
                     </table>
-                    <button type="submit" class="btn btn-success" id="simpan" onclick="simpan()">Simpan</button>
+                    <div class="form-group">
+                        <label for="tambahan">Tambahan</label>
+                        <input class="form-control" type="text" name="tambahan" id="tambahan" style="width: 80%;">
+                    </div>
+                    <button type="submit" class="btn btn-success" id="simpan" onclick="alert()">Simpan</button>
                     <a href="<?php echo site_url('monitor') ?>" class="btn btn-danger">Batal</a>
                   </div>
                   <!-- /.tab-pane -->
@@ -294,7 +307,29 @@
 		format: 'DD-MM-YYYY'
 	});
 
-            $(document).ready(function(){
+                        $(document).ready(function(){
+                            $('#nm_produk').change(function(){
+                                var id=$(this).val();
+                                $.ajax({
+                                    url : "<?php echo base_url();?>monitor/get_jns_paket",
+                                    method : "POST",
+                                    data : {id: id},
+                                    async : false,
+                                    dataType : 'json',
+                                    success: function(data){
+                                        var html = '<option value="0">Pilih</option>';
+                                        var i;
+                                        for(i=0; i<data.length; i++){
+                                            html += '<option value="'+data[i].kd_paket+'">'+data[i].nm_paket+'</option>';
+                                        }
+                                        $('#paket').html(html);
+                                        
+                                    }
+                                });
+                            });
+                        });
+
+        $(document).ready(function(){
         $('#provinsi').change(function(){
             var id=$(this).val();
             $.ajax({
@@ -409,6 +444,29 @@
                     var almt = document.getElementById('almt_rmh').value;
                     document.getElementById('almt_kirim').value = almt;
                     document.getElementById('almt_kirim').disabled  = true;
+                    $('#provinsi3').val($('#provinsi option:selected').val());
+                    $('#provinsi3').prop('disabled', 'disabled');
+                    if($('#provinsi option:selected').val() !== 0){
+                        var id=$('#provinsi option:selected').val();
+                        $.ajax({
+                            url : "<?php echo base_url();?>monitor/get_kota",
+                            method : "POST",
+                            data : {id: id},
+                            async : false,
+                            dataType : 'json',
+                            success: function(data){
+                                var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                }
+                                $('#almt_kt_kirim').html(html);
+                                $('#almt_kt_kirim').val($('#almt_kt_rmh option:selected').val());
+                                $('#almt_kt_kirim').prop('disabled', 'disabled');
+                            }
+                        });
+                    }
+                    
                 }
             }
         )
@@ -421,6 +479,28 @@
                     var almt = document.getElementById('almt_outlet').value;
                     document.getElementById('almt_kirim').value = almt;
                     document.getElementById('almt_kirim').disabled  = true;
+                    $('#provinsi3').val($('#provinsi2 option:selected').val());
+                    $('#provinsi3').prop('disabled', 'disabled');
+                    if($('#provinsi3 option:selected').val() !== 0){
+                        var id=$('#provinsi2 option:selected').val();
+                        $.ajax({
+                            url : "<?php echo base_url();?>monitor/get_kota",
+                            method : "POST",
+                            data : {id: id},
+                            async : false,
+                            dataType : 'json',
+                            success: function(data){
+                                var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                }
+                                $('#almt_kt_kirim').html(html);
+                                $('#almt_kt_kirim').val($('#almt_kt_outlet option:selected').val());
+                                $('#almt_kt_kirim').prop('disabled', 'disabled');
+                            }
+                        });
+                    }
                 }
             }
         )
@@ -433,10 +513,73 @@
                     var almt = document.getElementById('almt_rmh').value;
                     document.getElementById('almt_outlet').value = almt;
                     document.getElementById('almt_outlet').disabled = true;
+                    $('#provinsi2').val($('#provinsi option:selected').val());
+                    $('#provinsi2').prop('disabled', 'disabled');
+                    if($('#provinsi option:selected').val() !== 0){
+                        var id=$('#provinsi option:selected').val();
+                        $.ajax({
+                            url : "<?php echo base_url();?>monitor/get_kota",
+                            method : "POST",
+                            data : {id: id},
+                            async : false,
+                            dataType : 'json',
+                            success: function(data){
+                                var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                }
+                                $('#almt_kt_outlet').html(html);
+                                $('#almt_kt_outlet').val($('#almt_kt_rmh option:selected').val());
+                                $('#almt_kt_outlet').prop('disabled', 'disabled');
+                            }
+                        });
+                    }
                 }
             }
         )
     })
+
+    function alert(){
+        Swal.fire({
+            title: "Data Mitra",
+            html: '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Nama Mitra</td><td width=5%>:</td><td align="left">'+$('#nm_mitra').val()+
+            '</td></tr><tr><td align="left">Kota, Tanggal Lahir</td><td>:</td><td align="left">'+$('#kt_lahir').val()+', '+$('#tgl_lahir').val()+
+            '</td></tr><tr><td align="left">Alamat Rumah</td><td>:</td><td align="left"> '+$('#almt_rmh').val()+
+            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#provinsi option:selected').html()+
+            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#almt_kt_rmh option:selected').html()+
+            '</td></tr><tr><td align="left">No HP</td><td>:</td><td align="left">'+ $('#no_hp1').val()+
+            '</td></tr><tr><td align="left">No HP</td><td>:</td><td align="left">'+ $('#no_hp2').val()+
+            '</td></tr></table><br>'+
+            '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Status Pembayaran</td><td width=5%>:</td><td align="left"> '+$('#sts_pmby option:selected').html()+
+            '</td></tr><tr><td align="left">Nama Produk</td><td>:</td><td align="left"> '+$('#nm_produk option:selected').html()+
+            '</td></tr><tr><td align="left">Paket</td><td>:</td><td align="left"> '+$('#paket option:selected').html()+
+            '</td></tr><tr><td align="left">Jumlah Transfer</td><td>:</td><td align="left"> '+$('#jml_tarif').val()+
+            '</td></tr><tr><td align="left">Bank</td><td>:</td><td align="left"> '+$('#nm_bank option:selected').html()+
+            '</td></tr><tr><td align="left">No Rekening</td><td>:</td><td align="left"> '+$('#rekening').val()+
+            '</td></tr><tr><td align="left">Alamat Outlet</td><td>:</td><td align="left"> '+$('#almt_outlet').val()+
+            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#provinsi2 option:selected').html()+
+            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#almt_kt_outlet option:selected').html()+
+            '</td></tr></table><br>'+
+            '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Atas Nama</td><td width=5%>:</td><td align="left"> '+$('#ats_nm_rekening').val()+
+            '</td></tr><tr><td align="left">Alamat Kirim</td><td>:</td><td align="left"> '+$('#almt_kirim').val()+
+            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#provinsi3 option:selected').html()+
+            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#almt_kt_kirim option:selected').html()+
+            '</td></tr><tr><td align="left">Ekspedisi</td><td>:</td><td align="left"> '+$('#ekspedisi option:selected').html()+
+            '</td></tr><tr><td align="left">Biaya Kirim</td><td>:</td><td align="left"> '+$('#biaya_kirim').val()+
+            '</td></tr><tr><td align="left">Tambahan</td><td>:</td><td align="left"> '+$('#tambahan').val()+
+            '</td></tr></table>',
+            showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Kirim'
+        }).then((result) => {
+            if (result.value) {
+                console.log('Sukses');
+                simpan();
+            }
+            })
+    }
 
     function simpan(){
         var nm_mitra = $('#nm_mitra').val();
@@ -466,7 +609,8 @@
         // }
 
         var sts_pmby = $('#sts_pmby option:selected').val();
-
+        
+        var nm_produk = $('#nm_produk option:selected').val();
         var paket = $('#paket option:selected').val();
         var jml_tarif = $('#jml_tarif').val();
         var nm_bank = $('#nm_bank option:selected').val();
@@ -478,7 +622,7 @@
         var dataString = 'nm_mitra='+nm_mitra+'&kt_lahir='+kt_lahir+'&tgl_lahir='+tgl_lahir+'&almt_rmh='+almt_rmh+
         '&almt_prov_rmh='+almt_prov_rmh+'&almt_kt_rmh='+almt_kt_rmh+'&no_hp1='+no_hp1+'&no_hp2='+no_hp2+'&almt_outlet='+almt_outlet+
         '&almt_prov_outlet='+almt_prov_outlet+'&almt_kt_outlet='+almt_kt_outlet+'&almt_kirim='+almt_kirim+'&almt_prov_kirim='+almt_prov_kirim+
-        '&almt_kt_kirim='+almt_kt_kirim+'&sts_pmby='+sts_pmby+'&paket='+paket+'&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+
+        '&almt_kt_kirim='+almt_kt_kirim+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+
         '&ats_nm_rekening='+ats_nm_rekening+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim;
 
         $.ajax({
@@ -487,7 +631,19 @@
             data: dataString,
             success: function(){
                 console.log('yee');
-                window.location.href = "<?php echo base_url('Monitor')?>";
+                Swal.fire({
+                    title: 'Sukses',
+                    text: "Data Berhasil Disimpan!",
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                    }).then((result) => {
+                    if (result.value) {
+                        window.location.href = "<?php echo base_url('Monitor')?>";
+                    }
+                })
             }
         })
         // }

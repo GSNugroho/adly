@@ -29,7 +29,8 @@ class Monitor extends CI_Controller {
 			'dd_pk' => $this->M_monitor->get_paket(),
 			'dd_ek' => $this->M_monitor->get_ekspedisi(),
 			'dd_pr' => $this->M_monitor->get_provinsi(),
-			'dd_bg' => $this->M_monitor->get_barang()
+			'dd_bg' => $this->M_monitor->get_barang(),
+			'dd_pro' => $this->M_monitor->get_produk()
 		);
 		 $this->load->view('monitor/monitor_form', $data);
 	}
@@ -50,8 +51,9 @@ class Monitor extends CI_Controller {
 			'no_hp2' => $this->input->post('no_hp2', TRUE),
 			'almt_outlet' => $this->input->post('almt_outlet', TRUE),
 			'almt_kt_outlet' => $this->input->post('almt_kt_outlet', TRUE),
-			'almt_kirim' => $this->input->post('almt_kirim'),
-			'sts_pmby' => $this->input->post('sts_pmby'),
+			'almt_kirim' => $this->input->post('almt_kirim', TRUE),
+			'sts_pmby' => $this->input->post('sts_pmby', TRUE),
+			'nm_produk' => $this->input->post('nm_produk', TRUE),
 			'paket' => $this->input->post('paket', TRUE),
 			'jml_tarif' => $this->input->post('jml_tarif', TRUE),
 			'nm_bank' => $this->input->post('nm_bank', TRUE),
@@ -168,54 +170,35 @@ class Monitor extends CI_Controller {
 
 		if($row){
 			$data = array(
-				'aktif' => $aktif
+				'dt_aktif' => $aktif
 			);
 			$this->M_monitor->update($id, $data);
-			$this->session->set_flashdata('messages', 'Hapus Data Barang Berhasil');
+			$this->session->set_flashdata('messages', 'Hapus Data Berhasil');
 			redirect(base_url('Monitor'));
 		}
 	}
 	
 	function read($id){
-		$row = $this->M_monitor->get_by_id($id);
+		$row = $this->M_monitor->get_by_id_read($id);
 		if($row){
 			$data = array(
-			'kd_inv' => set_value('kd_inv', $row->kd_inv),
-			'nm_inv' => set_value('nm_inv', $row->nm_inv),
-			'merk' => set_value('merk', $row->vc_nm_merk),
-			'satuan' => set_value('satuan', $row->satuan),
-			'jmlh' => set_value('jmlh', $row->jmlh),
-			'tgl_terima' => set_value('tgl_terima', date('m/d/Y', strtotime($row->tgl_terima ))),
-			'status' => set_value('status', $row->status),
-			'kondisi' => set_value('kondisi', $row->kondisi),
-			'ket' => set_value('ket', $row->ket),
-			'kd_bantu' => set_value('kd_bantu', $row->kd_bantu),
-			'no_aset' => set_value('no_aset', $row->no_aset),
-			'id_ruang' => set_value('id_ruang', $row->vc_n_gugus),
-			'kd_brg' => set_value('kd_brg', $row->kd_brg),
-			'foto_brg' => set_value('foto_brg', $row->foto_brg),
-			'foto_qr' => set_value('foto_qr', $row->foto_qr),
-			'id_urut' => set_value('id_urut', $row->id_urut),
-			'aktif' => set_value('aktif', $row->aktif),
-			'jns_brg' => set_value('jns_brg', $row->jns_brg),
-			'cetak' => set_value('cetak', $row->cetak),
-			'kd_aset' => set_value('kd_aset', $row->kd_aset),
-			'dt_create' => set_value('dt_create', $row->dt_create),
-			'bt_ti' => set_value('bt_ti', $row->bt_ti),
-			'fl_harga' => set_value('fl_harga', $row->fl_harga),
-			'vc_op_update' => set_value('vc_op_update', $row->vc_op_update),
-			'dt_tgl_update' => set_value('dt_tgl_update', $row->dt_tgl_update),
-			'vc_op' => set_value('vc_op', $row->vc_op),
-			'kd_aset' => set_value('kd_aset', $row->kd_aset),
-			'nm_pengg' => set_value('vc_nm_pengguna', $row->vc_nm_pengguna),
-			'a_spes' => set_value('vc_spesifikasi', $row->vc_spesifikasi),
-			'sn' => set_value('vc_sn', $row->vc_sn),
-			// 'aset_aktif' => set_value('vc_kd_aktv', $row->vc_kd_aktv),
-			'vc_model' => set_value('vc_model', $row->vc_model)
+				'nm_mitra' => set_value('nm_mitra',$row->nm_mitra),
+				'kt_lahir' => set_value('kt_lahir',$row->kt_lahir),
+				'tgl_lahir' => set_value('tgl_lahir', date('d/m/Y', strtotime($row->tgl_lahir))),
+				'tgl_join' => set_value('tgl_join', date('d/m/Y', strtotime($row->tgl_join))),
+				'almt_rmh' => set_value('almt_rmh', $row->almt_rmh),
+				'prov_rmh' => set_value('prov_rmh', $row->provinsi1),
+				'nm_kota' => set_value('nm_kota', $row->kota1),
+				'no_hp' => set_value('no_hp', $row->no_hp),
+				'almt_outlet' => set_value('almt_outlet', $row->almt_outlet),
+				'prov_outlet' => set_value('prov_outlet', $row->provinsi2),
+				'kt_outlet' => set_value('kt_outlet', $row->kota2),
+				'nm_produk' => set_value('nm_produk', $row->nm_produk),
+				'paket' => set_value('paket', $row->paket)
 			);
 			$this->load->view('monitor/monitor_read', $data);
 		}else{
-			$this->session->set_flashdata('messages', 'Data Barang Tidak Ditemukan');
+			$this->session->set_flashdata('messages', 'Data Tidak Ditemukan');
 			redirect(base_url('Monitor'));
 		}
 	}
@@ -472,12 +455,140 @@ class Monitor extends CI_Controller {
         $data=$this->M_monitor->get_jns_barang($id);
         echo json_encode($data);
 	}
+
+	function get_jns_paket(){
+		$id=$this->input->post('id');
+		$data = $this->M_monitor->get_jns_paket($id);
+		echo json_encode($data);
+	}
 	
 	function get_temp(){
 		$data = $this->M_monitor->get_temp();
 		echo json_encode($data);
 	}
 	
+	function dt_mt_hri(){
+		## Read value
+		$draw = $_POST['draw'];
+		$baris = $_POST['start'];
+		$rowperpage = $_POST['length']; // Rows display per page
+		$columnIndex = $_POST['order'][0]['column']; // Column index
+		$columnName = $_POST['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
+		$searchValue = $_POST['search']['value']; // Search value
+
+		## Search 
+		$searchQuery = " ";			
+		$searchQuery .= " and DAY(dt_create) = DAY(GETDATE()) and MONTH(dt_create) = MONTH(GETDATE()) and YEAR(dt_create) = YEAR(GETDATE()) ";
+		 
+		//  $searchQuery .= " and sts_pmby = '1'";
+		if($searchValue != ''){
+		$searchQuery .= " and (
+		nm_mitra like '%".$searchValue."%' or  
+		ats_nm_rekening like '%".$searchValue."%' ) ";
+		}
+
+		## Total number of records without filtering
+		$sel = $this->M_monitor->get_total_dt();
+		// $records = sqlsrv_fetch_array($sel);
+		foreach($sel as $row){
+			$totalRecords = $row->allcount;
+		}
+		
+
+		## Total number of record with filtering
+		$sel = $this->M_monitor->get_total_fl($searchQuery);
+		// $records = sqlsrv_fetch_assoc($sel);
+		foreach($sel as $row){
+			$totalRecordwithFilter = $row->allcount;
+		}
+		
+
+		## Fetch records
+		$empQuery = $this->M_monitor->get_total_ft($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage);
+		$empRecords = $empQuery;
+		$data = array();
+
+		foreach($empRecords as $row){
+		
+			if($this->session->userdata('level')=='1'){
+				$button = '
+				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info">
+				<i class="fas fa-info-circle"></i>
+				</a>
+				<a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning btn-circle">
+				<i class="fas fa-edit"></i>
+				</a>
+				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle">
+				<i class="fas fa-trash"></i>
+				</a>
+				<a href="monitor/order/'.$row->kd_mitra.'" class="btn btn-warning btn-circle">
+				<i class="fas fa-edit"></i>
+				</a>
+				';
+			}elseif($this->session->userdata('level')=='2'){
+				// <a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning btn-circle" color: white">
+				// 	<i class="fas fa-edit"></i>
+				// 	</a>
+				if($row->sts_pmby == 1){
+					$button = '
+					<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info btn-circle" color: white">
+					<i class="fas fa-info-circle"></i>
+					</a>
+					<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
+					<i class="fas fa-trash"></i>
+					</a>
+					<a href="monitor/pelunasan/'.$row->kd_mitra.'" class="btn btn-success btn-circle" color: white">
+					<i class="fas fa-wallet"></i>
+					</a>
+					';
+				}else{
+					$button = '
+					<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info btn-circle" color: white">
+					<i class="fas fa-info-circle"></i>
+					</a>
+					<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
+					<i class="fas fa-trash"></i>
+					</a>
+					';
+				}
+				
+			}elseif($this->session->userdata('level')=='3'){
+				$button = '
+				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info" style="width: 100%;">
+				Info
+				</a>
+				<button value="'.$row->kd_mitra.'" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-whatever="'.$row->kd_mitra.'" >Order</button>
+				';
+			}
+			if($row->dt_pelunasan == null){
+				$pel = '-';
+			}else{
+				$pel = date('d-m-Y', strtotime($row->dt_pelunasan));
+			}
+			// onclick="load(this.value)"
+		$data[] = array( 
+			// "kd_inv"=>$row->kd_inv,
+			"nm_mitra"=>$row->nm_mitra,
+			"dt_create"=>date('d-m-Y', strtotime($row->dt_create)),
+			"dt_pelunasan"=>$pel,
+			"almt_kt_rmh"=>$row->nama_kota,
+			"paket"=>$row->nm_paket,
+			"action"=>$button
+		);
+		}
+
+		## Response
+		$response = array(
+		"draw" => intval($draw),
+		"iTotalRecords" => $totalRecords,
+		"iTotalDisplayRecords" => $totalRecordwithFilter,
+		"aaData" => $data
+		);
+
+		echo json_encode($response);
+	}
+
 	function dt_dp(){
 		## Read value
 		$draw = $_POST['draw'];
@@ -545,14 +656,12 @@ class Monitor extends CI_Controller {
 				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info btn-circle" color: white">
 				<i class="fas fa-info-circle"></i>
 				</a>
-				<a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning btn-circle" color: white">
-				<i class="fas fa-edit"></i>
-				</a>
+				
 				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
 				<i class="fas fa-trash"></i>
 				</a>
 				<a href="monitor/pelunasan/'.$row->kd_mitra.'" class="btn btn-success btn-circle" color: white">
-				<i class="fas fa-edit"></i>
+				<i class="fas fa-wallet"></i>
 				</a>
 				';
 			}elseif($this->session->userdata('level')=='3'){
@@ -658,9 +767,7 @@ class Monitor extends CI_Controller {
 				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info btn-circle">
 				<i class="fas fa-info-circle"></i>
 				</a>
-				<a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning btn-circle">
-				<i class="fas fa-edit"></i>
-				</a>
+				
 				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle">
 				<i class="fas fa-trash"></i>
 				</a>
@@ -895,7 +1002,8 @@ class Monitor extends CI_Controller {
 		if($row){
 			$data = array(
 				'dthis' => $this->M_monitor->get_history($id),
-				'nm_mitra' => set_value('nm_mitra', $row->nm_mitra)
+				'nm_mitra' => set_value('nm_mitra', $row->nm_mitra),
+				'almt_rmh' => set_value('almt_rmh', $row->almt_rmh),
 			);
 		}
 		

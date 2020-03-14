@@ -31,17 +31,24 @@
     <div class="card-body">
     <h2></h2>
     <!-- <a href="<?php echo site_url('monitor')?>" class="btn btn-danger">Kembali</a> -->
-    Nama Mitra : <?php echo $nm_mitra?>
-    <table border="1">
+    Nama Mitra : <?php echo $nm_mitra?> <br>
+    Alamat Rumah : <?php echo $almt_rmh?>
+    <table class="table table-bordered dataTable">
         <tr>
             <th>Tanggal Order</th>
             <th>Total Biaya Order</th>
             <th>Ekspedisi</th>
+            <th>Berat</th>
+            <th>Biaya Kirim</th>
+            <th>Rincian Order</th>
         </tr>
         <?php 
         if($dthis){
             foreach($dthis as $row){
-                echo '<tr><td>'.date('d-m-Y', strtotime($row->dt_trans)).'</td><td>Rp '.$row->total_order.'</td><td>'.$row->nama_ekspedisi.'</td></tr>';
+                echo '<tr><td>'.date('d-m-Y', strtotime($row->dt_trans)).'</td><td>Rp '.number_format($row->total_order,2,',','.').'</td><td>'.$row->nama_ekspedisi.'</td><td>'.$row->b_barang.' kg</td><td>Rp '.number_format($row->biaya_kirim,2,',','.').'</td>
+                <td><a href="'.base_url().'Order/read/'.$row->kd_order.'" class="btn btn-info" style="width: 100%;color: white">
+                Rincian Order
+                </a></td></tr>';
             };
         }else{
             echo 'Tidak ada data';

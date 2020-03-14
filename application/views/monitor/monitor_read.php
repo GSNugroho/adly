@@ -26,26 +26,27 @@
     
 			<div class="card shadow mb-4">
 			<div class="card-header py-3">
-           	<h6 class="m-0 font-weight-bold text-primary">Info Inventaris</h6>
+           	<h6 class="m-0 font-weight-bold text-primary">Info Mitra</h6>
 		</div>
     <div class="card-body">
     <h2></h2>
     <a href="<?php echo site_url('monitor')?>" class="btn btn-danger">Kembali</a>
-    <table>
-    <tr><td>Kode Inventaris</td><td>:</td><td><?php echo $kd_inv; ?></td></tr>
-    <tr><td>Nama Inventaris</td><td>:</td><td><?php echo $nm_inv; ?></td></tr>
-    <tr><td>Merk</td><td>:</td><td><?php echo $merk; ?></td></tr>
-    <tr><td>Satuan</td><td>:</td><td><?php echo $satuan; ?></td></tr>
-    <tr><td>Jumlah</td><td>:</td><td><?php echo $jmlh; ?></td></tr>
-    <tr><td>Tanggal Terima</td><td>:</td><td><?php echo date('d-m-Y', strtotime($tgl_terima)); ?></td></tr>
-    <tr><td>Status</td><td>:</td><td><?php echo $status; ?></td></tr>
-    <tr><td>Kondisi</td><td>:</td><td><?php echo $kondisi; ?></td></tr>
-    <tr><td>Keterangan</td><td>:</td><td><?php echo $ket; ?></td></tr>
-    <tr><td>Jenis Barang</td><td>:</td><td><?php echo $kd_bantu; ?></td></tr>
-    <tr><td>Ruang</td><td>:</td><td><?php echo $id_ruang; ?></td></tr>
-    <!-- <tr><td>Nomor Aset</td><td>:</td><td><?php //echo $no_aset; ?></td></tr> -->
-    <tr><td>Kode Aset</td><td>:</td><td><?php echo $kd_aset; ?></td></tr>
-    <tr><td>Nama Pengguna</td><td>:</td><td><?php echo $nm_pengg; ?></td></tr>
+    <table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 80%">
+      <tr><td>Nama Mitra</td><td>:</td><td><?php echo $nm_mitra; ?></td></tr>
+      <tr><td>Kota, Tanggal Lahir</td><td>:</td><td><?php echo $kt_lahir; ?>, <?php echo $tgl_lahir;?></td></tr>
+      <tr><td>Tanggal Join</td><td>:</td><td><?php echo $tgl_join; ?></td></tr>
+      <tr><td>Alamat Rumah</td><td>:</td><td><?php echo $almt_rmh; ?></td></tr>
+      <tr><td>Provinsi</td><td>:</td><td><?php echo $prov_rmh; ?></td></tr>
+      <tr><td>Kota</td><td>:</td><td><?php echo $nm_kota; ?></td></tr>
+      <tr><td>No HP</td><td>:</td><td><?php echo $no_hp; ?></td></tr>
+    </table>
+    <br>
+    <table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 80%">
+    <tr><td>Alamat Outlet</td><td>:</td><td><?php echo $almt_outlet; ?></td></tr>
+    <tr><td>Provinsi</td><td>:</td><td><?php echo $prov_outlet; ?></td></tr>
+    <tr><td>Kota</td><td>:</td><td><?php echo $kt_outlet; ?></td></tr>
+    <tr><td>Nama Produk</td><td>:</td><td><?php echo $nm_produk; ?></td></tr>
+    <tr><td>Paket</td><td>:</td><td><?php echo $paket; ?></td></tr>
     
     
     </table>
