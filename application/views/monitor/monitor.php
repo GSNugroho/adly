@@ -79,6 +79,8 @@
                             </li>
                             <li class="tabs" data-source="<?php echo base_url('monitor/dt_dp')?>" data-table="dp-table"><a href="#tab-dp">DP</a>
                             </li>
+                            <li class="tabs" data-source="<?php echo base_url('monitor/dt_cc')?>" data-table="cc-table"><a href="#tab-cc">Cicilan</a>
+                            </li>
                             <li class="tabs" data-source="<?php echo base_url('monitor/dt_lunas')?>" data-table="lunas-table"><a href="#tab-lunas">Lunas</a>
                             </li>
                         </ul>
@@ -89,6 +91,7 @@
                                         <th>Nama Mitra</th>
                                         <th>Tanggal Join</th>
                                         <th>Tanggal Lunas</th>
+                                        <th>Status</th>
                                         <th>Kota</th>
                                         <th>Paket</th>
                                         <th style="width:16%;">Action</th>
@@ -103,6 +106,22 @@
                                         <th>Nama Mitra</th>
                                         <th>Tanggal Join</th>
                                         <th>Tanggal Lunas</th>
+                                        <th style="display: none;">Status</th>
+                                        <th>Kota</th>
+                                        <th>Paket</th>
+                                        <th style="width:16%;">Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div id="tab-cc" class="table-responsive">
+                            <table id="cc-table" class="table table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Mitra</th>
+                                        <th>Tanggal Join</th>
+                                        <th>Tanggal Lunas</th>
+                                        <th style="display: none;">Status</th>
                                         <th>Kota</th>
                                         <th>Paket</th>
                                         <th style="width:16%;">Action</th>
@@ -117,6 +136,7 @@
                                         <th>Nama Mitra</th>
                                         <th>Tanggal Join</th>
                                         <th>Tanggal Lunas</th>
+                                        <th style="display: none;">Status</th>
                                         <th>Kota</th>
                                         <th>Paket</th>
                                         <th style="width:13%;">Action</th>
@@ -629,12 +649,11 @@
                     </div>
                     <input type="hidden" id="kd_mitra">
                     <input type="hidden" id="almt_outlet">
-                    <button type="submit" class="btn btn-success" onclick="alert()">Simpan</button>
+                    <button id="submit" type="submit" class="btn btn-success" >Simpan</button>
                     <button type="button" class="btn btn-secondary" onclick="tutup()">Batal</button>
                   <script>
-                      function alert(){
-                        
-                          $.ajax({
+                      $("#submit").click(function(){
+                        $.ajax({
                               url: "<?php echo base_url('Monitor/get_temp')?>",
                               dataType: 'json',
                               success: function(data){
@@ -668,6 +687,11 @@
                                         })
                               }
                           });
+                      })
+
+                      function alert(){
+                        console.log('BUG');
+                          
                       }
 
                       function form_validation(){
@@ -679,9 +703,6 @@
                       }
 
                       function simpan_order_mitra(){
-                          if(form_validation() == false){
-
-                          }else{
                         var kd_mitra = $('#kd_mitra').val();
                         var nm_mitra = $('#nm_mitra').val();
                         var almt_rmh = $('#almt_rmh').val();
@@ -736,7 +757,7 @@
                                     )
                             }
                         })
-                      }
+                      
                       }
 
                       $('#exampleModal').on('show.bs.modal', function(event) {
@@ -838,7 +859,591 @@
                         </div>
                     </div>
                 </div>
-				</div>
+                </div>
+                
+                <div class="modal fade" id="modalPelunasan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <!-- Tindakan popup -->
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" onclick="tutup()" class="close" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <!-- <h3 class="modal-title" id="exampleModalLabel">Data Order</h3> -->
+                            </div>
+                            <div class="modal-body">
+                                <div class="card-header d-flex p-0">
+                                    <h3 class="card-title p-3">Data Mitra</h3>
+                                    <ul class="nav nav-pills ml-auto p-2">
+                                        <li class="nav-item"><a class="nav-link" href="#tabs_1" data-toggle="tab">Identitas</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#tabs_2" data-toggle="tab">Outlet</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#tabs_3" data-toggle="tab">Pengiriman</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="#tabs_4" data-toggle="tab">Jenis Pembayaran</a></li>
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tabs_1">
+                                            <div class="form-group">
+                                                <label for="nm_mitra">Nama Mitra </label> <?php echo form_error('nm_mitra')?>
+                                                <input class="form-control" type="text" name="dt_nm_mitra" id="dt_nm_mitra" style="width: 80%;" disabled>
+                                            </div>
+                                            <table width='80%'>
+                                                <tr>
+                                                    <td width='10%'>
+                                                    <div class="form-group">
+                                                        <label for="tgl_terima">Kota & Tanggal Lahir </label> <?php echo form_error('tgl_lahir') ?>
+                                                            <input class="form-control" type="text" name="dt_kt_lahir" id="dt_kt_lahir" placeholder="Kota" disabled>
+                                                        </div>
+                                                    </td>
+                                                    <td width='40%'>
+                                                    <div class="form-group">
+                                                        <label style="height: 42px;"></label>
+                                                        <input class="form-control" type="text" name="dt_tgl_lahir" id="dt_tgl_lahir" placeholder="dd-mm-yyyy" disabled>
+                                                    </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="form-group">
+                                                <label for="almt_rmh">Alamat Rumah</label> <?php echo form_error('almt_rmh') ?>
+                                                <input class="form-control" type="text" name="dt_almt_rmh" id="dt_almt_rmh" style="width: 80%;" disabled>
+                                            </div>
+                                            <table width='80%'>
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="provinsi">Provinsi</label>
+                                                            <select class="form-control" name="dt_provinsi" id="dt_provinsi" style="width: 100%;" disabled>
+                                                                <option value="0">Pilih</option>
+                                                            <?php
+                                                            foreach ($dd_pr as $row) {  
+                                                                echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                                }
+                                                                echo"
+                                                            </select>"
+                                                            ?>
+                                                        <div>
+                                                    </td>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
+                                                                <select class="form-control" name="dt_almt_kt_rmh" id="dt_almt_kt_rmh" style="width: 100%;" disabled>
+                                                                    <option value="0">Pilih</option>
+                                                                </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="no_hp1">Nomor Handphone</label>
+                                                            <input class="form-control" name="dt_no_hp1" id="dt_no_hp1" style="width: 100%" disabled>
+                                                        </div>
+                                                    </td>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="no_hp2">Nomor Handphone</label>
+                                                            <input class="form-control" name="dt_no_hp2" id="dt_no_hp2" style="width: 100%" disabled>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane" id="tabs_2">
+                                            <div class="form-group">
+                                                    <label for="almt_outlet">Alamat Outlet</label> <?php echo form_error('almt_outlet') ?>
+                                                    <input class="form-control" type="text" name="dt_almt_outlet" id="dt_almt_outlet" style="width: 80%;" disabled>
+                                            </div>
+                                            <table width='80%'>
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="provinsi">Provinsi</label>
+                                                            <select class="form-control" name="dt_provinsi" id="dt_provinsi2" style="width: 100%;" disabled>
+                                                                <option value="0">Pilih</option>
+                                                            <?php
+                                                            foreach ($dd_pr as $row) {  
+                                                                echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                                }
+                                                                echo"
+                                                            </select>"
+                                                            ?>
+                                                        </div>
+                                                    </td>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
+                                                            <select class="form-control" name="dt_almt_kt_outlet" id="dt_almt_kt_outlet" style="width: 100%;" disabled>
+                                                                <option value="0">Pilih</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <br>
+                                            <div class="form-group">
+                                                    <label for="almt_outlet">Alamat Outlet Perbaikan</label> <?php echo form_error('almt_outlet') ?>
+                                                    <input class="form-control" type="text" name="dt_almt_outlet_prb" id="dt_almt_outlet_prb" style="width: 80%;">
+                                            </div>
+                                            <table width='80%'>
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="provinsi">Provinsi</label>
+                                                            <select class="form-control" name="dt_provinsi_prb" id="dt_provinsi2_prb" style="width: 100%;">
+                                                                <option value="0">Pilih</option>
+                                                            <?php
+                                                            foreach ($dd_pr as $row) {  
+                                                                echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                                }
+                                                                echo"
+                                                            </select>"
+                                                            ?>
+                                                        </div>
+                                                    </td>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
+                                                            <select class="form-control" name="dt_almt_kt_outlet_prb" id="dt_almt_kt_outlet_prb" style="width: 100%;">
+                                                                <option value="0">Pilih</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="form-group">
+                                                <input type="radio" name="cek2" id="cek3" value="1"> Seperti Alamat Rumah
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tabs_3">
+                                            <div class="form-group">
+                                                    <label for="almt_kirim">Alamat Kirim</label> <?php echo form_error('almt_kirim') ?>
+                                                    <input class="form-control" type="text" name="dt_almt_kirim" id="dt_almt_kirim" style="width: 80%;" disabled>
+                                            </div>
+                                            <table width='80%'>
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="provinsi">Provinsi</label>
+                                                            <select class="form-control" name="dt_provinsi" id="dt_provinsi3" style="width: 100%;" disabled>
+                                                                <option value="0">Pilih</option>
+                                                            <?php
+                                                            foreach ($dd_pr as $row) {  
+                                                                echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                                }
+                                                                echo"
+                                                            </select>"
+                                                            ?>
+                                                        </div>
+                                                    </td>
+                                                    <td width='50%'>                               
+                                                        <div class="form-group">
+                                                            <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
+                                                            <select class="form-control" name="dt_almt_kt_kirim" id="dt_almt_kt_kirim" disabled>
+                                                                <option value="0">Pilih</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="form-group">
+                                                    <label for="almt_kirim">Alamat Kirim Perbaikan</label> <?php echo form_error('almt_kirim') ?>
+                                                    <input class="form-control" type="text" name="dt_almt_kirim_prb" id="dt_almt_kirim_prb" style="width: 80%;">
+                                            </div>
+                                            <table width='80%'>
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="provinsi">Provinsi</label>
+                                                            <select class="form-control" name="dt_provinsi_prb" id="dt_provinsi3_prb" style="width: 100%;">
+                                                                <option value="0">Pilih</option>
+                                                            <?php
+                                                            foreach ($dd_pr as $row) {  
+                                                                echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                                }
+                                                                echo"
+                                                            </select>"
+                                                            ?>
+                                                        </div>
+                                                    </td>
+                                                    <td width='50%'>                               
+                                                        <div class="form-group">
+                                                            <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
+                                                            <select class="form-control" name="dt_almt_kt_kirim_prb" id="dt_almt_kt_kirim_prb">
+                                                                <option value="0">Pilih</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="form-group">
+                                                <input type="radio" name="cek" id="cek1" value="1"> Seperti Alamat Rumah
+                                                &nbsp&nbsp
+                                                <input type="radio" name="cek" id="cek2" value="2"> Seperti Alamat Outlet
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="checkbox" name="penerusan" id="penerusan">&nbsp&nbsp Penerusan Alamat
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="almt_terusan">Penerusan Alamat</label>
+                                                <input class="form-control" type="text" name="dt_almt_terusan" id="dt_almt_terusan" style="width: 80%;" disabled>
+                                            </div>
+                                            <table width="80%">
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="prov_terusan">Provinsi</label>
+                                                            <select class="form-control" name="dt_prov_terusan" id="dt_prov_terusan" style="width: 100%;" disabled>
+                                                                <option value="0">Pilih</option>
+                                                                <?php
+                                                                foreach ($dd_pr as $row) {  
+                                                                    echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                                    }
+                                                                    echo"
+                                                                </select>"
+                                                                ?>
+                                                        </div>
+                                                    </td>
+                                                    <td width='50%'>
+                                                    <div class="form-group">
+                                                        <label for="kt_terusan">Kota</label> 
+                                                        <select class="form-control" name="dt_kt_terusan" id="dt_kt_terusan" disabled>
+                                                            <option value="0">Pilih</option>
+                                                        </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="form-group">
+                                                <input type="radio" name="cekter" id="cekter1" value="1"> Seperti Alamat Rumah
+                                                &nbsp&nbsp
+                                                <input type="radio" name="cekter" id="cekter2" value="2"> Seperti Alamat Outlet
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tabs_4">
+                                            <div class="form-group">
+                                                <label for="pembayaran">Pembayaran</label><br>
+                                                <!-- <input type="radio" name="sts_pmby" id="sts_pmby1" value="1"> DP
+                                                <input type="radio" name="sts_pmby" id="sts_pmby2" value="2"> Lunas -->
+                                                <select class="form-control" name="dt_sts_pmby" id="dt_sts_pmby" style="width: 80%">
+                                                    <option value="3">Cicilan</option>
+                                                    <option value="4">Pelunasan</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="nm_produk">Nama Produk</label>
+                                                <select class="form-control" name="dt_nm_produk" id="dt_nm_produk" style="width: 80%">
+                                                    <option value="0">Pilih</option>
+                                                    <?php
+                                                    foreach ($dd_pro as $row) {  
+                                                        echo "<option value='".$row->kd_produk."' >".$row->nm_produk."</option>";
+                                                        }
+                                                        echo"
+                                                    </select>"
+                                                    ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="paket">Paket</label> 
+                                                <select class="form-control" name="dt_paket" id="dt_paket" style="width: 80%">
+                                                    <option value="0">Pilih</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="jml_tarif">Jumlah Transfer</label>
+                                                <input class="form-control" type="text" name="dt_jml_tarif" id="dt_jml_tarif" style="width: 80%;">
+                                            </div>
+                                            <table width='80%'>
+                                                <tr>
+                                                    <td width='20%'>
+                                                        <div class="form-group">
+                                                            <label for="rekening">Bank</label>
+                                                            <select class="form-control" name="dt_nm_bank" id="dt_nm_bank" style="width: 100%;">
+                                                                <option value="BNI">BNI</option>
+                                                                <option value="BRI">BRI</option>
+                                                                <option value="BCA">BCA</option>
+                                                                <option value="Mandiri">Mandiri</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td width='80%'>
+                                                        <div class="form-group">
+                                                            <label for="no_rekening">Nomor Rekening</label>
+                                                            <input class="form-control" type="text" name="dt_rekening" id="dt_rekening" style="width: 100%">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" name="dt_ats_nm_rekening" id="dt_ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
+                                            </div>
+                                            <table width="80%">
+                                                <tr>
+                                                    <td width='50%'>
+                                                        <div class="form-group">
+                                                            <label for="ekspedisi">Ekspedisi</label>
+                                                            <select class="form-control" name="dt_ekspedisi" id="dt_ekspedisi" style="width: 100%;">
+                                                                <option value="0">Pilih</option>
+                                                            <?php
+                                                            foreach ($dd_ek as $row) {  
+                                                                echo "<option value='".$row->kd_ekspedisi."' >".$row->nama_ekspedisi."</option>";
+                                                                }
+                                                                echo"
+                                                            </select>"
+                                                        ?>
+                                                        </div>
+                                                    </td>
+                                                    <td width='50%'>             
+                                                        <div class="form-group">
+                                                            <label for="biaya_kirim">Biaya Kirim</label>
+                                                            <input class="form-control" type="text" name="dt_biaya_kirim" id="dt_biaya_kirim" style="width: 100%;">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="form-group">
+                                                <label for="tambahan">Tambahan</label>
+                                                <input class="form-control" type="text" name="dt_tambahan" id="dt_tambahan" style="width: 80%;">
+                                            </div>
+                                            <input type="hidden" name="dt_kd_mitra" id="dt_kd_mitra">
+                                            <button type="submit" class="btn btn-success" id="update_byr" onclick="update_byr()">Simpan</button>
+                                            <a href="#" class="btn btn-danger">Batal</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    // $("#updatebyr").on('click', function(){
+                    //     var byr = $('#dt_sts_pmby').val();
+                    //     var kd_mitra = $('#dt_kd_mitra').val();
+                    //     var dataString = 'byr='+byr+'&kd_mitra='+kd_mitra;
+                    //     $.ajax({
+                    //           url: "<?php echo base_url('Monitor/update_byr')?>",
+                    //           type: "POST",
+                    //           data: dataString,
+                    //           success: function(data){
+                    //             console.log('suksas');
+                    //           }
+                    //       });
+                    //   })
+                      function update_byr(){
+                        var byr = $('#dt_sts_pmby').val();
+                        var kd_mitra = $('#dt_kd_mitra').val();
+                        var dataString = 'byr='+byr+'&kd_mitra='+kd_mitra;
+                        $.ajax({
+                              url: "<?php echo base_url('Monitor/update_byr')?>",
+                              type: "POST",
+                              data: dataString,
+                              success: function(data){
+                                console.log('suksas');
+                              }
+                          });
+                      }
+
+
+                    $('#modalPelunasan').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget)
+                        var recipient = button.data('whatever')
+                        var modal = $(this);
+                        var dataString = 'id=' + recipient
+                        $.ajax({
+                            type: "GET",
+                            url: "<?php echo base_url('Monitor/get_dtmt_pel')?>",
+                            dataType: "json",
+                            data: dataString,
+                            success: function(data) {
+                                $('#dt_nm_mitra').val(data[0]['nm_mitra']);
+                                $('#dt_kt_lahir').val(data[0]['kt_lahir']);
+                                $('#dt_tgl_lahir').val(data[0]['tgl_lahir']);
+                                $('#dt_almt_rmh').val(data[0]['almt_rmh']);
+                                $('#dt_provinsi').val(data[0]['provinsi1']);
+                                if($('#dt_provinsi').val() !== 0){
+                                    var id = $('#dt_provinsi').val();
+                                    $.ajax({
+                                            url : "<?php echo base_url();?>monitor/get_kota",
+                                            method : "POST",
+                                            data : {id: id},
+                                            async : false,
+                                            dataType : 'json',
+                                            success: function(data){
+                                                var html = '<option value="0">Pilih</option>';
+                                                var i;
+                                                for(i=0; i<data.length; i++){
+                                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                }
+                                                $('#dt_almt_kt_rmh').html(html);
+                                            }
+                                        });
+                                }
+                                $('#dt_almt_kt_rmh').val(data[0]['kota1']);
+                                $('#dt_no_hp1').val(data[0]['no_hp1']);
+                                $('#dt_no_hp2').val(data[0]['no_hp2']);
+                                $('#dt_almt_outlet').val(data[0]['almt_outlet']);
+                                $('#dt_provinsi2').val(data[0]['provinsi2']);
+                                if($('#dt_provinsi2').val() !== 0){
+                                    var id = $('#dt_provinsi2').val();
+                                    $.ajax({
+                                            url : "<?php echo base_url();?>monitor/get_kota",
+                                            method : "POST",
+                                            data : {id: id},
+                                            async : false,
+                                            dataType : 'json',
+                                            success: function(data){
+                                                var html = '<option value="0">Pilih</option>';
+                                                var i;
+                                                for(i=0; i<data.length; i++){
+                                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                }
+                                                $('#dt_almt_kt_outlet').html(html);
+                                            }
+                                        });
+                                }
+                                $('#dt_almt_kt_outlet').val(data[0]['kota2']);
+                                $('#dt_almt_kirim').val(data[0]['almt_kirim']);
+                                $('#dt_nm_produk').val(data[0]['nm_produk']);
+                                if($('#dt_nm_produk').val() !== 0){
+                                    var id = $('#dt_nm_produk').val();
+                                    $.ajax({
+                                            url : "<?php echo base_url();?>monitor/get_jns_paket",
+                                            method : "POST",
+                                            data : {id: id},
+                                            async : false,
+                                            dataType : 'json',
+                                            success: function(data){
+                                                var html = '<option value="0">Pilih</option>';
+                                                var i;
+                                                for(i=0; i<data.length; i++){
+                                                    html += '<option value="'+data[i].kd_paket+'">'+data[i].nm_paket+'</option>';
+                                                }
+                                                $('#dt_paket').html(html);
+                                            }
+                                        });
+                                }
+                                $('#dt_paket').val(data[0]['paket']);
+                                $('#dt_kd_mitra').val(data[0]['kd_mitra']);
+                                
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        });
+                    });
+
+                    $(document).ready(function(){
+                        $('#dt_nm_produk').change(function(){
+                            var id=$(this).val();
+                            $.ajax({
+                                url : "<?php echo base_url();?>monitor/get_jns_paket",
+                                method : "POST",
+                                data : {id: id},
+                                async : false,
+                                dataType : 'json',
+                                success: function(data){
+                                    var html = '<option value="0">Pilih</option>';
+                                    var i;
+                                    for(i=0; i<data.length; i++){
+                                        html += '<option value="'+data[i].kd_paket+'">'+data[i].nm_paket+'</option>';
+                                    }
+                                    $('#dt_paket').html(html);
+                                    
+                                }
+                            });
+                        });
+                    });
+
+                    $(document).ready(function(){
+                        $('#dt_provinsi_prb').change(function(){
+                            var id=$(this).val();
+                            $.ajax({
+                                url : "<?php echo base_url();?>monitor/get_kota",
+                                method : "POST",
+                                data : {id: id},
+                                async : false,
+                                dataType : 'json',
+                                success: function(data){
+                                    var html = '';
+                                    var i;
+                                    for(i=0; i<data.length; i++){
+                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                    }
+                                    $('#dt_almt_kt_rmh_prb').html(html);
+                                    
+                                }
+                            });
+                        });
+                    });
+                    $(document).ready(function(){
+                        $('#dt_provinsi2_prb').change(function(){
+                            var id=$(this).val();
+                            $.ajax({
+                                url : "<?php echo base_url();?>monitor/get_kota",
+                                method : "POST",
+                                data : {id: id},
+                                async : false,
+                                dataType : 'json',
+                                success: function(data){
+                                    var html = '';
+                                    var i;
+                                    for(i=0; i<data.length; i++){
+                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                    }
+                                    $('#dt_almt_kt_outlet_prb').html(html);
+                                    
+                                }
+                            });
+                        });
+                    });
+                    $(document).ready(function(){
+                        $('#dt_provinsi3_prb').change(function(){
+                            var id=$(this).val();
+                            $.ajax({
+                                url : "<?php echo base_url();?>monitor/get_kota",
+                                method : "POST",
+                                data : {id: id},
+                                async : false,
+                                dataType : 'json',
+                                success: function(data){
+                                    var html = '';
+                                    var i;
+                                    for(i=0; i<data.length; i++){
+                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                    }
+                                    $('#dt_almt_kt_kirim_prb').html(html);
+                                    
+                                }
+                            });
+                        });
+                    });
+                    $(document).ready(function(){
+                        $('#dt_prov_terusan').change(function(){
+                            var id=$(this).val();
+                            $.ajax({
+                                url : "<?php echo base_url();?>monitor/get_kota",
+                                method : "POST",
+                                data : {id: id},
+                                async : false,
+                                dataType : 'json',
+                                success: function(data){
+                                    var html = '';
+                                    var i;
+                                    for(i=0; i<data.length; i++){
+                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                    }
+                                    $('#dt_kt_terusan').html(html);
+                                    
+                                }
+                            });
+                        });
+                    });
+                </script>
+
 			</div>
 		</div>
 			<!-- Footer -->
@@ -947,7 +1552,9 @@
                             console.log(tableId);
                             initiateTable(tableId,source);
                             });
+
                             function initiateTable(tableId, source) {
+                                if(tableId === 'mthri-table'){visible = true}else{visible = false}
                                 var table = $("#" + tableId).DataTable({
                                     language: {
                                         "sEmptyTable":	 "Tidak ada data yang tersedia pada tabel ini",
@@ -981,12 +1588,20 @@
                                             data.searchByAkhir = akhir;
                                         }
                                     },
+                                    "columnDefs": [
+                                        {
+                                            "targets": [ 3 ],
+                                            "visible": visible,
+                                            "searchable": visible
+                                        }
+                                    ],
                                     'columns': [
                                         //{ data: 'no' },
                                         //  { data: 'kd_inv' },
                                         { data: 'nm_mitra' },
                                         { data: 'dt_create'},
                                         { data: 'dt_pelunasan' },
+                                        { data: 'sts_pmby' },
                                         { data: 'almt_kt_rmh' },
                                         { data: 'paket' },
                                         { data: 'action'}

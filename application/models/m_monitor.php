@@ -70,7 +70,10 @@ class M_monitor extends CI_Model{
 	}
 
 	function get_by_id_read($id){
-		$query =$this->db->query("SELECT adilaya_dt_mitra.nm_mitra as nm_mitra, adilaya_dt_mitra.kt_lahir as kt_lahir, adilaya_dt_mitra.tgl_lahir as tgl_lahir, adilaya_dt_mitra.dt_create as tgl_join, adilaya_dt_mitra.almt_rmh as almt_rmh, provinsi1.nama_provinsi as provinsi1, kota1.nama_kota as kota1 , adilaya_dt_mitra.no_hp1 as no_hp, adilaya_dt_mitra.almt_outlet as almt_outlet, provinsi2.nama_provinsi as provinsi2, kota2.nama_kota as kota2, adilaya_produk.nm_produk as nm_produk, adilaya_paket.nm_paket as paket FROM adilaya_dt_mitra
+		$query =$this->db->query("SELECT adilaya_dt_mitra.nm_mitra as nm_mitra, adilaya_dt_mitra.kt_lahir as kt_lahir, adilaya_dt_mitra.tgl_lahir as tgl_lahir, 
+		adilaya_dt_mitra.dt_create as tgl_join, adilaya_dt_mitra.almt_rmh as almt_rmh, provinsi1.nama_provinsi as provinsi1, kota1.nama_kota as kota1 , 
+		adilaya_dt_mitra.no_hp1 as no_hp, adilaya_dt_mitra.almt_outlet as almt_outlet, provinsi2.nama_provinsi as provinsi2, kota2.nama_kota as kota2, 
+		adilaya_produk.nm_produk as nm_produk, adilaya_paket.nm_paket as paket FROM adilaya_dt_mitra
 		JOIN kota as kota1 ON adilaya_dt_mitra.almt_kt_rmh = kota1.id_kota AND adilaya_dt_mitra.almt_kt_outlet = kota1.id_kota
 		JOIN kota as kota2 ON adilaya_dt_mitra.almt_kt_outlet = kota2.id_kota AND adilaya_dt_mitra.almt_kt_rmh = kota2.id_kota
 		JOIN provinsi as provinsi1 ON kota1.id_provinsi_fk = provinsi1.id_provinsi AND kota2.id_provinsi_fk = provinsi1.id_provinsi
@@ -138,6 +141,21 @@ class M_monitor extends CI_Model{
 	}
 	function get_dt_mitra_order($id){
 		$query = $this->db->query("SELECT kd_mitra, no_hp1, no_hp2, nm_mitra, almt_rmh, almt_outlet, almt_kirim, nm_produk FROM adilaya_dt_mitra  WHERE kd_mitra = '".$id."'");
+		return $query->result_array();
+	}
+	function get_dtmt_pel($id){
+		$query = $this->db->query("SELECT adilaya_dt_mitra.kd_mitra as kd_mitra, adilaya_dt_mitra.nm_mitra as nm_mitra, adilaya_dt_mitra.kt_lahir as kt_lahir, adilaya_dt_mitra.tgl_lahir as tgl_lahir,  
+		adilaya_dt_mitra.almt_rmh as almt_rmh, provinsi1.id_provinsi as provinsi1, adilaya_dt_mitra.almt_kt_rmh as kota1, adilaya_dt_mitra.no_hp1 as no_hp1, 
+		adilaya_dt_mitra.no_hp2 as no_hp2, adilaya_dt_mitra.almt_outlet as almt_outlet, provinsi2.id_provinsi as provinsi2, adilaya_dt_mitra.almt_kt_outlet as kota2, 
+		adilaya_dt_mitra.nm_produk as nm_produk, adilaya_dt_mitra.almt_kirim as almt_kirim, adilaya_dt_mitra.paket as paket FROM adilaya_dt_mitra
+		JOIN kota as kota1 ON adilaya_dt_mitra.almt_kt_rmh = kota1.id_kota AND adilaya_dt_mitra.almt_kt_outlet = kota1.id_kota
+		JOIN kota as kota2 ON adilaya_dt_mitra.almt_kt_outlet = kota2.id_kota AND adilaya_dt_mitra.almt_kt_rmh = kota2.id_kota
+		JOIN provinsi as provinsi1 ON kota1.id_provinsi_fk = provinsi1.id_provinsi AND kota2.id_provinsi_fk = provinsi1.id_provinsi
+		JOIN provinsi as provinsi2 ON kota2.id_provinsi_fk = provinsi2.id_provinsi AND kota1.id_provinsi_fk = provinsi2.id_provinsi
+		JOIN adilaya_paket ON adilaya_dt_mitra.paket = adilaya_paket.kd_paket
+		JOIN a_ekspedisi ON adilaya_dt_mitra.ekspedisi = a_ekspedisi.kd_ekspedisi
+		JOIN adilaya_produk ON adilaya_dt_mitra.nm_produk = adilaya_produk.kd_produk
+		WHERE dt_aktif = '1' AND adilaya_dt_mitra.kd_mitra = '".$id."'");
 		return $query->result_array();
 	}
 	function cek_kd_or($id){
@@ -232,8 +250,8 @@ class M_monitor extends CI_Model{
 		dt_pelunasan
 		FROM adilaya_dt_mitra 
 		JOIN kota on almt_kt_rmh = id_kota
-		JOIN adilaya_paket on paket = kd_paket
-		JOIN a_ekspedisi on ekspedisi = kd_ekspedisi
+		LEFT JOIN adilaya_paket on paket = kd_paket
+		LEFT JOIN a_ekspedisi on ekspedisi = kd_ekspedisi
 		WHERE 1=1 AND dt_aktif = '1' ".$searchQuery." and kd_mitra NOT IN (
 			SELECT TOP ".$baris." kd_mitra FROM adilaya_dt_mitra 
 			WHERE 1=1 AND dt_aktif = '1' ".$searchQuery." order by ".$columnName." ".$columnSortOrder.") 

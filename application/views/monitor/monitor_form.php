@@ -58,8 +58,6 @@
                             </div>
                             </td>
                         </tr>
-                    
-
                     </table>
                     <div class="form-group">
                         <label for="almt_rmh">Alamat Rumah</label> <?php echo form_error('almt_rmh') ?>
@@ -179,8 +177,50 @@
                         &nbsp&nbsp
                         <input type="radio" name="cek" id="cek2" value="2"> Seperti Alamat Outlet
                     </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="penerusan" id="penerusan">&nbsp&nbsp Penerusan Alamat
+                    </div>
+                    <div class="form-group">
+                        <label for="almt_terusan">Penerusan Alamat</label>
+                        <input class="form-control" type="text" name="almt_terusan" id="almt_terusan" style="width: 80%;" disabled>
+                    </div>
+                    <table width="80%">
+                        <tr>
+                            <td width='50%'>
+                                <div class="form-group">
+                                    <label for="prov_terusan">Provinsi</label>
+                                    <select class="form-control" name="prov_terusan" id="prov_terusan" style="width: 100%;" disabled>
+                                        <option value="0">Pilih</option>
+                                        <?php
+                                        foreach ($dd_pr as $row) {  
+                                            echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                            }
+                                            echo"
+                                        </select>"
+                                        ?>
+                                </div>
+                            </td>
+                            <td width='50%'>
+                            <div class="form-group">
+                                <label for="kt_terusan">Kota</label> 
+                                <select class="form-control" name="kt_terusan" id="kt_terusan" disabled>
+                                    <option value="0">Pilih</option>
+                                </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="form-group">
+                        <input type="radio" name="cekter" id="cekter1" value="1"> Seperti Alamat Rumah
+                        &nbsp&nbsp
+                        <input type="radio" name="cekter" id="cekter2" value="2"> Seperti Alamat Outlet
+                    </div>
                   </div>
                   <div class="tab-pane" id="tab_4">
+                    <div class="form-group">
+                        <label for="nm_marketing">Nama Marketing</label>
+                        <input class="form-control" type="text" name="nm_marketing" id="nm_marketing" style="width: 80%">
+                    </div>
                     <div class="form-group">
                         <label for="pembayaran">Pembayaran</label><br>
                         <!-- <input type="radio" name="sts_pmby" id="sts_pmby1" value="1"> DP
@@ -307,27 +347,27 @@
 		format: 'DD-MM-YYYY'
 	});
 
-                        $(document).ready(function(){
-                            $('#nm_produk').change(function(){
-                                var id=$(this).val();
-                                $.ajax({
-                                    url : "<?php echo base_url();?>monitor/get_jns_paket",
-                                    method : "POST",
-                                    data : {id: id},
-                                    async : false,
-                                    dataType : 'json',
-                                    success: function(data){
-                                        var html = '<option value="0">Pilih</option>';
-                                        var i;
-                                        for(i=0; i<data.length; i++){
-                                            html += '<option value="'+data[i].kd_paket+'">'+data[i].nm_paket+'</option>';
-                                        }
-                                        $('#paket').html(html);
-                                        
-                                    }
-                                });
-                            });
-                        });
+        $(document).ready(function(){
+            $('#nm_produk').change(function(){
+                var id=$(this).val();
+                $.ajax({
+                    url : "<?php echo base_url();?>monitor/get_jns_paket",
+                    method : "POST",
+                    data : {id: id},
+                    async : false,
+                    dataType : 'json',
+                    success: function(data){
+                        var html = '<option value="0">Pilih</option>';
+                        var i;
+                        for(i=0; i<data.length; i++){
+                            html += '<option value="'+data[i].kd_paket+'">'+data[i].nm_paket+'</option>';
+                        }
+                        $('#paket').html(html);
+                        
+                    }
+                });
+            });
+        });
 
         $(document).ready(function(){
         $('#provinsi').change(function(){
@@ -387,6 +427,27 @@
                         html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
                     }
                     $('#almt_kt_kirim').html(html);
+                     
+                }
+            });
+        });
+    });
+            $(document).ready(function(){
+        $('#prov_terusan').change(function(){
+            var id=$(this).val();
+            $.ajax({
+                url : "<?php echo base_url();?>monitor/get_kota",
+                method : "POST",
+                data : {id: id},
+                async : false,
+                dataType : 'json',
+                success: function(data){
+                    var html = '';
+                    var i;
+                    for(i=0; i<data.length; i++){
+                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                    }
+                    $('#kt_terusan').html(html);
                      
                 }
             });
@@ -538,6 +599,93 @@
                 }
             }
         )
+    })
+
+    $(document).ready(function(){
+        $('#cekter2').change(
+            function(){
+                if($(this).is(':checked')){
+                    var almt = document.getElementById('almt_outlet').value;
+                    document.getElementById('almt_terusan').value = almt;
+                    document.getElementById('almt_terusan').disabled  = true;
+                    $('#prov_terusan').val($('#provinsi2 option:selected').val());
+                    $('#prov_terusan').prop('disabled', 'disabled');
+                    if($('#provinsi3 option:selected').val() !== 0){
+                        var id=$('#provinsi2 option:selected').val();
+                        $.ajax({
+                            url : "<?php echo base_url();?>monitor/get_kota",
+                            method : "POST",
+                            data : {id: id},
+                            async : false,
+                            dataType : 'json',
+                            success: function(data){
+                                var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                }
+                                $('#kt_terusan').html(html);
+                                $('#kt_terusan').val($('#almt_kt_outlet option:selected').val());
+                                $('#kt_terusan').prop('disabled', 'disabled');
+                            }
+                        });
+                    }
+                }
+            }
+        )
+    })
+
+    $(document).ready(function(){
+        $('#cekter1').change(
+            function(){
+                if($(this).is(':checked')){
+                    var almt = document.getElementById('almt_rmh').value;
+                    document.getElementById('almt_terusan').value = almt;
+                    document.getElementById('almt_terusan').disabled = true;
+                    $('#prov_terusan').val($('#provinsi option:selected').val());
+                    $('#prov_terusan').prop('disabled', 'disabled');
+                    if($('#provinsi option:selected').val() !== 0){
+                        var id=$('#provinsi option:selected').val();
+                        $.ajax({
+                            url : "<?php echo base_url();?>monitor/get_kota",
+                            method : "POST",
+                            data : {id: id},
+                            async : false,
+                            dataType : 'json',
+                            success: function(data){
+                                var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                }
+                                $('#kt_terusan').html(html);
+                                $('#kt_terusan').val($('#almt_kt_rmh option:selected').val());
+                                $('#kt_terusan').prop('disabled', 'disabled');
+                            }
+                        });
+                    }
+                }
+            }
+        )
+    })
+
+    $(document).ready(function(){
+        $('#penerusan').on('click', function(){
+            if($('#penerusan').is(':checked')){
+                $('#almt_terusan').prop('disabled', false);
+                $('#prov_terusan').prop('disabled', false);
+                $('#kt_terusan').prop('disabled', false);
+                console.log('a');
+            }else{
+                $('#almt_terusan').prop('disabled', true);
+                $('#prov_terusan').prop('disabled', true);
+                $('#kt_terusan').prop('disabled', true);
+                $('#almt_terusan').val('');
+                $('#prov_terusan').val('0');
+                $('#kt_terusan').val('0');
+                console.log('b');
+            }
+        })
     })
 
     function alert(){

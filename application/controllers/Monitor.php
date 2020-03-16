@@ -145,6 +145,13 @@ class Monitor extends CI_Controller {
 				redirect(base_url('Monitor'));
 	}
 
+	function update_byr(){
+		$data = array(
+			'sts_pmby' => $this->input->post('byr', true),
+		);
+		$this->M_monitor->update($this->input->post('kd_mitra'), $data);
+	}
+
 	function pelunasan($id){
 		$data = array(
 			'dt_pelunasan'=>date('Y-m-d'),
@@ -531,9 +538,9 @@ class Monitor extends CI_Controller {
 					<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
 					<i class="fas fa-trash"></i>
 					</a>
-					<a href="monitor/pelunasan/'.$row->kd_mitra.'" class="btn btn-success btn-circle" color: white">
+					<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'">
 					<i class="fas fa-wallet"></i>
-					</a>
+					</button>
 					';
 				}else{
 					$button = '
@@ -559,12 +566,19 @@ class Monitor extends CI_Controller {
 			}else{
 				$pel = date('d-m-Y', strtotime($row->dt_pelunasan));
 			}
+
+			if($row->sts_pmby == 1){
+				$sts = 'DP';
+			}else if($row->sts_pmby == 2){
+				$sts = 'Lunas';
+			}
 			// onclick="load(this.value)"
 		$data[] = array( 
 			// "kd_inv"=>$row->kd_inv,
 			"nm_mitra"=>$row->nm_mitra,
 			"dt_create"=>date('d-m-Y', strtotime($row->dt_create)),
 			"dt_pelunasan"=>$pel,
+			"sts_pmby"=>$sts,
 			"almt_kt_rmh"=>$row->nama_kota,
 			"paket"=>$row->nm_paket,
 			"action"=>$button
@@ -600,6 +614,116 @@ class Monitor extends CI_Controller {
 			$searchQuery .= " and (dt_create BETWEEN '".$searchByAwal."' AND '".$searchByAkhir."' ) ";
 		 }
 		 $searchQuery .= " and sts_pmby = '1'";
+		if($searchValue != ''){
+		$searchQuery .= " and (
+		nm_mitra like '%".$searchValue."%' or  
+		ats_nm_rekening like '%".$searchValue."%' ) ";
+		}
+
+		## Total number of records without filtering
+		$sel = $this->M_monitor->get_total_dt();
+		// $records = sqlsrv_fetch_array($sel);
+		foreach($sel as $row){
+			$totalRecords = $row->allcount;
+		}
+		
+
+		## Total number of record with filtering
+		$sel = $this->M_monitor->get_total_fl($searchQuery);
+		// $records = sqlsrv_fetch_assoc($sel);
+		foreach($sel as $row){
+			$totalRecordwithFilter = $row->allcount;
+		}
+		
+
+		## Fetch records
+		$empQuery = $this->M_monitor->get_total_ft($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage);
+		$empRecords = $empQuery;
+		$data = array();
+
+		foreach($empRecords as $row){
+		
+			if($this->session->userdata('level')=='1'){
+				$button = '
+				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info">
+				<i class="fas fa-info-circle"></i>
+				</a>
+				<a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning btn-circle">
+				<i class="fas fa-edit"></i>
+				</a>
+				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle">
+				<i class="fas fa-trash"></i>
+				</a>
+				<a href="monitor/order/'.$row->kd_mitra.'" class="btn btn-warning btn-circle">
+				<i class="fas fa-edit"></i>
+				</a>
+				';
+			}elseif($this->session->userdata('level')=='2'){
+				$button = '
+				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info btn-circle" color: white">
+				<i class="fas fa-info-circle"></i>
+				</a>
+				
+				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
+				<i class="fas fa-trash"></i>
+				</a>
+				<a href="monitor/pelunasan/'.$row->kd_mitra.'" class="btn btn-success btn-circle" color: white">
+				<i class="fas fa-wallet"></i>
+				</a>
+				';
+			}elseif($this->session->userdata('level')=='3'){
+				$button = '
+				<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info" style="width: 100%;">
+				Info
+				</a>
+				<button value="'.$row->kd_mitra.'" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-whatever="'.$row->kd_mitra.'" >Order</button>
+				';
+			}
+			if($row->dt_pelunasan == null){
+				$pel = '-';
+			}else{
+				$pel = date('d-m-Y', strtotime($row->dt_pelunasan));
+			}
+			// onclick="load(this.value)"
+		$data[] = array( 
+			// "kd_inv"=>$row->kd_inv,
+			"nm_mitra"=>$row->nm_mitra,
+			"dt_create"=>date('d-m-Y', strtotime($row->dt_create)),
+			"dt_pelunasan"=>$pel,
+			"almt_kt_rmh"=>$row->nama_kota,
+			"paket"=>$row->nm_paket,
+			"action"=>$button
+		);
+		}
+
+		## Response
+		$response = array(
+		"draw" => intval($draw),
+		"iTotalRecords" => $totalRecords,
+		"iTotalDisplayRecords" => $totalRecordwithFilter,
+		"aaData" => $data
+		);
+
+		echo json_encode($response);
+	}
+	function dt_cc(){
+		## Read value
+		$draw = $_POST['draw'];
+		$baris = $_POST['start'];
+		$rowperpage = $_POST['length']; // Rows display per page
+		$columnIndex = $_POST['order'][0]['column']; // Column index
+		$columnName = $_POST['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
+		$searchValue = $_POST['search']['value']; // Search value
+
+		## Search 
+		$searchQuery = " ";
+		if($this->input->post('searchByAwal') != '' && $this->input->post('searchByAkhir') != ''){
+			$searchByAwal = date('Y-m-d', strtotime($this->input->post('searchByAwal')));
+            $searchByAkhir = date('Y-m-d', strtotime($this->input->post('searchByAkhir')));
+			$searchQuery .= " and (dt_create BETWEEN '".$searchByAwal."' AND '".$searchByAkhir."' ) ";
+		 }
+		 $searchQuery .= " and sts_pmby = '3'";
 		if($searchValue != ''){
 		$searchQuery .= " and (
 		nm_mitra like '%".$searchValue."%' or  
@@ -879,6 +1003,13 @@ class Monitor extends CI_Controller {
 	function get_dtorder_mitra(){
 		$id = $this->input->get('id', TRUE);
 		$row = $this->M_monitor->get_dt_mitra_order($id);
+
+		echo json_encode($row);
+	}
+
+	function get_dtmt_pel(){
+		$id = $this->input->get('id', TRUE);
+		$row = $this->M_monitor->get_dtmt_pel($id);
 
 		echo json_encode($row);
 	}
