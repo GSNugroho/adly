@@ -261,7 +261,12 @@ class M_monitor extends CI_Model{
 		nama_ekspedisi, 
 		biaya_kirim,
 		dt_create,
-		dt_pelunasan
+		dt_pelunasan,
+		dt_last_order,
+		CASE
+    	WHEN DATEADD(month, 3, dt_last_order) <= GETDATE() THEN 'Di atas 3 bulan'
+    	ELSE 'Kurang dari 3 bulan'
+		END AS last
 		FROM adilaya_dt_mitra 
 		JOIN kota on almt_kt_rmh = id_kota
 		LEFT JOIN adilaya_paket on paket = kd_paket

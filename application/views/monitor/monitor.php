@@ -156,7 +156,9 @@
 						<table class="table table-bordered" id="dataMitra" width="100%" cellspacing="0">
 						<thead>
 							<tr>
-								<th>Nama Mitra</th>
+                                <th>Nama Mitra</th>
+                                <th style="display: none;">Last Order</th>
+								<th>Produk</th>
 								<th>Kota</th>
 								<th>History</th>
 								<th style="width:13%;">Action</th>
@@ -412,38 +414,93 @@
                                                         <option value="0">Pilih</option>
                                                     </select>
                                                 </div>
-
-                                                <div class="form-group">
-                                                    <label for="jml_tarif">Jumlah Transfer</label>
-                                                    <input class="form-control" type="text" name="in_jml_tarif" id="in_jml_tarif" style="width: 80%;">
+                                                
+                                                <div class="bank_form">
+                                                    <table width='80%'>
+                                                        <tr>
+                                                            <td width='20%'>
+                                                                <div class="form-group">
+                                                                    <label for="rekening">Bank</label>
+                                                                    <select class="form-control" name="in_nm_bank" id="in_nm_bank" style="width: 100%;">
+                                                                        <option value="BNI">BNI</option>
+                                                                        <option value="BRI">BRI</option>
+                                                                        <option value="BCA">BCA</option>
+                                                                        <option value="Mandiri">Mandiri</option>
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                            <td width='80%'>
+                                                                <div class="form-group">
+                                                                    <label for="no_rekening">Nomor Rekening</label>
+                                                                    <input class="form-control" type="text" name="in_rekening" id="in_rekening" style="width: 100%">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="form-group">
+                                                        <label for="jml_tarif">Jumlah Transfer</label>
+                                                        <input class="form-control" type="text" name="in_jml_tarif" id="in_jml_tarif" style="width: 80%;">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" name="in_ats_nm_rekening" id="in_ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
+                                                    </div>
                                                 </div>
-                                                <table width='80%'>
-                                                    <tr>
-                                                        <td width='20%'>
-                                                            <div class="form-group">
-                                                                <label for="rekening">Bank</label>
-                                                                <select class="form-control" name="in_nm_bank" id="in_nm_bank" style="width: 100%;">
-                                                                    <option value="BNI">BNI</option>
-                                                                    <option value="BRI">BRI</option>
-                                                                    <option value="BCA">BCA</option>
-                                                                    <option value="Mandiri">Mandiri</option>
-                                                                </select>
-                                                            </div>
-                                                        </td>
-                                                        <td width='80%'>
-                                                            <div class="form-group">
-                                                                <label for="no_rekening">Nomor Rekening</label>
-                                                                <input class="form-control" type="text" name="in_rekening" id="in_rekening" style="width: 100%">
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <div class="form-group">
-                                                    <input class="form-control" type="text" name="in_ats_nm_rekening" id="in_ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
-                                                </div>
-                                                <button class="btn btn-primary" id="tambah" value="tambah" onclick="tm_bank()">Tambah</button>
+                                                <button class="btn btn-primary" id="tambah" value="tambah">Tambah Bank</button>
+                                                
+                                                <!-- <button class="btn btn-primary" id="tambah" value="tambah" onclick="tm_bank()">Tambah</button> -->
+                                                <script>
+                                                    $(document).ready(function() {
+                                                        var max_fields      = 3; //maximum input boxes allowed
+                                                        var wrapper   		= $(".bank_form"); //Fields wrapper
+                                                        var add_button      = $("#tambah"); //Add button ID
+                                                        
+                                                        var x = 1; //initlal text box count
+                                                        $(add_button).click(function(e){ //on add input button click
+                                                            e.preventDefault();
+                                                            if(x < max_fields){ //max input box allowed
+                                                                x++; //text box increment
+                                                                $(wrapper).append(`    
+                                                                <div class=".bank">
+                                                                <table width='80%'>
+                                                                        <tr>
+                                                                            <td width='20%'>
+                                                                                <div class="form-group">
+                                                                                    <label for="rekening">Bank</label>
+                                                                                    <select class="form-control" name="in_nm_bank" id="in_nm_bank`+x+`" style="width: 100%;">
+                                                                                        <option value="BNI">BNI</option>
+                                                                                        <option value="BRI">BRI</option>
+                                                                                        <option value="BCA">BCA</option>
+                                                                                        <option value="Mandiri">Mandiri</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td width='80%'>
+                                                                                <div class="form-group">
+                                                                                    <label for="no_rekening">Nomor Rekening</label>
+                                                                                    <input class="form-control" type="text" name="in_rekening" id="in_rekening`+x+`" style="width: 100%">
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <div class="form-group">
+                                                                        <label for="jml_tarif">Jumlah Transfer</label>
+                                                                        <input class="form-control" type="text" name="in_jml_tarif" id="in_jml_tarif`+x+`" style="width: 80%;">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <input class="form-control" type="text" name="in_ats_nm_rekening" id="in_ats_nm_rekening`+x+`" placeholder="Atas Nama" style="width: 80%;">
+                                                                    </div>
+                                                                <a href="#" class="remove_field">Remove</a></div>`); //add input box
+                                                                console.log('aaa');
+                                                            }
+                                                        });
+                                                        
+                                                        $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+                                                            e.preventDefault(); $(this).parent('div').remove(); x--;
+                                                        })
+                                                    });
+                                                </script>
                                                 <br>
-                                                <div class="form-group">
+                                                <!-- <div class="form-group">
                                                         <label for="almt_outlet">Data Bank</label> <?php echo form_error('almt_outlet') ?>
                                                         <div class="table-responsive">
                                                             <table class="table table-bordered" id="tableBank" width="100%" cellspacing="0">
@@ -458,81 +515,8 @@
                                                             </thead>
                                                             </table>
                                                         </div>
-                                                </div>
-                                                <script>
-                                                    
-                                                        bayar = $('#tableBank').DataTable({
-                                                        "bLengthChange": false,
-                                                        "bFilter": false,
-                                                        language: {
-                                                            "sEmptyTable": "Tidak ada data yang tersedia pada tabel ini",
-                                                            "sProcessing": "Sedang memproses...",
-                                                            "sLengthMenu": "Tampilkan _MENU_ entri",
-                                                            "sZeroRecords": "Tidak ditemukan data yang sesuai",
-                                                            "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                                                            "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
-                                                            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                                                            "sInfoPostFix": "",
-                                                            "sSearch": "Cari:",
-                                                            "sUrl": "",
-                                                            "oPaginate": {
-                                                                "sFirst": "Pertama",
-                                                                "sPrevious": "Sebelumnya",
-                                                                "sNext": "Selanjutnya",
-                                                                "sLast": "Terakhir"
-                                                            }
-                                                        },
-                                                        // 'order': [[ 2, "desc" ]],
-                                                        'processing': true,
-                                                        'serverSide': true,
-                                                        'serverMethod': 'post',
-                                                        'ajax': {
-                                                            'url': '<?php echo base_url('monitor/tmp_bank')?>',
-                                                        },
-                                                        'columns': [
-                                                            {
-                                                                data: 'nm_bank'
-                                                            },
-                                                            {
-                                                                data: 'jml_transfer'
-                                                            },
-                                                            {
-                                                                data: 'no_rekening'
-                                                                //  render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
-                                                            },
-                                                            {
-                                                                data: 'ats_nm',
-                                                                // render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
-                                                            },
-                                                            {
-                                                                data: 'aksi'
-                                                            }
-                                                        ]
-                                                    });
-                                                    
-
-                                                    function tm_bank(){
-                                                        var jml_tarif = $('#in_jml_tarif').val();
-                                                        var nm_bank = $('#in_nm_bank option:selected').val();
-                                                        var no_rekening = $('#in_rekening').val();
-                                                        var ats_nm = $('#in_ats_nm_rekening').val();
-
-                                                        var dataString = 'jml_trf='+jml_tarif+'&nm_bank='+nm_bank+'&no_rekening='+no_rekening+'&ats_nm='+ats_nm;
-                                                        $.ajax({
-                                                            type: 'post',
-                                                            url: '<?php echo base_url('monitor/tb_bank')?>',
-                                                            data: dataString,
-                                                            success: function(){
-                                                                $('#tableBank').DataTable().ajax.reload();
-                                                                document.getElementById('in_jml_tarif').value = '';
-                                                                document.getElementById('in_nm_bank').value = '0';
-                                                                document.getElementById('in_rekening').value = '';
-                                                                document.getElementById('in_ats_nm_rekening').value = '';
-                                                            }
-                                                        })
-                                                    }
-
-                                                </script>
+                                                </div> -->
+                                                
                                                 <table width="80%">
                                                     <tr>
                                                         <td width='50%'>
@@ -644,18 +628,35 @@
                             var sts_pmby = $('#in_sts_pmby option:selected').val();
                             var nm_produk = $('#in_nm_produk option:selected').val();
                             var paket = $('#in_paket option:selected').val();
-                            // var jml_tarif = $('#in_jml_tarif').val();
-                            // var nm_bank = $('#in_nm_bank option:selected').val();
-                            // var rekening = $('#in_rekening').val();
-                            // var ats_nm_rekening = $('#in_ats_nm_rekening').val();
                             var ekspedisi = $('#in_ekspedisi option:selected').val();
                             var biaya_kirim = $('#in_biaya_kirim').val();
+
+                            var jml_tarif = $('#in_jml_tarif').val();
+                            var nm_bank = $('#in_nm_bank option:selected').val();
+                            var rekening = $('#in_rekening').val();
+                            var ats_nm_rekening = $('#in_ats_nm_rekening').val();
 
                             var dataString = 'nm_mitra='+nm_mitra+'&kt_lahir='+kt_lahir+'&tgl_lahir='+tgl_lahir+'&almt_rmh='+almt_rmh+
                             '&almt_prov_rmh='+almt_prov_rmh+'&almt_kt_rmh='+almt_kt_rmh+'&no_hp1='+no_hp1+'&no_hp2='+no_hp2+'&almt_outlet='+almt_outlet+
                             '&almt_prov_outlet='+almt_prov_outlet+'&almt_kt_outlet='+almt_kt_outlet+'&almt_kirim='+almt_kirim+'&almt_prov_kirim='+almt_prov_kirim+
                             '&almt_kt_kirim='+almt_kt_kirim+'&almt_terusan='+almt_terusan+'&almt_prov_terusan='+almt_prov_terusan+'&almt_kt_terusan='+almt_kt_terusan+
-                            '&nm_marketing='+nm_marketing+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim;
+                            '&nm_marketing='+nm_marketing+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+
+                            '&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening;
+                            
+                            if($('#in_jml_tarif2').val() !== undefined){
+                                var jml_tarif2 = $('#in_jml_tarif2').val();
+                                var nm_bank2 = $('#in_nm_bank2 option:selected').val();
+                                var rekening2 = $('#in_rekening2').val();
+                                var ats_nm_rekening2 = $('#in_ats_nm_rekening2').val();
+                                dataString += '&jml_tarif2='+jml_tarif2+'&nm_bank2='+nm_bank2+'&rekening2='+rekening2+'&ats_nm_rekening2='+ats_nm_rekening2;
+                            }
+                            if($('#in_jml_tarif3').val() !== undefined){
+                                var jml_tarif3 = $('#in_jml_tarif3').val();
+                                var nm_bank3 = $('#in_nm_bank3 option:selected').val();
+                                var rekening3 = $('#in_rekening3').val();
+                                var ats_nm_rekening3 = $('#in_ats_nm_rekening3').val();
+                                dataString += '&jml_tarif3='+jml_tarif3+'&nm_bank3='+nm_bank3+'&rekening3='+rekening3+'&ats_nm_rekening3='+ats_nm_rekening3;
+                            }
 
                             $.ajax({
                                 type: 'post',
@@ -1523,34 +1524,111 @@
                         </div>
                         <! /.tab-pane -->
                         <div class="tab-pane" id="tab_4">
-                            <div class="form-group">
-                                <label for="jml_tarif">Jumlah Transfer</label>
-                                <input class="form-control" type="text" name="jml_transfer" id="jml_transfer" style="width: 80%;">
+                            <div class="or_bank">
+                                <table width='80%'>
+                                    <tr>
+                                        <td width='20%'>
+                                            <div class="form-group">
+                                                <label for="rekening">Bank</label>
+                                                <select class="form-control" name="nm_bank" id="nm_bank" style="width: 100%;">
+                                                    <option value="BNI">BNI</option>
+                                                    <option value="BRI">BRI</option>
+                                                    <option value="BCA">BCA</option>
+                                                    <option value="Mandiri">Mandiri</option>
+                                                    <option value="Cash">Cash</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td width='80%'>
+                                            <div class="form-group">
+                                                <label for="no_rekening">Nomor Rekening</label>
+                                                <input class="form-control" type="text" name="rekening" id="rekening" style="width: 100%">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="form-group">
+                                    <label for="jml_tarif">Jumlah Transfer</label>
+                                    <input class="form-control" type="text" name="jml_transfer" id="jml_transfer" style="width: 80%;">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="ats_nm_rekening" id="ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
+                                </div>
                             </div>
-                            <table width='80%'>
-                                <tr>
-                                    <td width='20%'>
-                                        <div class="form-group">
-                                            <label for="rekening">Bank</label>
-                                            <select class="form-control" name="nm_bank" id="nm_bank" style="width: 100%;">
-                                                <option value="BNI">BNI</option>
-                                                <option value="BRI">BRI</option>
-                                                <option value="BCA">BCA</option>
-                                                <option value="Mandiri">Mandiri</option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td width='80%'>
-                                        <div class="form-group">
-                                            <label for="no_rekening">Nomor Rekening</label>
-                                            <input class="form-control" type="text" name="rekening" id="rekening" style="width: 100%">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div class="form-group">
-                                <input class="form-control" type="text" name="ats_nm_rekening" id="ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
-                            </div>
+                            <button class="btn btn-primary" id="or_tambah" value="tambah">Tambah Bank</button>
+
+                            <script>
+                                $(document).ready(function() {
+                                    var max_fields      = 3; //maximum input boxes allowed
+                                    var wrapper   		= $(".or_bank"); //Fields wrapper
+                                    var add_button      = $("#or_tambah"); //Add button ID
+                                    
+                                    var x = 1; //initlal text box count
+                                    $(add_button).click(function(e){ //on add input button click
+                                        e.preventDefault();
+                                        if(x < max_fields){ //max input box allowed
+                                            x++; //text box increment
+                                            $(wrapper).append(`    
+                                            <div class=".dtbank">
+                                            <table width='80%'>
+                                                    <tr>
+                                                        <td width='20%'>
+                                                            <div class="form-group">
+                                                                <label for="rekening">Bank</label>
+                                                                <select class="form-control" name="nm_bank" id="nm_bank`+x+`" style="width: 100%;">
+                                                                    <option value="BNI">BNI</option>
+                                                                    <option value="BRI">BRI</option>
+                                                                    <option value="BCA">BCA</option>
+                                                                    <option value="Mandiri">Mandiri</option>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td width='80%'>
+                                                            <div class="form-group">
+                                                                <label for="no_rekening">Nomor Rekening</label>
+                                                                <input class="form-control" type="text" name="rekening" id="rekening`+x+`" style="width: 100%">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div class="form-group">
+                                                    <label for="jml_tarif">Jumlah Transfer</label>
+                                                    <input class="form-control" type="text" name="jml_tarif" id="jml_tarif`+x+`" style="width: 80%;">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input class="form-control" type="text" name="ats_nm_rekening" id="ats_nm_rekening`+x+`" placeholder="Atas Nama" style="width: 80%;">
+                                                </div>
+                                            <a href="#" class="remove_field">Remove</a></div>`); //add input box
+                                            console.log('aaa');
+                                        }
+                                    });
+                                    
+                                    $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+                                        e.preventDefault(); $(this).parent('div').remove(); x--;
+                                    })
+                                });
+
+                                var rupiah = document.getElementById('jml_transfer');
+                                rupiah.addEventListener('keyup', function(e){
+                                    rupiah.value = formatRupiah(this.value, 'Rp ');
+                                });
+                            
+                                function formatRupiah(angka, prefix){
+                                    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                                    split = number_string.split(','),
+                                    sisa = split[0].length % 3,
+                                    rupiah = split[0].substr(0, sisa),
+                                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+                                
+                                    if(ribuan){
+                                        separator = sisa ? '.' : '';
+                                        rupiah += separator + ribuan.join('.');
+                                    }
+                                
+                                    rupiah = split[1] != undefined ? rupiah + '.' + split[1] : rupiah;
+                                    return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah :'');
+                                }
+                            </script>
                             <table width="80%">
                                 <tr>
                                     <td width='50%'>
@@ -1589,6 +1667,26 @@
                             <button id="submit" type="submit" class="btn btn-success" >Simpan</button>
                             <button type="button" class="btn btn-secondary" onclick="tutup()">Batal</button>
                         <script>
+                            var kirim = document.getElementById('biaya_kirim');
+                            kirim.addEventListener('keyup', function(e){
+                                kirim.value = formatRupiahKirim(this.value, 'Rp ');
+                            });
+
+                            function formatRupiahKirim(angka, prefix){
+                                var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                                split = number_string.split(','),
+                                sisa = split[0].length % 3,
+                                kirim = split[0].substr(0, sisa),
+                                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                                if(ribuan){
+                                    separator = sisa ? '.' : '';
+                                    kirim += separator + ribuan.join('.');
+                                }
+
+                                kirim = split[1] != undefined ? kirim + '.' + split[1] : kirim;
+                                return prefix == undefined ? kirim : (kirim ? 'Rp ' + kirim :'');
+                            }
                             $("#submit").click(function(){
                                 $.ajax({
                                     url: "<?php echo base_url('Monitor/get_temp')?>",
@@ -2086,127 +2184,90 @@
                                                     <option value="0">Pilih</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="jml_tarif">Jumlah Transfer</label>
-                                                <input class="form-control" type="text" name="dt_jml_tarif" id="dt_jml_tarif" style="width: 80%;">
-                                            </div>
-                                            <table width='80%'>
-                                                <tr>
-                                                    <td width='20%'>
-                                                        <div class="form-group">
-                                                            <label for="rekening">Bank</label>
-                                                            <select class="form-control" name="dt_nm_bank" id="dt_nm_bank" style="width: 100%;">
-                                                                <option value="BNI">BNI</option>
-                                                                <option value="BRI">BRI</option>
-                                                                <option value="BCA">BCA</option>
-                                                                <option value="Mandiri">Mandiri</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                    <td width='80%'>
-                                                        <div class="form-group">
-                                                            <label for="no_rekening">Nomor Rekening</label>
-                                                            <input class="form-control" type="text" name="dt_rekening" id="dt_rekening" style="width: 100%">
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            <div class="form-group">
-                                                <input class="form-control" type="text" name="dt_ats_nm_rekening" id="dt_ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
+                                            <div class="dt_bank_form">
+                                                <table width='80%'>
+                                                    <tr>
+                                                        <td width='20%'>
+                                                            <div class="form-group">
+                                                                <label for="rekening">Bank</label>
+                                                                <select class="form-control" name="dt_nm_bank" id="dt_nm_bank" style="width: 100%;">
+                                                                    <option value="BNI">BNI</option>
+                                                                    <option value="BRI">BRI</option>
+                                                                    <option value="BCA">BCA</option>
+                                                                    <option value="Mandiri">Mandiri</option>
+                                                                </select>
+                                                            </div>
+                                                        </td>
+                                                        <td width='80%'>
+                                                            <div class="form-group">
+                                                                <label for="no_rekening">Nomor Rekening</label>
+                                                                <input class="form-control" type="text" name="dt_rekening" id="dt_rekening" style="width: 100%">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div class="form-group">
+                                                    <label for="jml_tarif">Jumlah Transfer</label>
+                                                    <input class="form-control" type="text" name="dt_jml_tarif" id="dt_jml_tarif" style="width: 80%;">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input class="form-control" type="text" name="dt_ats_nm_rekening" id="dt_ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
+                                                </div>
                                             </div>
                                             <input type="hidden" name="dt_kd_pmby" id="dt_kd_pmby">
-                                            <button class="btn btn-primary" id="tambah" value="tambah" onclick="tmb_bank()">Tambah</button>
-                                            <br>
-                                            <div class="form-group">
-                                                    <label for="almt_outlet">Data Bank</label> <?php echo form_error('almt_outlet') ?>
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered" id="dttableBank" width="100%" cellspacing="0">
-                                                        <thead>
-                                                            <tr>
-                                                            <th>Nama Bank</th>
-                                                            <th>Jumlah Transfer</th>
-                                                            <th>No. Rekening</th>
-                                                            <th>Atasnama</th>
-                                                            <th>Aksi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        </table>
-                                                    </div>
-                                            </div>
+                                            <!-- <button class="btn btn-primary" id="tambah" value="tambah" onclick="tmb_bank()">Tambah</button> -->
+                                            <button class="btn btn-primary" id="dt_tambah" value="tambah">Tambah Bank</button>
+                                            
                                             <script>
-                                            function tblpel(){
-                                                lunas = $('#dttableBank').DataTable({
-                                                        "bLengthChange": false,
-                                                        "bFilter": false,
-                                                        language: {
-                                                            "sEmptyTable": "Tidak ada data yang tersedia pada tabel ini",
-                                                            "sProcessing": "Sedang memproses...",
-                                                            "sLengthMenu": "Tampilkan _MENU_ entri",
-                                                            "sZeroRecords": "Tidak ditemukan data yang sesuai",
-                                                            "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                                                            "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
-                                                            "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                                                            "sInfoPostFix": "",
-                                                            "sSearch": "Cari:",
-                                                            "sUrl": "",
-                                                            "oPaginate": {
-                                                                "sFirst": "Pertama",
-                                                                "sPrevious": "Sebelumnya",
-                                                                "sNext": "Selanjutnya",
-                                                                "sLast": "Terakhir"
-                                                            }
-                                                        },
-                                                        // 'order': [[ 2, "desc" ]],
-                                                        'processing': true,
-                                                        'serverSide': true,
-                                                        'serverMethod': 'post',
-                                                        'ajax': {
-                                                            'url': '<?php echo base_url('monitor/tmp_bank')?>',
-                                                        },
-                                                        'columns': [
-                                                            {
-                                                                data: 'nm_bank'
-                                                            },
-                                                            {
-                                                                data: 'jml_transfer'
-                                                            },
-                                                            {
-                                                                data: 'no_rekening'
-                                                                //  render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
-                                                            },
-                                                            {
-                                                                data: 'ats_nm',
-                                                                // render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
-                                                            },
-                                                            {
-                                                                data: 'aksi'
-                                                            }
-                                                        ]
-                                                    });
-                                            }
+                                            $(document).ready(function() {
+                                                var max_fields      = 3; //maximum input boxes allowed
+                                                var wrapper   		= $(".dt_bank_form"); //Fields wrapper
+                                                var add_button      = $("#dt_tambah"); //Add button ID
                                                 
-
-                                                    function tmb_bank(){
-                                                        var jml_tarif = $('#dt_jml_tarif').val();
-                                                        var nm_bank = $('#dt_nm_bank option:selected').val();
-                                                        var no_rekening = $('#dt_rekening').val();
-                                                        var ats_nm = $('#dt_ats_nm_rekening').val();
-                                                        var kd_pmby = $('#dt_kd_pmby').val();
-
-                                                        var dataString = 'jml_trf='+jml_tarif+'&nm_bank='+nm_bank+'&no_rekening='+no_rekening+'&ats_nm='+ats_nm+'&kd_pmby='+kd_pmby;
-                                                        $.ajax({
-                                                            type: 'post',
-                                                            url: '<?php echo base_url('monitor/tb_bank_ad')?>',
-                                                            data: dataString,
-                                                            success: function(){
-                                                                $('#dttableBank').DataTable().ajax.reload();
-                                                                document.getElementById('dt_jml_tarif').value = '';
-                                                                document.getElementById('dt_nm_bank').value = '0';
-                                                                document.getElementById('dt_rekening').value = '';
-                                                                document.getElementById('dt_ats_nm_rekening').value = '';
-                                                            }
-                                                        })
+                                                var x = 1; //initlal text box count
+                                                $(add_button).click(function(e){ //on add input button click
+                                                    e.preventDefault();
+                                                    if(x < max_fields){ //max input box allowed
+                                                        x++; //text box increment
+                                                        $(wrapper).append(`    
+                                                        <div class=".dtbank">
+                                                        <table width='80%'>
+                                                                <tr>
+                                                                    <td width='20%'>
+                                                                        <div class="form-group">
+                                                                            <label for="rekening">Bank</label>
+                                                                            <select class="form-control" name="dt_nm_bank" id="dt_nm_bank`+x+`" style="width: 100%;">
+                                                                                <option value="BNI">BNI</option>
+                                                                                <option value="BRI">BRI</option>
+                                                                                <option value="BCA">BCA</option>
+                                                                                <option value="Mandiri">Mandiri</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td width='80%'>
+                                                                        <div class="form-group">
+                                                                            <label for="no_rekening">Nomor Rekening</label>
+                                                                            <input class="form-control" type="text" name="dt_rekening" id="dt_rekening`+x+`" style="width: 100%">
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <div class="form-group">
+                                                                <label for="jml_tarif">Jumlah Transfer</label>
+                                                                <input class="form-control" type="text" name="dt_jml_tarif" id="dt_jml_tarif`+x+`" style="width: 80%;">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input class="form-control" type="text" name="dt_ats_nm_rekening" id="dt_ats_nm_rekening`+x+`" placeholder="Atas Nama" style="width: 80%;">
+                                                            </div>
+                                                        <a href="#" class="remove_field">Remove</a></div>`); //add input box
+                                                        console.log('aaa');
                                                     }
+                                                });
+                                                
+                                                $(wrapper).on("click",".remove_field", function(e){ //user click on remove text
+                                                    e.preventDefault(); $(this).parent('div').remove(); x--;
+                                                })
+                                            });
                                             </script>
                                             <table width="80%">
                                                 <tr>
@@ -2292,7 +2353,7 @@
                             // document.getElementById('dt_cekter1').checked = false;
                             // document.getElementById('dt_cekter2').checked = false;
                             // document.getElementById('dt_penerusan').checked = false;
-                            lunas.destroy();
+                            // lunas.destroy();
                             // $('#dttableBank').DataTable().ajax.reload();
                             $('.nav-pills a:first').tab('show');
                             $('#modalPelunasan').modal('hide');
@@ -2324,11 +2385,16 @@
                         var nm_produk = $('#dt_nm_produk option:selected').val();
                         var paket = $('#dt_paket option:selected').val();
                         var ekspedisi =$('#dt_ekspedisi option:selected').val();
-                        var biaya_kirim = $('#dt_biaya_kirim option:selected').val();
+                        var biaya_kirim = $('#dt_biaya_kirim').val();
                         var tambahan = $('#dt_tambahan').val();
                         var pembayaran = $('#dt_kd_pmby').val();
+                        var jml_tarif = $('#dt_jml_tarif').val();
+                        var nm_bank = $('#dt_nm_bank option:selected').val();
+                        var rekening = $('#dt_rekening').val();
+                        var ats_nm_rekening = $('#dt_ats_nm_rekening').val();
 
-                        var dataString = 'kd_mitra='+kd_mitra+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+'&tambahan='+tambahan+'&pembayaran='+pembayaran;
+                        var dataString = 'kd_mitra='+kd_mitra+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+
+                        '&tambahan='+tambahan+'&pembayaran='+pembayaran+'&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening;
                         if($('#dt_almt_outlet_prb').val() !== ''){
                             var almt_outlet = $('#dt_almt_outlet_prb').val();
                             var almt_prov_outlet = $('#dt_provinsi2_prb option:selected').val();
@@ -2356,6 +2422,20 @@
                             var almt_prov_terusan = $('#dt_prov_terusan option:selected').val();
                             var almt_kt_terusan = $('#dt_kt_terusan option:selected').val();
                             dataString += '&almt_terusan='+almt_terusan+'&almt_prov_terusan='+almt_prov_terusan+'&almt_kt_terusan='+almt_kt_terusan;
+                        }
+                        if($('#dt_jml_tarif2').val() !== undefined){
+                                var jml_tarif2 = $('#dt_jml_tarif2').val();
+                                var nm_bank2 = $('#dt_nm_bank2 option:selected').val();
+                                var rekening2 = $('#dt_rekening2').val();
+                                var ats_nm_rekening2 = $('#dt_ats_nm_rekening2').val();
+                                dataString += '&jml_tarif2='+jml_tarif2+'&nm_bank2='+nm_bank2+'&rekening2='+rekening2+'&ats_nm_rekening2='+ats_nm_rekening2;
+                            }
+                        if($('#dt_jml_tarif3').val() !== undefined){
+                            var jml_tarif3 = $('#dt_jml_tarif3').val();
+                            var nm_bank3 = $('#dt_nm_bank3 option:selected').val();
+                            var rekening3 = $('#dt_rekening3').val();
+                            var ats_nm_rekening3 = $('#dt_ats_nm_rekening3').val();
+                            dataString += '&jml_tarif3='+jml_tarif3+'&nm_bank3='+nm_bank3+'&rekening3='+rekening3+'&ats_nm_rekening3='+ats_nm_rekening3;
                         }
                         $.ajax({
                               url: "<?php echo base_url('Monitor/update_byr')?>",
@@ -2634,10 +2714,26 @@
           	data.searchByAkhir = akhir;
 		  }
       },
+      "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            if (aData['last'] === "Di atas 3 bulan") {
+                $('td', nRow).css('background-color', 'LightCoral');
+            } else {
+                $('td', nRow).css('background-color', '');
+            }
+        },
+        "columnDefs": [
+            {
+                "targets": [ 1 ],
+                "visible": false,
+                "searchable": false
+            }
+        ],
       'columns': [
          //{ data: 'no' },
         //  { data: 'kd_inv' },
          { data: 'nm_mitra' },
+         { data: 'last' },
+         { data: 'nm_produk' },
          { data: 'almt_kt_rmh' },
          { data: 'history' },
 		 { data: 'action'}
