@@ -9,6 +9,8 @@
         <script src="<?php echo base_url('assets/datepicker/js/bootstrap.min.js')?>"></script>
         <script src="<?php echo base_url('assets/datepicker/js/bootstrap-datetimepicker.js')?>"></script>
         <script src="<?php echo base_url('assets/swal/sweetalert2.all.min.js')?>"></script>
+        <script src="<?php echo base_url('assets/vendor/datatables/jquery.dataTables.min.js')?>"></script>
+	<script src="<?php echo base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js')?>"></script>
 
         <div class="row">
           <div class="col-12">
@@ -278,6 +280,96 @@
                     <div class="form-group">
                         <input class="form-control" type="text" name="ats_nm_rekening" id="ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
                     </div>
+                    <button class="btn btn-primary" id="tambah" value="tambah" onclick="tm_bank()">Tambah</button>
+                    <br>
+                    <div class="form-group">
+                            <label for="almt_outlet">Data Bank</label> <?php echo form_error('almt_outlet') ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="tableBank" width="100%" cellspacing="0">
+                                  <thead>
+                                    <tr>
+                                      <th>Nama Bank</th>
+                                      <th>Jumlah Transfer</th>
+                                      <th>No. Rekening</th>
+                                      <th>Atasnama</th>
+                                      <th>Aksi</th>
+                                    </tr>
+                                  </thead>
+                                </table>
+                              </div>
+                    </div>
+                    <script>
+                        table = $('#tableBank').DataTable({
+                            "bLengthChange": false,
+                            "bFilter": false,
+                            language: {
+                                "sEmptyTable": "Tidak ada data yang tersedia pada tabel ini",
+                                "sProcessing": "Sedang memproses...",
+                                "sLengthMenu": "Tampilkan _MENU_ entri",
+                                "sZeroRecords": "Tidak ditemukan data yang sesuai",
+                                "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                                "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+                                "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                                "sInfoPostFix": "",
+                                "sSearch": "Cari:",
+                                "sUrl": "",
+                                "oPaginate": {
+                                    "sFirst": "Pertama",
+                                    "sPrevious": "Sebelumnya",
+                                    "sNext": "Selanjutnya",
+                                    "sLast": "Terakhir"
+                                }
+                            },
+                            // 'order': [[ 2, "desc" ]],
+                            'processing': true,
+                            'serverSide': true,
+                            'serverMethod': 'post',
+                            'ajax': {
+                                'url': '<?php echo base_url('monitor/tmp_bank')?>',
+                            },
+                            'columns': [
+                                {
+                                    data: 'nm_bank'
+                                },
+                                {
+                                    data: 'jml_transfer'
+                                },
+                                {
+                                    data: 'no_rekening'
+                                    //  render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
+                                },
+                                {
+                                    data: 'ats_nm',
+                                    // render: $.fn.dataTable.render.number('.', ',', 2, 'Rp ')
+                                },
+                                {
+                                    data: 'aksi'
+                                }
+                            ]
+                        });
+
+                        function tm_bank(){
+                            var jml_tarif = $('#jml_tarif').val();
+                            var nm_bank = $('#nm_bank option:selected').val();
+                            var no_rekening = $('#rekening').val();
+                            var ats_nm = $('#ats_nm_rekening').val();
+
+                            var dataString = 'jml_trf='+jml_tarif+'&nm_bank='+nm_bank+'&no_rekening='+no_rekening+'&ats_nm='+ats_nm;
+                            $.ajax({
+                                type: 'post',
+                                url: '<?php echo base_url('monitor/tb_bank')?>',
+                                data: dataString,
+                                success: function(){
+                                    $('#tableBank').DataTable().ajax.reload();
+                                    document.getElementById('jml_tarif').value = '';
+                                    document.getElementById('nm_bank').value = '0';
+                                    document.getElementById('rekening').value = '';
+                                    document.getElementById('ats_nm_rekening').value = '';
+                                }
+                            })
+                        }
+
+                    </script>
                     <table width="80%">
                         <tr>
                             <td width='50%'>
@@ -688,34 +780,52 @@
         })
     })
 
+    $(document).ready(function(){
+        $('#rek2').on('click', function(){
+            if($('#rek2').is(':checked')){
+                $('#jml_tarif2').prop('disabled', false);
+                $('#nm_bank2').prop('disabled', false);
+                $('#rekening2').prop('disabled', false);
+                $('#ats_nm_rekening2').prop('disabled', false);
+                console.log('cek');
+            }else{
+                $('#jml_tarif2').prop('disabled', true);
+                $('#nm_bank2').prop('disabled', true);
+                $('#rekening2').prop('disabled', true);
+                $('#ats_nm_rekening2').prop('disabled', true);
+                console.log('discek');
+            }
+        })
+    })
+
     function alert(){
         Swal.fire({
             title: "Data Mitra",
-            html: '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Nama Mitra</td><td width=5%>:</td><td align="left">'+$('#nm_mitra').val()+
-            '</td></tr><tr><td align="left">Kota, Tanggal Lahir</td><td>:</td><td align="left">'+$('#kt_lahir').val()+', '+$('#tgl_lahir').val()+
-            '</td></tr><tr><td align="left">Alamat Rumah</td><td>:</td><td align="left"> '+$('#almt_rmh').val()+
-            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#provinsi option:selected').html()+
-            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#almt_kt_rmh option:selected').html()+
-            '</td></tr><tr><td align="left">No HP</td><td>:</td><td align="left">'+ $('#no_hp1').val()+
-            '</td></tr><tr><td align="left">No HP</td><td>:</td><td align="left">'+ $('#no_hp2').val()+
+            html: '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Nama Mitra</td><td width=5%>:</td><td align="left">'+$('#in_nm_mitra').val()+
+            '</td></tr><tr><td align="left">Kota, Tanggal Lahir</td><td>:</td><td align="left">'+$('#in_kt_lahir').val()+', '+$('#in_tgl_lahir').val()+
+            '</td></tr><tr><td align="left">Alamat Rumah</td><td>:</td><td align="left"> '+$('#in_almt_rmh').val()+
+            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#in_provinsi option:selected').html()+
+            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#in_almt_kt_rmh option:selected').html()+
+            '</td></tr><tr><td align="left">No HP</td><td>:</td><td align="left">'+ $('#in_no_hp1').val()+
+            '</td></tr><tr><td align="left">No HP</td><td>:</td><td align="left">'+ $('#in_no_hp2').val()+
             '</td></tr></table><br>'+
-            '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Status Pembayaran</td><td width=5%>:</td><td align="left"> '+$('#sts_pmby option:selected').html()+
-            '</td></tr><tr><td align="left">Nama Produk</td><td>:</td><td align="left"> '+$('#nm_produk option:selected').html()+
-            '</td></tr><tr><td align="left">Paket</td><td>:</td><td align="left"> '+$('#paket option:selected').html()+
-            '</td></tr><tr><td align="left">Jumlah Transfer</td><td>:</td><td align="left"> '+$('#jml_tarif').val()+
-            '</td></tr><tr><td align="left">Bank</td><td>:</td><td align="left"> '+$('#nm_bank option:selected').html()+
-            '</td></tr><tr><td align="left">No Rekening</td><td>:</td><td align="left"> '+$('#rekening').val()+
-            '</td></tr><tr><td align="left">Alamat Outlet</td><td>:</td><td align="left"> '+$('#almt_outlet').val()+
-            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#provinsi2 option:selected').html()+
-            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#almt_kt_outlet option:selected').html()+
+            '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Status Pembayaran</td><td width=5%>:</td><td align="left"> '+$('#in_sts_pmby option:selected').html()+
+            '</td></tr><tr><td align="left">Nama Produk</td><td>:</td><td align="left"> '+$('#in_nm_produk option:selected').html()+
+            '</td></tr><tr><td align="left">Paket</td><td>:</td><td align="left"> '+$('#in_paket option:selected').html()+
+            '</td></tr><tr><td align="left">Jumlah Transfer</td><td>:</td><td align="left"> '+$('#in_jml_tarif').val()+
+            '</td></tr><tr><td align="left">Bank</td><td>:</td><td align="left"> '+$('#in_nm_bank option:selected').html()+
+            '</td></tr><tr><td align="left">No Rekening</td><td>:</td><td align="left"> '+$('#in_rekening').val()+
+            '</td></tr><tr><td align="left">Alamat Outlet</td><td>:</td><td align="left"> '+$('#in_almt_outlet').val()+
+            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#in_provinsi2 option:selected').html()+
+            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#in_almt_kt_outlet option:selected').html()+
             '</td></tr></table><br>'+
-            '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Atas Nama</td><td width=5%>:</td><td align="left"> '+$('#ats_nm_rekening').val()+
-            '</td></tr><tr><td align="left">Alamat Kirim</td><td>:</td><td align="left"> '+$('#almt_kirim').val()+
-            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#provinsi3 option:selected').html()+
-            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#almt_kt_kirim option:selected').html()+
-            '</td></tr><tr><td align="left">Ekspedisi</td><td>:</td><td align="left"> '+$('#ekspedisi option:selected').html()+
-            '</td></tr><tr><td align="left">Biaya Kirim</td><td>:</td><td align="left"> '+$('#biaya_kirim').val()+
-            '</td></tr><tr><td align="left">Tambahan</td><td>:</td><td align="left"> '+$('#tambahan').val()+
+            '<table style="background-color: #ffffff; filter: alpha(opacity=40); opacity: 0.95;border:3px black solid;width: 100%"><tr><td align="left" width=35%>Atas Nama</td><td width=5%>:</td><td align="left"> '+$('#in_ats_nm_rekening').val()+
+            '</td></tr><tr><td align="left">Alamat Kirim</td><td>:</td><td align="left"> '+$('#in_almt_kirim').val()+
+            '</td></tr><tr><td align="left">Provinsi</td><td>:</td><td align="left"> '+$('#in_provinsi3 option:selected').html()+
+            '</td></tr><tr><td align="left">Kota</td><td>:</td><td align="left"> '+$('#in_almt_kt_kirim option:selected').html()+
+            '</td></tr><tr><td align="left">Ekspedisi</td><td>:</td><td align="left"> '+$('#in_ekspedisi option:selected').html()+
+            '</td></tr><tr><td align="left">Biaya Kirim</td><td>:</td><td align="left"> '+$('#in_biaya_kirim').val()+
+            '</td></tr><tr><td align="left">Tambahan</td><td>:</td><td align="left"> '+$('#in_tambahan').val()+
             '</td></tr></table>',
             showCancelButton: true,
                 confirmButtonColor: '#3085d6',

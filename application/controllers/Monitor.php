@@ -47,13 +47,8 @@ class Monitor extends CI_Controller {
 	}
 
 	public function create_action(){
-			$aktif = 1;
-			if($this->input->post('cek') == 1){
-				$kirim = $this->input->post('almt_rmh');
-			}else{
-				$kirim = $this->input->post('almt_outlet');
-			}
-			$data = array(
+		$aktif = 1;
+		$data = array(
 			'nm_mitra' => $this->input->post('nm_mitra', TRUE),
 			'kt_lahir' => $this->input->post('kt_lahir', TRUE),
 			'tgl_lahir' => date('Y-m-d', strtotime($this->input->post('tgl_lahir'))),
@@ -64,26 +59,41 @@ class Monitor extends CI_Controller {
 			'almt_outlet' => $this->input->post('almt_outlet', TRUE),
 			'almt_kt_outlet' => $this->input->post('almt_kt_outlet', TRUE),
 			'almt_kirim' => $this->input->post('almt_kirim', TRUE),
+			'almt_kt_kirim' => $this->input->post('almt_kt_kirim', TRUE),
+			'almt_terusan' => $this->input->post('almt_terusan', TRUE),
+			'almt_kt_terusan' => $this->input->post('almt_kt_terusan', TRUE),
+			'nm_marketing' => $this->input->post('nm_marketing', TRUE),
 			'sts_pmby' => $this->input->post('sts_pmby', TRUE),
 			'nm_produk' => $this->input->post('nm_produk', TRUE),
 			'paket' => $this->input->post('paket', TRUE),
-			'jml_tarif' => $this->input->post('jml_tarif', TRUE),
-			'nm_bank' => $this->input->post('nm_bank', TRUE),
-			'rekening' => $this->input->post('rekening', TRUE),
-			'ats_nm_rekening' => $this->input->post('ats_nm_rekening', TRUE),
 			'ekspedisi' => $this->input->post('ekspedisi', TRUE),
 			'biaya_kirim' => $this->input->post('biaya_kirim', TRUE),
 			'kd_mitra' => $this->kode(),
+			'pembayaran' => $this->get_kode_pmby(),
 			'dt_aktif' => $aktif,
 			'dt_create' => date('Y-m-d')
+		);
+
+		$dtl_pmby = $this->M_monitor->get_all_pmby();
+		foreach($dtl_pmby as $row){
+			$kd_pmby = $row->kd_pmby;
+			$datapmby = array(
+				'kd_pmby' => $row->kd_pmby,
+				'jml_transfer' => $row->jml_transfer,
+				'nm_bank' => $row->nm_bank,
+				'no_rekening' => $row->no_rekening,
+				'ats_nm' => $row->ats_nm,
+				'dt_trans' => date('Y-m-d')
 			);
-			
-			$this->M_monitor->insert($data);
-			// $this->M_monitor->insertaset($dataaset);
-			$this->session->set_flashdata('message','Data Barang Berhasil Ditambahkan');
-			redirect(site_url('Monitor'));
-			header(site_url('Monitor'));
+			$this->M_monitor->insertpmby($datapmby);
+			$this->M_monitor->tmp_pmby_delete($kd_pmby);
 		}
+		
+		$this->M_monitor->insert($data);
+		$this->session->set_flashdata('message','Data Barang Berhasil Ditambahkan');
+		redirect(site_url('Monitor'));
+		header(site_url('Monitor'));
+	}
 	
 	function update($id){
 		$row = $this->M_monitor->get_by_id($id);
@@ -146,9 +156,18 @@ class Monitor extends CI_Controller {
 	}
 
 	function update_byr(){
-		$data = array(
-			'sts_pmby' => $this->input->post('byr', true),
-		);
+		if($this->input->post('byr', true) == 4){
+			$sts_byr = 2;
+			$data = array(
+				'sts_pmby' => $sts_byr,
+				'dt_pelunasan' => date('Y-m-d')
+			);
+		}else{
+			$data = array(
+				'sts_pmby' => $this->input->post('byr', true),
+			);
+		}
+		
 		$this->M_monitor->update($this->input->post('kd_mitra'), $data);
 	}
 
@@ -194,7 +213,8 @@ class Monitor extends CI_Controller {
 				'prov_outlet' => set_value('prov_outlet', $row->provinsi2),
 				'kt_outlet' => set_value('kt_outlet', $row->kota2),
 				'nm_produk' => set_value('nm_produk', $row->nm_produk),
-				'paket' => set_value('paket', $row->paket)
+				'paket' => set_value('paket', $row->paket),
+				'rin_by' => $this->M_monitor->get_rin_by($id)
 			);
 			$this->load->view('monitor/monitor_read', $data);
 		}else{
@@ -234,6 +254,19 @@ class Monitor extends CI_Controller {
         $char = "MT";
         $kodebaru = $char.sprintf("%06s", $noUrut);
         return $kodebaru;
+	}
+	function get_kode_pmby(){
+		$kode = $this->M_monitor->get_kode_pmby();
+		foreach($kode as $row){
+			$data = $row->maxkode;
+		}
+
+		$kdpmby = $data;
+		$noUrut = (int) substr($kdpmby, 3, 6);
+		$noUrut++;
+		$char = "PB";
+		$kodebaru = $char.sprintf("%06s", $noUrut);
+		return $kodebaru;
 	}
 	function no_aset($no_gol, $id_rng, $tgl_m, $merk, $urut){
 		 
@@ -530,7 +563,7 @@ class Monitor extends CI_Controller {
 				// <a href="monitor/update/'.$row->kd_mitra.'" class="btn btn-warning btn-circle" color: white">
 				// 	<i class="fas fa-edit"></i>
 				// 	</a>
-				if($row->sts_pmby == 1){
+				if($row->sts_pmby == 1 || $row->sts_pmby == 3){
 					$button = '
 					<a href="monitor/read/'.$row->kd_mitra.'" class="btn btn-info btn-circle" color: white">
 					<i class="fas fa-info-circle"></i>
@@ -571,6 +604,8 @@ class Monitor extends CI_Controller {
 				$sts = 'DP';
 			}else if($row->sts_pmby == 2){
 				$sts = 'Lunas';
+			}else if($row->sts_pmby == 3){
+				$sts = 'Cicilan';
 			}
 			// onclick="load(this.value)"
 		$data[] = array( 
@@ -667,9 +702,9 @@ class Monitor extends CI_Controller {
 				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
 				<i class="fas fa-trash"></i>
 				</a>
-				<a href="monitor/pelunasan/'.$row->kd_mitra.'" class="btn btn-success btn-circle" color: white">
+				<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'">
 				<i class="fas fa-wallet"></i>
-				</a>
+				</button>
 				';
 			}elseif($this->session->userdata('level')=='3'){
 				$button = '
@@ -777,9 +812,9 @@ class Monitor extends CI_Controller {
 				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
 				<i class="fas fa-trash"></i>
 				</a>
-				<a href="monitor/pelunasan/'.$row->kd_mitra.'" class="btn btn-success btn-circle" color: white">
+				<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'">
 				<i class="fas fa-wallet"></i>
-				</a>
+				</button>
 				';
 			}elseif($this->session->userdata('level')=='3'){
 				$button = '
@@ -999,6 +1034,79 @@ class Monitor extends CI_Controller {
 
 		echo json_encode($response);
 	}
+	function tmp_bank(){
+		## Read value
+		$draw = $_POST['draw'];
+		$baris = $_POST['start'];
+		$rowperpage = $_POST['length']; // Rows display per page
+		$columnIndex = $_POST['order'][0]['column']; // Column index
+		$columnName = $_POST['columns'][$columnIndex]['data']; // Column name
+		$columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
+		$searchValue = $_POST['search']['value']; // Search value
+		
+
+		## Search 
+		$searchQuery = " ";
+		// if($this->input->post('searchByAwal') != '' && $this->input->post('searchByAkhir') != ''){
+		// 	$searchByAwal = date('Y-m-d', strtotime($this->input->post('searchByAwal')));
+        //     $searchByAkhir = date('Y-m-d', strtotime($this->input->post('searchByAkhir')));
+		// 	$searchQuery .= " and (dt_create BETWEEN '".$searchByAwal."' AND '".$searchByAkhir."' ) ";
+		//  }
+		// //  $searchQuery .= " and sts_pmby = '2'";
+		// if($searchValue != ''){
+		// $searchQuery .= " and (
+		// nm_mitra like '%".$searchValue."%' or  
+		// ats_nm_rekening like '%".$searchValue."%' ) ";
+		// }
+
+		## Total number of records without filtering
+		$sel = $this->M_monitor->get_total_dt_bn();
+		// $records = sqlsrv_fetch_array($sel);
+		foreach($sel as $row){
+			$totalRecords = $row->allcount;
+		}
+		
+
+		## Total number of record with filtering
+		$sel = $this->M_monitor->get_total_fl_bn($searchQuery);
+		// $records = sqlsrv_fetch_assoc($sel);
+		foreach($sel as $row){
+			$totalRecordwithFilter = $row->allcount;
+		}
+		
+
+		## Fetch records
+		$empQuery = $this->M_monitor->get_total_ft_bn($searchQuery, $columnName, $columnSortOrder, $baris, $rowperpage);
+		$empRecords = $empQuery;
+		$data = array();
+
+		foreach($empRecords as $row){
+
+			 $button = '
+				
+				<button value="'.$row->id.'" class="btn btn-danger"   onclick="temp_hapus_order(this.value)">Hapus</button>
+				';
+		$data[] = array( 
+			// "kd_inv"=>$row->kd_inv,
+			// "kd_tmp_order"=>$row->kd_tmp_order,
+			"nm_bank"=>$row->nm_bank,
+			"jml_transfer"=>$row->jml_transfer,
+			"no_rekening"=>$row->no_rekening,
+			"ats_nm"=>$row->ats_nm,
+			"aksi"=>$button
+		);
+		}
+
+		## Response
+		$response = array(
+		"draw" => intval($draw),
+		"iTotalRecords" => $totalRecords,
+		"iTotalDisplayRecords" => $totalRecordwithFilter,
+		"aaData" => $data
+		);
+
+		echo json_encode($response);
+	}
 
 	function get_dtorder_mitra(){
 		$id = $this->input->get('id', TRUE);
@@ -1089,6 +1197,17 @@ class Monitor extends CI_Controller {
 		$this->M_monitor->tmp_order_insert($data);
 	}
 
+	function tb_bank(){
+		$data = array(
+			'jml_transfer' => $this->input->post('jml_trf', TRUE),
+			'nm_bank' => $this->input->post('nm_bank', TRUE),
+			'no_rekening' => $this->input->post('no_rekening', TRUE),
+			'ats_nm' => $this->input->post('ats_nm', TRUE),
+			'kd_pmby' => $this->get_kode_pmby()
+		);
+		$this->M_monitor->tmp_pmby_insert($data);
+	}
+
 	function hapus_order(){
 		
 			$data = $this->input->post('val', TRUE);
@@ -1100,6 +1219,11 @@ class Monitor extends CI_Controller {
 			}
 		$this->M_monitor->tmp_order_delete($data);
 		$this->M_monitor->adilaya_order_delete($kd_tmp_order);
+	}
+
+	function hapus_bank(){
+		$kd_tmp = $this->get_kode_pmby();
+		$this->M_monitor->tmp_pmby_delete($kd_tmp);
 	}
 
 	function temp_hapus_order(){

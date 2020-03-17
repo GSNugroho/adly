@@ -49,8 +49,22 @@
     <tr><td>Kota</td><td>:</td><td><?php echo $kt_outlet; ?></td></tr>
     <tr><td>Nama Produk</td><td>:</td><td><?php echo $nm_produk; ?></td></tr>
     <tr><td>Paket</td><td>:</td><td><?php echo $paket; ?></td></tr>
-    
-    
+    </table>
+    <br>
+    Rincian Pembayaran
+    <table class="table table-bordered dataTable" style="width: 80%">
+      <tr>
+        <th>Atas Nama</th>
+        <th>Nama Bank</th>
+        <th>No Rekening</th>
+        <th>Jumlah Transfer</th>
+      </tr>
+      <?php
+        foreach($rin_by as $row){
+          echo '<tr><td>'.$row->ats_nm.'</td><td>'.$row->nm_bank.'</td><td>'.$row->no_rekening.'</td><td>'.$row->jml_transfer.'</td>
+          </tr>';
+      };
+      ?>
     </table>
     </div>
     <footer class="sticky-footer bg-white">
