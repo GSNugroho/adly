@@ -72,7 +72,7 @@
 					<!-- <a href="<?php //echo base_url('monitor/create')?>" class="btn btn-primary btn-icon-split">
                     	<span class="text">Input Data Mitra</span>
                     </a> -->
-                    <button style="height: 36px" class="btn btn-primary" data-toggle="modal" data-target="#inputMitra"  data-keyboard="false" data-backdrop="static">Input Data Mitra</button>
+                    <button style="height: 36px" class="btn btn-primary" data-toggle="modal" data-target="#inputMitra"  data-keyboard="false" data-backdrop="static" onclick="load()">Input Data Mitra</button>
                     <?php endif;?>
 					<br>
                     <br>
@@ -460,7 +460,8 @@
                                                         </div>
                                                 </div>
                                                 <script>
-                                                    table = $('#tableBank').DataTable({
+                                                    
+                                                        bayar = $('#tableBank').DataTable({
                                                         "bLengthChange": false,
                                                         "bFilter": false,
                                                         language: {
@@ -508,6 +509,7 @@
                                                             }
                                                         ]
                                                     });
+                                                    
 
                                                     function tm_bank(){
                                                         var jml_tarif = $('#in_jml_tarif').val();
@@ -746,7 +748,7 @@
                             document.getElementById('in_cekter1').checked = false;
                             document.getElementById('in_cekter2').checked = false;
                             document.getElementById('in_penerusan').checked = false;
-                            table.destroy();
+                            // bayar.destroy();
                             $('.nav-pills a:first').tab('show');
                             $('#inputMitra').modal('hide');
                             console.log('as');
@@ -2112,6 +2114,7 @@
                                             <div class="form-group">
                                                 <input class="form-control" type="text" name="dt_ats_nm_rekening" id="dt_ats_nm_rekening" placeholder="Atas Nama" style="width: 80%;">
                                             </div>
+                                            <input type="hidden" name="dt_kd_pmby" id="dt_kd_pmby">
                                             <button class="btn btn-primary" id="tambah" value="tambah" onclick="tmb_bank()">Tambah</button>
                                             <br>
                                             <div class="form-group">
@@ -2131,6 +2134,7 @@
                                                     </div>
                                             </div>
                                             <script>
+                                            function tblpel(){
                                                 lunas = $('#dttableBank').DataTable({
                                                         "bLengthChange": false,
                                                         "bFilter": false,
@@ -2179,17 +2183,20 @@
                                                             }
                                                         ]
                                                     });
+                                            }
+                                                
 
                                                     function tmb_bank(){
                                                         var jml_tarif = $('#dt_jml_tarif').val();
                                                         var nm_bank = $('#dt_nm_bank option:selected').val();
                                                         var no_rekening = $('#dt_rekening').val();
                                                         var ats_nm = $('#dt_ats_nm_rekening').val();
+                                                        var kd_pmby = $('#dt_kd_pmby').val();
 
-                                                        var dataString = 'jml_trf='+jml_tarif+'&nm_bank='+nm_bank+'&no_rekening='+no_rekening+'&ats_nm='+ats_nm;
+                                                        var dataString = 'jml_trf='+jml_tarif+'&nm_bank='+nm_bank+'&no_rekening='+no_rekening+'&ats_nm='+ats_nm+'&kd_pmby='+kd_pmby;
                                                         $.ajax({
                                                             type: 'post',
-                                                            url: '<?php echo base_url('monitor/tb_bank')?>',
+                                                            url: '<?php echo base_url('monitor/tb_bank_ad')?>',
                                                             data: dataString,
                                                             success: function(){
                                                                 $('#dttableBank').DataTable().ajax.reload();
@@ -2230,6 +2237,7 @@
                                                 <input class="form-control" type="text" name="dt_tambahan" id="dt_tambahan" style="width: 80%;">
                                             </div>
                                             <input type="hidden" name="dt_kd_mitra" id="dt_kd_mitra">
+                                            
                                             <button type="submit" class="btn btn-success" id="update_byr" onclick="update_byr()">Simpan</button>
                                             <button class="btn btn-danger" onclick="ttp()">Batal</button>
                                         </div>
@@ -2245,9 +2253,12 @@
                 </div>
                 <script>
                     function ttp(){
+                        var kd_pmby = $('#dt_kd_pmby').val();
+                        var data =  'kd_pmby='+kd_pmby;
                         $.ajax({
                                 type: 'post',
-                                url: '<?php echo base_url('monitor/hapus_bank')?>',
+                                url: '<?php echo base_url('monitor/hapus_bank_ad')?>',
+                                data: data,
                                 success: function(){
                                     console.log('YEEE');
                                     
@@ -2307,16 +2318,60 @@
                     })
 
                       function update_byr(){
-                        var byr = $('#dt_sts_pmby').val();
+                        // var byr = $('#dt_sts_pmby').val();
                         var kd_mitra = $('#dt_kd_mitra').val();
-                        var dataString = 'byr='+byr+'&kd_mitra='+kd_mitra;
+                        var sts_pmby = $('#dt_sts_pmby option:selected').val();
+                        var nm_produk = $('#dt_nm_produk option:selected').val();
+                        var paket = $('#dt_paket option:selected').val();
+                        var ekspedisi =$('#dt_ekspedisi option:selected').val();
+                        var biaya_kirim = $('#dt_biaya_kirim option:selected').val();
+                        var tambahan = $('#dt_tambahan').val();
+                        var pembayaran = $('#dt_kd_pmby').val();
+
+                        var dataString = 'kd_mitra='+kd_mitra+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+'&tambahan='+tambahan+'&pembayaran='+pembayaran;
+                        if($('#dt_almt_outlet_prb').val() !== ''){
+                            var almt_outlet = $('#dt_almt_outlet_prb').val();
+                            var almt_prov_outlet = $('#dt_provinsi2_prb option:selected').val();
+                            var almt_kt_outlet = $('#dt_almt_kt_outlet_prb option:selected').val();
+                            dataString += '&almt_outlet='+almt_outlet+'&almt_prov_outlet'+almt_prov_outlet+'&almt_kt_outlet='+almt_kt_outlet;
+                        }else{
+                            var almt_outlet = $('#dt_almt_outlet').val();
+                            var almt_prov_outlet = $('#dt_provinsi2 option:selected').val();
+                            var almt_kt_outlet = $('#dt_almt_kt_outlet option:selected').val();
+                            dataString += '&almt_outlet='+almt_outlet+'&almt_prov_outlet'+almt_prov_outlet+'&almt_kt_outlet='+almt_kt_outlet;
+                        }
+                        if($('#dt_almt_kirim_prb').val() !== ''){
+                            var almt_kirim = $('#dt_almt_kirim_prb').val();
+                            var almt_prov_kirim = $('#dt_provinsi3_prb option:selected').val();
+                            var almt_kt_kirim = $('#dt_almt_kt_kirim_prb option:selected').val();
+                            dataString += '&almt_kirim='+almt_kirim+'&almt_prov_kirim='+almt_prov_kirim+'&almt_kt_kirim='+almt_kt_kirim;
+                        }else{
+                            var almt_kirim = $('#dt_almt_kirim').val();
+                            var almt_prov_kirim = $('#dt_provinsi3 option:selected').val();
+                            var almt_kt_kirim = $('#dt_almt_kt_kirim option:selected').val();
+                            dataString += '&almt_kirim='+almt_kirim+'&almt_prov_kirim='+almt_prov_kirim+'&almt_kt_kirim='+almt_kt_kirim;
+                        }
+                        if($('#dt_almt_terusan').val() !== ''){
+                            var almt_terusan = $('#dt_almt_terusan').val();
+                            var almt_prov_terusan = $('#dt_prov_terusan option:selected').val();
+                            var almt_kt_terusan = $('#dt_kt_terusan option:selected').val();
+                            dataString += '&almt_terusan='+almt_terusan+'&almt_prov_terusan='+almt_prov_terusan+'&almt_kt_terusan='+almt_kt_terusan;
+                        }
                         $.ajax({
                               url: "<?php echo base_url('Monitor/update_byr')?>",
                               type: "POST",
                               data: dataString,
                               success: function(data){
                                 console.log('suksas');
+                                Swal.fire(
+                                    'Sukses',
+                                    'Update berhasil disimpan',
+                                    'success'
+                                )
                                 $('#modalPelunasan').modal('hide');
+                                $('#mthri-table').DataTable().ajax.reload();
+                                $('#dp-table').DataTable().ajax.reload();
+                                $('#cc-table').DataTable().ajax.reload();
                               }
                           });
                       }
@@ -2402,6 +2457,7 @@
                                 }
                                 $('#dt_paket').val(data[0]['paket']);
                                 $('#dt_kd_mitra').val(data[0]['kd_mitra']);
+                                $('#dt_kd_pmby').val(data[0]['pembayaran']);
                                 
                             },
                             error: function(err) {

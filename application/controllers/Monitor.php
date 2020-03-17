@@ -156,16 +156,52 @@ class Monitor extends CI_Controller {
 	}
 
 	function update_byr(){
-		if($this->input->post('byr', true) == 4){
-			$sts_byr = 2;
-			$data = array(
-				'sts_pmby' => $sts_byr,
-				'dt_pelunasan' => date('Y-m-d')
-			);
+		if($this->input->post('sts_pmby', true) == 4){
+				$sts_byr = 2;
+				$data = array(
+					'nm_produk' => $this->input->post('nm_produk', TRUE),
+					'paket' => $this->input->post('paket', TRUE),
+					'ekspedisi' => $this->input->post('ekspedisi', TRUE),
+					'biaya_kirim' => $this->input->post('biaya_kirim', TRUE),
+					'almt_outlet' => $this->input->post('almt_outlet', TRUE),
+					'almt_prov_outlet' => $this->input->post('almt_prov_outlet', TRUE),
+					'almt_kt_outlet' => $this->input->post('almt_kt_outlet', TRUE),
+					'almt_kirim' => $this->input->post('almt_kirim', TRUE),
+					'almt_prov_kirim' => $this->input->post('almt_prov_kirim', TRUE),
+					'almt_kt_kirim' => $this->input->post('almt_kt_kirim', TRUE),
+					'sts_pmby' => $sts_byr,
+					'dt_pelunasan' => date('Y-m-d')
+				);
+			
 		}else{
 			$data = array(
-				'sts_pmby' => $this->input->post('byr', true),
+				'sts_pmby' => $this->input->post('sts_pmby', true),
+				'nm_produk' => $this->input->post('nm_produk', TRUE),
+				'paket' => $this->input->post('paket', TRUE),
+				'ekspedisi' => $this->input->post('ekspedisi', TRUE),
+				'biaya_kirim' => $this->input->post('biaya_kirim', TRUE),
+				'almt_outlet' => $this->input->post('almt_outlet', TRUE),
+				// 'almt_prov_outlet' => $this->input->post('almt_prov_outlet', TRUE),
+				'almt_kt_outlet' => $this->input->post('almt_kt_outlet', TRUE),
+				'almt_kirim' => $this->input->post('almt_kirim', TRUE),
+				// 'almt_prov_kirim' => $this->input->post('almt_prov_kirim', TRUE),
+				'almt_kt_kirim' => $this->input->post('almt_kt_kirim', TRUE),
+				// 'dt_pelunasan' => date('Y-m-d')
 			);
+		}
+		$dtl_pmby = $this->M_monitor->get_all_pmby();
+		foreach($dtl_pmby as $row){
+			$kd_pmby = $row->kd_pmby;
+			$datapmby = array(
+				'kd_pmby' => $row->kd_pmby,
+				'jml_transfer' => $row->jml_transfer,
+				'nm_bank' => $row->nm_bank,
+				'no_rekening' => $row->no_rekening,
+				'ats_nm' => $row->ats_nm,
+				'dt_trans' => date('Y-m-d')
+			);
+			$this->M_monitor->insertpmby($datapmby);
+			$this->M_monitor->tmp_pmby_delete($kd_pmby);
 		}
 		
 		$this->M_monitor->update($this->input->post('kd_mitra'), $data);
@@ -571,7 +607,7 @@ class Monitor extends CI_Controller {
 					<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
 					<i class="fas fa-trash"></i>
 					</a>
-					<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'">
+					<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-backdrop="static" data-keyboard="false" data-whatever="'.$row->kd_mitra.'" onclick="tblpel()">
 					<i class="fas fa-wallet"></i>
 					</button>
 					';
@@ -702,7 +738,7 @@ class Monitor extends CI_Controller {
 				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
 				<i class="fas fa-trash"></i>
 				</a>
-				<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'">
+				<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'" onclick="tblpel()">
 				<i class="fas fa-wallet"></i>
 				</button>
 				';
@@ -812,7 +848,7 @@ class Monitor extends CI_Controller {
 				<a href="monitor/delete/'.$row->kd_mitra.'" class="btn btn-danger btn-circle" color: white">
 				<i class="fas fa-trash"></i>
 				</a>
-				<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'">
+				<button value="'.$row->kd_mitra.'" class="btn btn-success btn-circle" data-toggle="modal" data-target="#modalPelunasan" data-keyboard="false" data-whatever="'.$row->kd_mitra.'" onclick="tblpel()">
 				<i class="fas fa-wallet"></i>
 				</button>
 				';
@@ -1207,6 +1243,16 @@ class Monitor extends CI_Controller {
 		);
 		$this->M_monitor->tmp_pmby_insert($data);
 	}
+	function tb_bank_ad(){
+		$data = array(
+			'jml_transfer' => $this->input->post('jml_trf', TRUE),
+			'nm_bank' => $this->input->post('nm_bank', TRUE),
+			'no_rekening' => $this->input->post('no_rekening', TRUE),
+			'ats_nm' => $this->input->post('ats_nm', TRUE),
+			'kd_pmby' => $this->input->post('kd_pmby', TRUE)
+		);
+		$this->M_monitor->tmp_pmby_insert($data);
+	}
 
 	function hapus_order(){
 		
@@ -1223,6 +1269,11 @@ class Monitor extends CI_Controller {
 
 	function hapus_bank(){
 		$kd_tmp = $this->get_kode_pmby();
+		$this->M_monitor->tmp_pmby_delete($kd_tmp);
+	}
+
+	function hapus_bank_ad(){
+		$kd_tmp = $this->input->post('kd_pmby');
 		$this->M_monitor->tmp_pmby_delete($kd_tmp);
 	}
 

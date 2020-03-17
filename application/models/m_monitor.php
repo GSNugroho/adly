@@ -168,7 +168,7 @@ class M_monitor extends CI_Model{
 		$query = $this->db->query("SELECT adilaya_dt_mitra.kd_mitra as kd_mitra, adilaya_dt_mitra.nm_mitra as nm_mitra, adilaya_dt_mitra.kt_lahir as kt_lahir, adilaya_dt_mitra.tgl_lahir as tgl_lahir,  
 		adilaya_dt_mitra.almt_rmh as almt_rmh, provinsi1.id_provinsi as provinsi1, adilaya_dt_mitra.almt_kt_rmh as kota1, adilaya_dt_mitra.no_hp1 as no_hp1, 
 		adilaya_dt_mitra.no_hp2 as no_hp2, adilaya_dt_mitra.almt_outlet as almt_outlet, provinsi2.id_provinsi as provinsi2, adilaya_dt_mitra.almt_kt_outlet as kota2, 
-		adilaya_dt_mitra.nm_produk as nm_produk, adilaya_dt_mitra.almt_kirim as almt_kirim, adilaya_dt_mitra.paket as paket FROM adilaya_dt_mitra
+		adilaya_dt_mitra.nm_produk as nm_produk, adilaya_dt_mitra.almt_kirim as almt_kirim, adilaya_dt_mitra.paket as paket, adilaya_dt_mitra.pembayaran as pembayaran FROM adilaya_dt_mitra
 		LEFT JOIN kota as kota1 ON adilaya_dt_mitra.almt_kt_rmh = kota1.id_kota AND adilaya_dt_mitra.almt_kt_outlet = kota1.id_kota
 		LEFT JOIN kota as kota2 ON adilaya_dt_mitra.almt_kt_outlet = kota2.id_kota AND adilaya_dt_mitra.almt_kt_rmh = kota2.id_kota
 		LEFT JOIN provinsi as provinsi1 ON kota1.id_provinsi_fk = provinsi1.id_provinsi AND kota2.id_provinsi_fk = provinsi1.id_provinsi
