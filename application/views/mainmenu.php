@@ -62,7 +62,7 @@
 		<!-- Mitra -->
 		<li class="nav-item">
         <a class="nav-link" href="<?php echo base_url('monitor')?>">
-          <i class="fas fa-boxes"></i>
+          <i class="fas fa-users"></i>
           <span>Data Mitra</span></a>
     </li>
     <?php if($this->session->userdata('level')=='3'):?>

@@ -51,7 +51,7 @@
     <tr><td>Paket</td><td>:</td><td><?php echo $paket; ?></td></tr>
     </table>
     <br>
-    Rincian Pembayaran
+    Rincian Pembayaran Mitra Join :
     <table class="table table-bordered dataTable" style="width: 80%">
       <tr>
         <th>Atas Nama</th>

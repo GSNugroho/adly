@@ -69,6 +69,7 @@ class Monitor extends CI_Controller {
 			'paket' => $this->input->post('paket', TRUE),
 			'ekspedisi' => $this->input->post('ekspedisi', TRUE),
 			'biaya_kirim' => $this->input->post('biaya_kirim', TRUE),
+			'tambahan' => $this->input->post('tambahan', TRUE),
 			'kd_mitra' => $this->kode(),
 			'pembayaran' => $kode,
 			'dt_aktif' => $aktif,
@@ -1273,6 +1274,27 @@ class Monitor extends CI_Controller {
 		);
 		$this->M_monitor->tmp_order_delete($kd_mitra);
 		$this->M_monitor->update_dtmitra_order($ko, $data);
+
+		if($this->input->post('jml_tarif2', true) != ''){
+			$data = array(
+				'jml_transfer2' => $this->input->post('jml_tarif2', true),
+				'nm_bank2' => $this->input->post('nm_bank2', true),
+				'rekening2' => $this->input->post('rekening2', true),
+				'ats_nm_rekening2' => $this->input->post('ats_nm_rekening2', true),
+			);
+			$this->M_monitor->update_dtmitra_order($ko, $data);
+		}
+
+		if($this->input->post('jml_tarif3', true) != ''){
+			$data = array(
+				'jml_transfer3' => $this->input->post('jml_tarif3', true),
+				'nm_bank3' => $this->input->post('nm_bank3', true),
+				'rekening3' => $this->input->post('rekening3', true),
+				'ats_nm_rekening3' => $this->input->post('ats_nm_rekening3', true),
+			);
+			$this->M_monitor->update_dtmitra_order($ko, $data);
+		}
+
 		$last = array(
 			'dt_last_order'=>date('Y-m-d')
 		);

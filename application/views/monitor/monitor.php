@@ -182,7 +182,7 @@
                                         <!-- <form action="<?php //echo base_url().'monitor/create_action';?>" method="post"> -->
                                         <div class="card-header d-flex p-0">
                                             <h3 class="card-title p-3">Data Mitra</h3>
-                                            <ul class="nav nav-pills ml-auto p-2">
+                                            <ul class="nav nav-pillss ml-auto p-2">
                                             <li class="nav-item"><a class="nav-link" href="#tabb_1" data-toggle="tab">Identitas</a></li>
                                             <li class="nav-item"><a class="nav-link" href="#tabb_2" data-toggle="tab">Outlet</a></li>
                                             <li class="nav-item"><a class="nav-link" href="#tabb_3" data-toggle="tab">Pengiriman</a></li>
@@ -301,9 +301,52 @@
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <div class="form-group">
+                                                <!-- <div class="form-group">
                                                     <input type="radio" name="in_cek2" id="in_cek3" value="1"> Seperti Alamat Rumah
+                                                </div> -->
+                                                <div class="form-group">
+                                                    <input type="checkbox" name="incek2" id="incek3"> Seperti Alamat Rumah
                                                 </div>
+                                                <script>
+                                                    $(document).ready(function(){
+                                                        $('#incek3').on('click', function(){
+                                                            if($(this).is(':checked')){
+                                                                var almt = document.getElementById('in_almt_rmh').value;
+                                                                document.getElementById('in_almt_outlet').value = almt;
+                                                                document.getElementById('in_almt_outlet').disabled = true;
+                                                                $('#in_provinsi2').val($('#in_provinsi option:selected').val());
+                                                                $('#in_provinsi2').prop('disabled', 'disabled');
+                                                                if($('#in_provinsi option:selected').val() !== 0){
+                                                                    var id=$('#in_provinsi option:selected').val();
+                                                                    $.ajax({
+                                                                        url : "<?php echo base_url();?>monitor/get_kota",
+                                                                        method : "POST",
+                                                                        data : {id: id},
+                                                                        async : false,
+                                                                        dataType : 'json',
+                                                                        success: function(data){
+                                                                            var html = '';
+                                                                            var i;
+                                                                            for(i=0; i<data.length; i++){
+                                                                                html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                                            }
+                                                                            $('#in_almt_kt_outlet').html(html);
+                                                                            $('#in_almt_kt_outlet').val($('#in_almt_kt_rmh option:selected').val());
+                                                                            $('#in_almt_kt_outlet').prop('disabled', 'disabled');
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }else{
+                                                                document.getElementById('in_almt_outlet').value = '';
+                                                                document.getElementById('in_almt_outlet').disabled = false;
+                                                                document.getElementById('in_provinsi2').value = '0';
+                                                                document.getElementById('in_provinsi2').disabled = false;
+                                                                document.getElementById('in_almt_kt_outlet').value = '';
+                                                                document.getElementById('in_almt_kt_outlet').disabled = false;
+                                                            }
+                                                        })
+                                                    })
+                                                </script>
                                             </div>
                                             <!-- /.tab-pane -->
                                             <div class="tab-pane" id="tabb_3">
@@ -342,6 +385,18 @@
                                                     &nbsp&nbsp
                                                     <input type="radio" name="in_cek" id="in_cek2" value="2"> Seperti Alamat Outlet
                                                 </div>
+                                                <!-- <div class="form-group">
+                                                    <input type="checkbox" name="incek" id="incek1" class="chb"> Seperti Alamat Rumah
+                                                    &nbsp&nbsp
+                                                    <input type="checkbox" name="incek" id="incek2" class="chb"> Seperti Alamat Outlet
+                                                </div> -->
+                                                <script>
+                                                    // $(".chb").change(function(){
+                                                    //         $(".chb").prop('checked',false);
+                                                    //         $(this).prop('checked',true);
+                                                    //         if()
+                                                    //     });
+                                                </script>
                                                 <div class="form-group">
                                                     <input type="checkbox" name="in_penerusan" id="in_penerusan">&nbsp&nbsp Penerusan Alamat
                                                 </div>
@@ -630,6 +685,7 @@
                             var paket = $('#in_paket option:selected').val();
                             var ekspedisi = $('#in_ekspedisi option:selected').val();
                             var biaya_kirim = $('#in_biaya_kirim').val();
+                            var tambahan = $('#in_tambahan').val();
 
                             var jml_tarif = $('#in_jml_tarif').val();
                             var nm_bank = $('#in_nm_bank option:selected').val();
@@ -641,7 +697,7 @@
                             '&almt_prov_outlet='+almt_prov_outlet+'&almt_kt_outlet='+almt_kt_outlet+'&almt_kirim='+almt_kirim+'&almt_prov_kirim='+almt_prov_kirim+
                             '&almt_kt_kirim='+almt_kt_kirim+'&almt_terusan='+almt_terusan+'&almt_prov_terusan='+almt_prov_terusan+'&almt_kt_terusan='+almt_kt_terusan+
                             '&nm_marketing='+nm_marketing+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+
-                            '&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening;
+                            '&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening+'&tambahan='+tambahan;
                             
                             if($('#in_jml_tarif2').val() !== undefined){
                                 var jml_tarif2 = $('#in_jml_tarif2').val();
@@ -675,6 +731,7 @@
                                         }).then((result) => {
                                         if (result.value) {
                                             document.getElementById('in_nm_mitra').value = '';
+                                            document.getElementById('in_tambahan').value = '';
                                             document.getElementById('in_kt_lahir').value = '';
                                             document.getElementById('in_tgl_lahir').value = '';
                                             document.getElementById('in_almt_rmh').value = '';
@@ -703,7 +760,7 @@
                                             document.getElementById('in_cekter2').checked = false;
                                             document.getElementById('in_penerusan').checked = false;
                                             // table.destroy();
-                                            $('.nav-pills a:first').tab('show');
+                                            $('.nav-pillss a:first').tab('show');
                                             $('#inputMitra').modal('hide');
                                             $('#mthri-table').DataTable().ajax.reload();
                                         }
@@ -730,11 +787,17 @@
                             document.getElementById('in_no_hp1').value = '';
                             document.getElementById('in_no_hp2').value = '';
                             document.getElementById('in_almt_outlet').value = '';
+                            document.getElementById('in_almt_outlet').disabled = false;
                             document.getElementById('in_provinsi2').value = '0';
+                            document.getElementById('in_provinsi2').disabled = false;
                             document.getElementById('in_almt_kt_outlet').value = '0';
+                            document.getElementById('in_almt_kt_outlet').disabled = false;
                             document.getElementById('in_provinsi3').value = '0';
+                            document.getElementById('in_provinsi3').disabled = false;
                             document.getElementById('in_almt_kirim').value = '';
+                            document.getElementById('in_almt_kirim').disabled = false;
                             document.getElementById('in_almt_kt_kirim').value = '0';
+                            document.getElementById('in_almt_kt_kirim').disabled = false;
                             document.getElementById('in_almt_terusan').value = '';
                             document.getElementById('in_prov_terusan').value = '0';
                             document.getElementById('in_kt_terusan').value = '0';
@@ -744,13 +807,13 @@
                             document.getElementById('in_paket').value = '0';
                             document.getElementById('in_ekspedisi').value = '0';
                             document.getElementById('in_biaya_kirim').value = '';
-                            document.getElementById('in_cek3').checked = false;
+                            document.getElementById('in_cek2').checked = false;
                             document.getElementById('in_cek1').checked = false;
                             document.getElementById('in_cekter1').checked = false;
                             document.getElementById('in_cekter2').checked = false;
                             document.getElementById('in_penerusan').checked = false;
                             // bayar.destroy();
-                            $('.nav-pills a:first').tab('show');
+                            $('.nav-pillss a:first').tab('show');
                             $('#inputMitra').modal('hide');
                             console.log('as');
                         }
@@ -865,12 +928,12 @@
                             });
                         });
 
-                        var rupiah = document.getElementById('in_jml_tarif');
-                        rupiah.addEventListener('keyup', function(e){
-                            rupiah.value = formatRupiah(this.value, 'Rp ');
+                        var rupiah1 = document.getElementById('in_jml_tarif');
+                        rupiah1.addEventListener('keyup', function(e){
+                            rupiah1.value = formatRupiah1(this.value, 'Rp ');
                         });
 
-                        function formatRupiah(angka, prefix){
+                        function formatRupiah1(angka, prefix){
                             var number_string = angka.replace(/[^,\d]/g, '').toString(),
                             split = number_string.split(','),
                             sisa = split[0].length % 3,
@@ -886,12 +949,12 @@
                             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah :'');
                         }
 
-                        var kirim = document.getElementById('in_biaya_kirim');
-                        kirim.addEventListener('keyup', function(e){
-                            kirim.value = formatRupiahKirim(this.value, 'Rp ');
+                        var kirim1 = document.getElementById('in_biaya_kirim');
+                        kirim1.addEventListener('keyup', function(e){
+                            kirim1.value = formatRupiahKirim1(this.value, 'Rp ');
                         });
 
-                        function formatRupiahKirim(angka, prefix){
+                        function formatRupiahKirim1(angka, prefix){
                             var number_string = angka.replace(/[^,\d]/g, '').toString(),
                             split = number_string.split(','),
                             sisa = split[0].length % 3,
@@ -1146,37 +1209,32 @@
                             <div class="form-group">
                                 <label for="almt_rmh">Alamat Rumah</label> 
                                 <input class="form-control" type="text" name="almt_rmh" id="almt_rmh" style="width: 80%;" disabled>
-                                <!-- <select class="form-control" style="width: 80%;">
-                                    <option>Rumah</option>
-                                    <option>Outlet</option>
-                                    <option>Kirim</option>
-                                </select> -->
                             </div>
                             <table width='80%'>
-                                <!-- <tr>
+                                <tr>
                                     <td width='50%'>
                                         <div class="form-group">
-                                            <label for="provinsi">Provinsi</label>
-                                            <select class="form-control" name="provinsi" id="provinsi" style="width: 100%;">
+                                            
+                                            <select class="form-control" name="provinsi" id="provinsi3" style="width: 100%; display: none;">
                                                 <option value="0">Pilih</option>
                                             <?php
-                                            // foreach ($dd_pr as $row) {  
-                                            //     echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
-                                            //     }
-                                            //     echo"
-                                            // </select>"
+                                            foreach ($dd_pr as $row) {  
+                                                echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                }
+                                                echo"
+                                            </select>"
                                             ?>
                                         <div>
                                     </td>
                                     <td width='50%'>
                                         <div class="form-group">
-                                            <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
-                                                <select class="form-control" name="almt_kt_rmh" id="almt_kt_rmh" style="width: 100%;">
+                                            
+                                                <select class="form-control" name="almt_kt_rmh" id="almt_kt_rmh" style="width: 100%; display: none;">
                                                     <option value="0">Pilih</option>
                                                 </select>
                                         </div>
                                     </td>
-                                </tr> -->
+                                </tr>
                                 <tr>
                                     <td width='50%'>
                                         <div class="form-group">
@@ -1253,27 +1311,7 @@
                                     </div>
                             </div>
                             <script>
-                                // $(document).ready(function(){
-                                //     $('#daftarProduk').change(function(){
-                                //         var id=$(this).val();
-                                //         $.ajax({
-                                //             url : "<?php echo base_url();?>monitor/get_jns_barang",
-                                //             method : "POST",
-                                //             data : {id: id},
-                                //             async : false,
-                                //             dataType : 'json',
-                                //             success: function(data){
-                                //                 var html = '<option value="0">Pilih</option>';
-                                //                 var i;
-                                //                 for(i=0; i<data.length; i++){
-                                //                     html += '<option value="'+data[i].kd_barang+'">'+data[i].nm_barang+'</option>';
-                                //                 }
-                                //                 $('#daftarBarang').html(html);
-                                                
-                                //             }
-                                //         });
-                                //     });
-                                // });
+                                
                                 function load(val) {
                                         table = $('#tableOrder').DataTable({
                                                 // columnDefs: [{
@@ -1453,12 +1491,16 @@
                                         }
                                         
                             </script>
-                            <!-- <table width='80%'>
+                            <div class="form-group" stye="display: none;">
+                                
+                                <input class="form-control" type="text" name="almt_outlet" id="almt_outlet" style="width: 80%; display: none;" disabled>
+                            </div>
+                            <table width='80%'>
                                 <tr>
                                     <td width='50%'>
                                         <div class="form-group">
-                                            <label for="provinsi">Provinsi</label>
-                                            <select class="form-control" name="provinsi" id="provinsi2" style="width: 100%;">
+                                            
+                                            <select class="form-control" name="provinsi" id="provinsi2" style="width: 100%; display: none;">
                                                 <option value="0">Pilih</option>
                                             <?php
                                             foreach ($dd_pr as $row) {  
@@ -1471,17 +1513,14 @@
                                     </td>
                                     <td width='50%'>
                                         <div class="form-group">
-                                            <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
-                                            <select class="form-control" name="almt_kt_outlet" id="almt_kt_outlet" style="width: 100%;">
+                                            
+                                            <select class="form-control" name="almt_kt_outlet" id="almt_kt_outlet" style="width: 100%; display: none;">
                                                 <option value="0">Pilih</option>
                                             </select>
                                         </div>
                                     </td>
                                 </tr>
                             </table>
-                            <div class="form-group">
-                                <input type="radio" name="cek2" id="cek3" value="1"> Seperti Alamat Rumah
-                            </div> -->
                         </div>
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="tab_3">
@@ -1608,12 +1647,12 @@
                                     })
                                 });
 
-                                var rupiah = document.getElementById('jml_transfer');
-                                rupiah.addEventListener('keyup', function(e){
-                                    rupiah.value = formatRupiah(this.value, 'Rp ');
+                                var rupiah2 = document.getElementById('jml_transfer');
+                                rupiah2.addEventListener('keyup', function(e){
+                                    rupiah2.value = formatRupiah2(this.value, 'Rp ');
                                 });
                             
-                                function formatRupiah(angka, prefix){
+                                function formatRupiah2(angka, prefix){
                                     var number_string = angka.replace(/[^,\d]/g, '').toString(),
                                     split = number_string.split(','),
                                     sisa = split[0].length % 3,
@@ -1667,12 +1706,12 @@
                             <button id="submit" type="submit" class="btn btn-success" >Simpan</button>
                             <button type="button" class="btn btn-secondary" onclick="tutup()">Batal</button>
                         <script>
-                            var kirim = document.getElementById('biaya_kirim');
-                            kirim.addEventListener('keyup', function(e){
-                                kirim.value = formatRupiahKirim(this.value, 'Rp ');
+                            var kirim2 = document.getElementById('biaya_kirim');
+                            kirim2.addEventListener('keyup', function(e){
+                                kirim2.value = formatRupiahKirim2(this.value, 'Rp ');
                             });
 
-                            function formatRupiahKirim(angka, prefix){
+                            function formatRupiahKirim2(angka, prefix){
                                 var number_string = angka.replace(/[^,\d]/g, '').toString(),
                                 split = number_string.split(','),
                                 sisa = split[0].length % 3,
@@ -1761,12 +1800,36 @@
                                 '&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening+'&ekspedisi='+ekspedisi+
                                 '&b_barang='+b_barang+'&biaya_kirim='+biaya_kirim+'&keterangan='+keterangan;
 
+                                if($('#jml_tarif2').val() !== undefined){
+                                var jml_tarif2 = $('#jml_tarif2').val();
+                                var nm_bank2 = $('#nm_bank2 option:selected').val();
+                                var rekening2 = $('#rekening2').val();
+                                var ats_nm_rekening2 = $('#ats_nm_rekening2').val();
+                                dataString += '&jml_tarif2='+jml_tarif2+'&nm_bank2='+nm_bank2+'&rekening2='+rekening2+'&ats_nm_rekening2='+ats_nm_rekening2;
+                                }
+                                if($('#jml_tarif3').val() !== undefined){
+                                    var jml_tarif3 = $('#jml_tarif3').val();
+                                    var nm_bank3 = $('#nm_bank3 option:selected').val();
+                                    var rekening3 = $('#rekening3').val();
+                                    var ats_nm_rekening3 = $('#ats_nm_rekening3').val();
+                                    dataString += '&jml_tarif3='+jml_tarif3+'&nm_bank3='+nm_bank3+'&rekening3='+rekening3+'&ats_nm_rekening3='+ats_nm_rekening3;
+                                }
+
                                 $.ajax({
                                     type: 'post',
                                     url: '<?php echo base_url('Monitor/tambah_mitra_order')?>',
                                     data: dataString,
                                     success: function(){
-                                        document.getElementById('almt_kirim').value = "";
+                                            document.getElementById('almt_kirim').value = "";
+                                            document.getElementById('provinsi3').value = "";
+                                            document.getElementById('provinsi3').disabled = false;
+                                            document.getElementById('almt_outlet').value = "";
+                                            document.getElementById('provinsi2').value = "";
+                                            document.getElementById('provinsi2').disabled = false;
+                                            document.getElementById('provinsi').value = "";
+                                            document.getElementById('provinsi').disabled = false;
+                                            document.getElementById('almt_kt_kirim').value = "";
+                                            document.getElementById('almt_kt_kirim').disabled = false;
                                             document.getElementById('almt_kirim').disabled = false;
                                             document.getElementById('jml_transfer').value = "";
                                             document.getElementById('rekening').value = "";
@@ -1803,12 +1866,53 @@
 
                                             $.ajax({
                                                 type: "GET",
-                                                url: "<?php echo base_url('Monitor/get_dtorder_mitra')?>",
+                                                url: "<?php echo base_url('Monitor/get_dtmt_pel')?>",
                                                 dataType: "json",
                                                 data: dataString,
                                                 success: function(data) {
                                                     $('#nm_mitra').val(data[0]['nm_mitra']);
                                                     $('#almt_rmh').val(data[0]['almt_rmh']);
+                                                    $('#provinsi3').val(data[0]['provinsi1']);
+                                                    if($('#provinsi3').val() !== 0){
+                                                        var id = $('#provinsi3').val();
+                                                        $.ajax({
+                                                                url : "<?php echo base_url();?>monitor/get_kota",
+                                                                method : "POST",
+                                                                data : {id: id},
+                                                                async : false,
+                                                                dataType : 'json',
+                                                                success: function(data){
+                                                                    var html = '<option value="0">Pilih</option>';
+                                                                    var i;
+                                                                    for(i=0; i<data.length; i++){
+                                                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                                    }
+                                                                    $('#almt_kt_rmh').html(html);
+                                                                }
+                                                            });
+                                                    }
+                                                    $('#almt_kt_rmh').val(data[0]['kota1']);
+                                                    $('#almt_outlet').val(data[0]['almt_outlet']);
+                                                    $('#provinsi2').val(data[0]['provinsi2']);
+                                                    if($('#provinsi2').val() !== 0){
+                                                        var id = $('#provinsi2').val();
+                                                        $.ajax({
+                                                                url : "<?php echo base_url();?>monitor/get_kota",
+                                                                method : "POST",
+                                                                data : {id: id},
+                                                                async : false,
+                                                                dataType : 'json',
+                                                                success: function(data){
+                                                                    var html = '<option value="0">Pilih</option>';
+                                                                    var i;
+                                                                    for(i=0; i<data.length; i++){
+                                                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                                    }
+                                                                    $('#almt_kt_outlet').html(html);
+                                                                }
+                                                            });
+                                                    }
+                                                    $('#almt_kt_outlet').val(data[0]['kota2']);
                                                     $('#no_hp1').val(data[0]['no_hp1']);
                                                     $('#no_hp2').val(data[0]['no_hp2']);
                                                     $('#kd_mitra').val(data[0]['kd_mitra']);
@@ -1868,6 +1972,15 @@
                                             document.getElementById('daftarProduk').value = "";
                                             document.getElementById('daftarBarang').value = "";
                                             document.getElementById('jml_barang').value = "";
+                                            document.getElementById('provinsi3').value = "";
+                                            document.getElementById('provinsi3').disabled = false;
+                                            document.getElementById('almt_outlet').value = "";
+                                            document.getElementById('provinsi2').value = "";
+                                            document.getElementById('provinsi2').disabled = false;
+                                            document.getElementById('provinsi').value = "";
+                                            document.getElementById('provinsi').disabled = false;
+                                            document.getElementById('almt_kt_kirim').value = "";
+                                            document.getElementById('almt_kt_kirim').disabled = false;
                                             document.getElementById("cek1").checked = false;
                                             document.getElementById("cek2").checked = false;
                                             // $(".nav-item:first-child").addClass("active");
@@ -1909,7 +2022,7 @@
                             <div class="modal-body">
                                 <div class="card-header d-flex p-0">
                                     <h3 class="card-title p-3">Data Mitra</h3>
-                                    <ul class="nav nav-pills ml-auto p-2">
+                                    <ul class="nav nav-pillsl ml-auto p-2">
                                         <li class="nav-item"><a class="nav-link" href="#tabs_1" data-toggle="tab">Identitas</a></li>
                                         <li class="nav-item"><a class="nav-link" href="#tabs_2" data-toggle="tab">Outlet</a></li>
                                         <li class="nav-item"><a class="nav-link" href="#tabs_3" data-toggle="tab">Pengiriman</a></li>
@@ -2313,6 +2426,50 @@
                     </div>
                 </div>
                 <script>
+                    var rupiah3 = document.getElementById('dt_jml_tarif');
+                    rupiah3.addEventListener('keyup', function(e){
+                        rupiah3.value = formatRupiah3(this.value, 'Rp ');
+                    });
+                
+                    function formatRupiah3(angka, prefix){
+                        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                        split = number_string.split(','),
+                        sisa = split[0].length % 3,
+                        rupiah = split[0].substr(0, sisa),
+                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+                    
+                        if(ribuan){
+                            separator = sisa ? '.' : '';
+                            rupiah += separator + ribuan.join('.');
+                        }
+                    
+                        rupiah = split[1] != undefined ? rupiah + '.' + split[1] : rupiah;
+                        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah :'');
+                    }
+                
+                
+                
+                    var kirim3 = document.getElementById('dt_biaya_kirim');
+                    kirim3.addEventListener('keyup', function(e){
+                        kirim3.value = formatRupiahKirim3(this.value, 'Rp ');
+                    });
+
+                    function formatRupiahKirim3(angka, prefix){
+                        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                        split = number_string.split(','),
+                        sisa = split[0].length % 3,
+                        kirim = split[0].substr(0, sisa),
+                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                        if(ribuan){
+                            separator = sisa ? '.' : '';
+                            kirim += separator + ribuan.join('.');
+                        }
+
+                        kirim = split[1] != undefined ? kirim + '.' + split[1] : kirim;
+                        return prefix == undefined ? kirim : (kirim ? 'Rp ' + kirim :'');
+                    }
+
                     function ttp(){
                         var kd_pmby = $('#dt_kd_pmby').val();
                         var data =  'kd_pmby='+kd_pmby;
@@ -2355,7 +2512,7 @@
                             // document.getElementById('dt_penerusan').checked = false;
                             // lunas.destroy();
                             // $('#dttableBank').DataTable().ajax.reload();
-                            $('.nav-pills a:first').tab('show');
+                            $('.nav-pillsl a:first').tab('show');
                             $('#modalPelunasan').modal('hide');
                     }
 
@@ -2449,6 +2606,7 @@
                                     'success'
                                 )
                                 $('#modalPelunasan').modal('hide');
+                                $('.nav-pillsl a:first').tab('show');
                                 $('#mthri-table').DataTable().ajax.reload();
                                 $('#dp-table').DataTable().ajax.reload();
                                 $('#cc-table').DataTable().ajax.reload();
@@ -2652,6 +2810,74 @@
                             });
                         });
                     });
+                    $(document).ready(function(){
+                            $('#cek1').change(
+                                function(){
+                                    if($(this).is(':checked')){
+                                        var almt = document.getElementById('almt_rmh').value;
+                                        document.getElementById('almt_kirim').value = almt;
+                                        document.getElementById('almt_kirim').disabled  = true;
+                                        $('#provinsi').val($('#provinsi3 option:selected').val());
+                                        $('#provinsi').prop('disabled', 'disabled');
+                                        if($('#provinsi option:selected').val() !== 0){
+                                            var id=$('#provinsi option:selected').val();
+                                            $.ajax({
+                                                url : "<?php echo base_url();?>monitor/get_kota",
+                                                method : "POST",
+                                                data : {id: id},
+                                                async : false,
+                                                dataType : 'json',
+                                                success: function(data){
+                                                    var html = '';
+                                                    var i;
+                                                    for(i=0; i<data.length; i++){
+                                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                    }
+                                                    $('#almt_kt_kirim').html(html);
+                                                    $('#almt_kt_kirim').val($('#almt_kt_rmh option:selected').val());
+                                                    $('#almt_kt_kirim').prop('disabled', 'disabled');
+                                                }
+                                            });
+                                        }
+                                        
+                                    }
+                                }
+                            )
+                        })
+                    //kirim
+                        $(document).ready(function(){
+                            $('#cek2').change(
+                                function(){
+                                    if($(this).is(':checked')){
+                                        var almt = document.getElementById('almt_outlet').value;
+                                        document.getElementById('almt_kirim').value = almt;
+                                        document.getElementById('almt_kirim').disabled  = true;
+                                        $('#provinsi3').val($('#provinsi2 option:selected').val());
+                                        $('#provinsi3').prop('disabled', 'disabled');
+                                        if($('#provinsi3 option:selected').val() !== 0){
+                                            var id=$('#provinsi2 option:selected').val();
+                                            $.ajax({
+                                                url : "<?php echo base_url();?>monitor/get_kota",
+                                                method : "POST",
+                                                data : {id: id},
+                                                async : false,
+                                                dataType : 'json',
+                                                success: function(data){
+                                                    var html = '';
+                                                    var i;
+                                                    for(i=0; i<data.length; i++){
+                                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                    }
+                                                    $('#almt_kt_kirim').html(html);
+                                                    $('#almt_kt_kirim').val($('#almt_kt_outlet option:selected').val());
+                                                    $('#almt_kt_kirim').prop('disabled', 'disabled');
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            )
+                        })
                 </script>
 
 			</div>
@@ -2864,6 +3090,28 @@
                     var almt = document.getElementById('almt_rmh').value;
                     document.getElementById('almt_kirim').value = almt;
                     document.getElementById('almt_kirim').disabled  = true;
+                    $('#provinsi2').val($('#provinsi option:selected').val());
+                    $('#provinsi2').prop('disabled', 'disabled');
+                    if($('#provinsi option:selected').val() !== 0){
+                        var id=$('#provinsi option:selected').val();
+                        $.ajax({
+                            url : "<?php echo base_url();?>monitor/get_kota",
+                            method : "POST",
+                            data : {id: id},
+                            async : false,
+                            dataType : 'json',
+                            success: function(data){
+                                var html = '';
+                                var i;
+                                for(i=0; i<data.length; i++){
+                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                }
+                                $('#almt_kt_outlet').html(html);
+                                $('#almt_kt_outlet').val($('#almt_kt_rmh option:selected').val());
+                                $('#almt_kt_outlet').prop('disabled', 'disabled');
+                            }
+                        });
+                    }
                 }
             }
         )

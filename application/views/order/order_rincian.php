@@ -39,7 +39,7 @@
             <tr><td>Kota</td><td>:</td><td>'.$mitra->nama_kota.'</td></tr>
             <tr><td>Ekspedisi</td><td>:</td><td>'.$mitra->ekspedisi.'</td></tr>
             <tr><td>Total Berat</td><td>:</td><td>'.$mitra->b_barang.' kg</td></tr>
-            <tr><td>Biaya Kirim</td><td>:</td><td>Rp '.number_format($mitra->biaya_kirim,2,',','.').'</td></tr>
+            <tr><td>Biaya Kirim</td><td>:</td><td>'.$mitra->biaya_kirim.'</td></tr>
             <tr><td>Keterangan</td><td>:</td><td>'.$mitra->ket.'</td></tr>
             </table>';
             
