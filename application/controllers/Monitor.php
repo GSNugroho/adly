@@ -70,9 +70,16 @@ class Monitor extends CI_Controller {
 			'ekspedisi' => $this->input->post('ekspedisi', TRUE),
 			'biaya_kirim' => $this->input->post('biaya_kirim', TRUE),
 			'tambahan' => $this->input->post('tambahan', TRUE),
+			'ats_nm_penerusan' => $this->input->post('ats_nm_penerusan', TRUE),
+			'by_tmbbb' => $this->input->post('by_tmbbb', TRUE),
+			'nm_bank_tmbb' => $this->input->post('nm_bank_tmbb', TRUE),
+			'rekening_tmbb' => $this->input->post('rekening_tmbb', TRUE),
+			'jml_tarif_tmbbb' => $this->input->post('jml_tarif_tmbbb', TRUE),
+			'ats_nm_rekening_tmbbb' => $this->input->post('ats_nm_rekening_tmbbb', TRUE),
 			'kd_mitra' => $this->kode(),
 			'pembayaran' => $kode,
 			'dt_aktif' => $aktif,
+			'sts_vakum' => $aktif,
 			'dt_create' => date('Y-m-d')
 		);
 
@@ -200,7 +207,9 @@ class Monitor extends CI_Controller {
 					'ekspedisi' => $this->input->post('ekspedisi', TRUE),
 					'biaya_kirim' => $this->input->post('biaya_kirim', TRUE),
 					'almt_outlet' => $this->input->post('almt_outlet', TRUE),
+					'almt_rmh' => $this->input->post('almt_rmh', TRUE),
 					// 'almt_prov_outlet' => $this->input->post('almt_prov_outlet', TRUE),
+					'almt_kt_rmh' => $this->input->post('almt_kt_rmh', TRUE),
 					'almt_kt_outlet' => $this->input->post('almt_kt_outlet', TRUE),
 					'almt_kirim' => $this->input->post('almt_kirim', TRUE),
 					// 'almt_prov_kirim' => $this->input->post('almt_prov_kirim', TRUE),
@@ -217,6 +226,8 @@ class Monitor extends CI_Controller {
 				'ekspedisi' => $this->input->post('ekspedisi', TRUE),
 				'biaya_kirim' => $this->input->post('biaya_kirim', TRUE),
 				'almt_outlet' => $this->input->post('almt_outlet', TRUE),
+				'almt_rmh' => $this->input->post('almt_rmh', TRUE),
+				'almt_kt_rmh' => $this->input->post('almt_kt_rmh', TRUE),
 				// 'almt_prov_outlet' => $this->input->post('almt_prov_outlet', TRUE),
 				'almt_kt_outlet' => $this->input->post('almt_kt_outlet', TRUE),
 				'almt_kirim' => $this->input->post('almt_kirim', TRUE),
@@ -275,6 +286,25 @@ class Monitor extends CI_Controller {
 		}
 		
 		$this->M_monitor->update($this->input->post('kd_mitra'), $data);
+	}
+
+	function vakum($id){
+		$row = $this->M_monitor->get_by_id($id);
+		if($row){
+			$sts_vakum = $row->sts_vakum;
+		}
+		if($sts_vakum == 1){
+			$data = array(
+				'sts_vakum' => 0
+			);
+		}else{
+			$data = array(
+				'sts_vakum' => 1
+			);
+		}
+		
+		$this->M_monitor->update($id, $data);
+		redirect(site_url('Monitor'));
 	}
 
 	function pelunasan($id){
@@ -559,8 +589,22 @@ class Monitor extends CI_Controller {
 					</a>
 					<button value="'.$row->kd_mitra.'" class="btn btn-warning" style="width: 100%;" data-toggle="modal" data-target="#exampleModal"  data-keyboard="false" data-backdrop="static" data-whatever="'.$row->kd_mitra.'" onclick="load(this.value)">Order</button>
 					';
-				}
-				
+				}				
+			}
+
+			
+			if($row->sts_vakum == 1){
+				$button .= '
+				<a href="monitor/vakum/'.$row->kd_mitra.'" class="btn btn-danger" style="width: 100%;">
+				OFF
+				</a>
+				';
+			}else{
+				$button .= '
+				<a href="monitor/vakum/'.$row->kd_mitra.'" class="btn btn-danger" style="width: 100%;">
+				Aktif
+				</a>
+				';
 			}
 			// onclick="load(this.value)"
 		$data[] = array( 
@@ -1244,9 +1288,266 @@ class Monitor extends CI_Controller {
 	}
 
 	function tambah_mitra_order(){
+		date_default_timezone_set("Asia/Jakarta");
 		$kd_mitra = $this->input->post('kd_mitra', TRUE);
 		$data = $this->M_monitor->get_all_harga($kd_mitra);
 		$total = 0;
+		$nm_p = $this->input->post('nm_produk', TRUE);
+
+		if($nm_p == 'PR000001'){
+			$kd_o = $this->kode_OR();
+			$total = (int)$this->input->post('tot_h_paket3', true);
+			$all = $this->M_monitor->get_tmp_tahu();
+			foreach($all as $row){
+				$total = $total + ($row->harga_barang * $row->jml_barang);
+				$detail = array(
+					"kd_order" => $kd_o,
+					"kd_barang" => $row->kd_barang,
+					"jml_barang" => $row->jml_barang
+				);
+				$this->M_monitor->insertdetail($detail);
+			}
+			$data = array(
+				"kd_mitra" => $kd_mitra,
+				"kd_order" => $kd_o,
+				"total_order"=> $total,
+				"dt_trans"=> date('Y-m-d H:i:s'),
+				"almt_kirim"=> $this->input->post('almt_kirim', TRUE),
+				"almt_kt_kirim"=> $this->input->post('almt_kt_kirim', TRUE),
+				"almt_terusan"=> $this->input->post('almt_terusan', TRUE),
+				"almt_kt_terusan"=> $this->input->post('almt_kt_terusan', TRUE),
+				"jml_transfer"=> $this->input->post('jml_transfer', TRUE),
+				"nm_bank"=> $this->input->post('nm_bank', TRUE),
+				"rekening"=> $this->input->post('rekening', TRUE),
+				"ats_nm_rekening"=> $this->input->post('ats_nm_rekening', TRUE),
+				"ekspedisi"=> $this->input->post('ekspedisi', TRUE),
+				"b_barang"=> $this->input->post('b_barang', TRUE),
+				"biaya_kirim"=> $this->input->post('biaya_kirim', TRUE),
+				"ket"=> $this->input->post('keterangan', TRUE),
+				"porsi"=>$this->input->post('jmlporsi', TRUE)
+			);
+			$this->M_monitor->insert_order($data);
+
+			if($this->input->post('jml_tarif2', true) != ''){
+				$data = array(
+					'jml_transfer2' => $this->input->post('jml_tarif2', true),
+					'nm_bank2' => $this->input->post('nm_bank2', true),
+					'rekening2' => $this->input->post('rekening2', true),
+					'ats_nm_rekening2' => $this->input->post('ats_nm_rekening2', true),
+				);
+				$this->M_monitor->update_dtmitra_order($kd_o, $data);
+			}
+	
+			if($this->input->post('jml_tarif3', true) != ''){
+				$data = array(
+					'jml_transfer3' => $this->input->post('jml_tarif3', true),
+					'nm_bank3' => $this->input->post('nm_bank3', true),
+					'rekening3' => $this->input->post('rekening3', true),
+					'ats_nm_rekening3' => $this->input->post('ats_nm_rekening3', true),
+				);
+				$this->M_monitor->update_dtmitra_order($kd_o, $data);
+			}
+			if($this->input->post('jmltpng') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('tepung'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmltpng', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlasin') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('asin'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlasin', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlpaperbag') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('paperbag'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlpaperbag', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe1') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe1'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe1', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbox') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('box'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbox', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe2') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe2'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe2', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe3') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe3'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe3', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbbq') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('bbq'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbbq', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbalado') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('balado'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbalado', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlkeju') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('keju'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlkeju', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlpizza') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('pizza'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlpizza', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmljbakar') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jbakar'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmljbakar', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlabp') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('abaw'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlabp', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlsp') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('sapip'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlsp', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlka') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('kari'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlka', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlrl') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('rumput'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlrl', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmljm') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jmljm'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmljm', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmllh') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jman'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmllh', true)
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+
+			$this->M_monitor->tmp_order_delete($kd_mitra);
+		}else{
 		foreach($data as $row){
 			$total = $total + ($row->harga_barang * $row->jml_barang);
 			$ko = $row->kd_tmp_order;
@@ -1257,12 +1558,14 @@ class Monitor extends CI_Controller {
 			);
 			$this->M_monitor->insertdetail($detail);
 		}
-		date_default_timezone_set("Asia/Jakarta");
+		
 		$data = array(
 			"total_order"=> $total,
 			"dt_trans"=> date('Y-m-d H:i:s'),
 			"almt_kirim"=> $this->input->post('almt_kirim', TRUE),
 			"almt_kt_kirim"=> $this->input->post('almt_kt_kirim', TRUE),
+			"almt_terusan"=> $this->input->post('almt_terusan', TRUE),
+			"almt_kt_terusan"=> $this->input->post('almt_kt_terusan', TRUE),
 			"jml_transfer"=> $this->input->post('jml_transfer', TRUE),
 			"nm_bank"=> $this->input->post('nm_bank', TRUE),
 			"rekening"=> $this->input->post('rekening', TRUE),
@@ -1300,6 +1603,7 @@ class Monitor extends CI_Controller {
 		);
 		$this->M_monitor->update($kd_mitra, $last);
 	}
+	}
 
 	function tambah_order(){
 		$id = '1';
@@ -1327,6 +1631,20 @@ class Monitor extends CI_Controller {
 		if($cek_row == false){
 			$this->M_monitor->insert_order($data_in);
 		}
+		$this->M_monitor->tmp_order_insert($data);
+	}
+	function tambah_order_tahu(){
+		$id = '1';
+		$kd_mt = $this->input->post('kd_mitra', TRUE);
+		
+		$data = array(
+			"kd_barang" => $this->input->post('brg', TRUE),
+			"jml_barang" => $this->input->post('jml', TRUE),
+			"harga_barang" => $this->input->post('harg', TRUE),
+			"kd_mitra" => $kd_mt
+			
+		);
+		
 		$this->M_monitor->tmp_order_insert($data);
 	}
 

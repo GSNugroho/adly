@@ -17,7 +17,13 @@
 	<!-- Template e -->
     <link rel="stylesheet" href="../../../assets/bootstrap/css/sb-admin-2.min.css"/>
     <link href="../../../assets/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
+<style>
+  input[type=number] {
+  -moz-appearance: textfield;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+</style>
 </head>
 
 <body id="page-top">
@@ -468,89 +474,632 @@
                 <!-- /.tab-pane -->
                 <div class="tab-pane" id="tab_2">
                     <div class="form-group">
-                        <label for="Barang">Barang</label>
-                        <select class="form-control" name="barang" id="barang" style="width: 80%;">
-                            <option>Tepung</option>
-                            <option>Keju</option>
+                        <label for="Barang">Produk</label>
+                        <select class="form-control" name="barang" id="barang" style="width: 80%;" disabled>
+                            <option selected>Tahu Gila</option>
+                            <!-- <option>Keju</option>
                             <option>Minyak</option>
-                            <option>Ayam</option>
+                            <option>Ayam</option> -->
                         </select>
-                        <br>
+                        <label for="total">Total Harga</label>
+                        <input type="text" id="tot_harga" name="tot_harga" class="form-control" disabled>
+                        <!-- <br>
                         <input class="form-control" name="jml_barang" id="jml_barang" type="text" placeholder="Jumlah barang" style="width: 80%">
                         <br>
-                        <button class="btn btn-primary" type="submit">Tambah</button>
+                        <button class="btn btn-primary" type="submit">Tambah</button> -->
+                        <!-- <br>
+                        <input type="radio" name="paketItem" id="paketItem1"> Paket 2 Item
+                        <input type="radio" name="paketItem" id="paketItem2"> Paket 3 Item -->
+                        <br>
+                        <input type="checkbox" name="paketItem" id="paketItem3"> Eceran
+                        <input type="checkbox" name="paketItem" id="paketItem2"> Paket 3 Item
+                        <input type="checkbox" name="paketItem" id="paketItem1"> Paket 2 Item
+                        <script>
+                          $(document).ready(function(){
+                              $('#paketItem1').on('click', function(){
+                                  if($('#paketItem1').is(':checked')){
+                                      $('#paket2').show();
+                                  }else{
+                                    $('#paket2').hide();
+                                      document.getElementById('tot_harga').value = '';
+                                  }
+                              })
+                          })
+                          $(document).ready(function(){
+                              $('#paketItem2').on('click', function(){
+                                  if($('#paketItem2').is(':checked')){
+                                      $('#paket3').show();
+                                  }else{
+                                    $('#paket3').hide();
+                                    document.getElementById('tot_harga').value = '';
+                                  }
+                              })
+                          })
+                          $(document).ready(function(){
+                              $('#paketItem3').on('click', function(){
+                                  if($('#paketItem3').is(':checked')){
+                                      $('#paketecer').show();
+                                  }else{
+                                      $('#paketecer').hide();
+                                  }
+                              })
+                          })
+                        </script>
                     </div>
-              
+                    <div id="paketecer" style="display: none;">
+                      <div class="form-group">
+                        <label for="a_barang">Barang</label>
+                        <select class="form-control" id="a_barang" name="a_barang">
+                          <option>Tepung</option>
+                          <option>Asin</option>
+                          <option>Paperbag</option>
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <label for="jml_barang">Jumlah Barang</label>
+                        <input type="text" class="form-control" id="jml_barang" name="jml_barang">
+                      </div>
+                      <div class="form-group">
+                        <label for="harga_barang">Harga Barang</label>
+                        <input type="text" class="form-control" id="harga_barang" name="harga_barang">
+                      </div>
+                    </div>
+
+                    <div id="paket3" style="display: none;">
                     <div class="form-group">
-                            <label for="almt_outlet">Rincian Order</label> <?php echo form_error('almt_outlet') ?>
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                  <thead>
-                                    <tr>
-                                      <th>Name</th>
-                                      <th>Jumlah</th>
-                                      <th>Harga</th>
-                                    </tr>
-                                  </thead>
-                                  <!-- <tfoot>
-                                    <tr>
-                                      <th>Name</th>
-                                      <th>Position</th>
-                                      <th>Office</th>
-                                      <th>Age</th>
-                                      <th>Start date</th>
-                                      <th>Salary</th>
-                                    </tr>
-                                  </tfoot> -->
-                                  <tbody>
-                                    <tr>
-                                      <td>Tepung</td>
-                                      <td>1</td>
-                                      <td>100000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tepung</td>
-                                        <td>1</td>
-                                        <td>100000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tepung</td>
-                                        <td>1</td>
-                                        <td>100000</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
+                      <label for="paketPorsi">Jumlah Porsi</label>
+                      <input class="form-control" type="number" name="paketPorsi" id="paketPorsi" style="width: 80%;">
                     </div>
-                    <!-- <table width='80%'>
+                      <table class="table table-bordered" id="tablePaket3">
                         <tr>
-                            <td width='50%'>
-                                <div class="form-group">
-                                    <label for="provinsi">Provinsi</label>
-                                    <select class="form-control" name="provinsi" id="provinsi2" style="width: 100%;">
-                                        <option value="0">Pilih</option>
-                                    <?php
-                                    foreach ($dd_pr as $row) {  
-                                        echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
-                                        }
-                                        echo"
-                                    </select>"
-                                    ?>
-                                </div>
-                            </td>
-                            <td width='50%'>
-                                <div class="form-group">
-                                    <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
-                                    <select class="form-control" name="almt_kt_outlet" id="almt_kt_outlet" style="width: 100%;">
-                                        <option value="0">Pilih</option>
-                                    </select>
-                                </div>
-                            </td>
+                          <th colspan="2" width=30%>Bahan Baku</th>
+                          <th colspan="2" width=30%>Bumbu</th>
+                          <th colspan="2" width=30%>Kemasan</th>
                         </tr>
-                    </table>
-                    <div class="form-group">
-                        <input type="radio" name="cek2" id="cek3" value="1"> Seperti Alamat Rumah
-                    </div> -->
+                        <tr>
+                          <td width=20%>Tepung</td>
+                          <td><input class="form-control" type="number" name="jmltpng" id="jmltpng" step="any">kg</td>
+                          <td width=20%>Asin</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlasin" id="jmlasin"></td>
+                          <td width=20%>Paperbag</td>
+                          <td><input class="form-control kemCal" type="number" name="jmlpaperbag" id="jmlpaperbag"></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Cabe Lev 1</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlcabe1" id="jmlcabe1"></td>
+                          <td width=20%>Box</td>
+                          <td><input class="form-control kemCal" type="number" name="jmlbox" id="jmlbox"></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Cabe Lev 2</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlcabe2" id="jmlcabe2"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Cabe Lev 3</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlcabe3" id="jmlcabe3"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>BBQ</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlbbq" id="jmlbbq"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Balado</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlbalado" id="jmlbalado"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Keju</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlkeju" id="jmlkeju"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Pizza</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlpizza" id="jmlpizza"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Jagung Bakar</td>
+                          <td><input class="form-control txtCal" type="number" name="jmljbakar" id="jmljbakar"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Ayam Bawang Pedas</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlabp" id="jmlabp"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Sapi Panggang</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlsp" id="jmlsp"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Kari Ayam</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlka" id="jmlka"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Rumput Laut</td>
+                          <td><input class="form-control txtCal" type="number" name="jmlrl" id="jmlrl"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Jagung Manis</td>
+                          <td><input class="form-control txtCal" type="number" name="jmljm" id="jmljm"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%></td>
+                          <td></td>
+                          <td width=20%>Lada Hitam</td>
+                          <td><input class="form-control txtCal" type="number" name="jmllh" id="jmllh"></td>
+                          <td width=20%></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td width=20%>Total</td>
+                          <td><input class="form-control" type="number" name="jmlbb" id="jmlbb" >kg</td>
+                          <td width=20%>Total</td>
+                          <td><input class="form-control" type="number" name="jmlbumbu" id="jmlbumbu" >porsi</td>
+                          <td width=20%>Total</td>
+                          <td><input class="form-control" type="number" name="jmlkemasan" id="jmlkemasan" >pcs</td>
+                        </tr>
+                      </table>
+                    </div>
+                    <script>
+                      var tpng = 0.04;
+                      var hitung = 0;
+                      var jmlporsi = document.getElementById('paketPorsi');
+                      jmlporsi.addEventListener('keyup', function(e){
+                        var tot = parseInt(document.getElementById('paketPorsi').value) * 1900;
+                        document.getElementById('tot_harga').value = number_format(tot,2,',','.');
+                        
+                        document.getElementById("jmlbumbu").max = jmlporsi.value;
+                        document.getElementById("jmlkemasan").max = jmlporsi.value;
+                        hitung = parseInt(jmlporsi.value) * tpng;
+                        document.getElementById("jmltpng").value = hitung;
+                        document.getElementById("jmlbb").value = hitung;
+                      })
+
+                      $(document).ready(function(){
+                      $("#tablePaket3").on('input', '.txtCal', function () {
+                            var calculated_total_sum = 0;
+                          
+                            $("#tablePaket3 .txtCal").each(function () {
+                                var get_textbox_value = $(this).val();
+                                if ($.isNumeric(get_textbox_value)) {
+                                    calculated_total_sum += parseFloat(get_textbox_value);
+                                    }                  
+                                  });
+                                    $("#jmlbumbu").val(calculated_total_sum);
+                            });
+
+                      });
+                      $(document).ready(function(){
+                      $("#tablePaket3").on('input', '.kemCal', function () {
+                            var calculated_total_sum = 0;
+                          
+                            $("#tablePaket3 .kemCal").each(function () {
+                                var get_textbox_value = $(this).val();
+                                if ($.isNumeric(get_textbox_value)) {
+                                    calculated_total_sum += parseFloat(get_textbox_value);
+                                    }                  
+                                  });
+                                    $("#jmlkemasan").val(calculated_total_sum);
+                            });
+
+                      });
+                    </script>
+
+                    <div id="paket2" style="display: none;">
+                      <div class="form-group">
+                        <label for="paketPorsi">Jumlah Porsi</label>
+                        <input class="form-control" type="number" name="paketPorsi" id="paketPorsi2" style="width: 80%;">
+                      </div>
+                      <table class="table table-bordered" id="tablePaket2">
+                        <tr>
+                          <td align="center"><input type="checkbox" name="bbdanb" id="bbdanb"> Bahan & Bumbu</td>
+                          <td align="center"><input type="checkbox" name="kdanb" id="kdanb"> Kemasan & Bumbu</td>
+                          <td align="center"><input type="checkbox" name="bbdank" id="bbdank"> Bahan & Kemasan</td>
+                          <script>
+                            var jmlporsi2 = document.getElementById('paketPorsi2');
+                            var hitung2 = 0;
+                            jmlporsi2.addEventListener('keyup', function(e){
+                              var tot2 = parseInt(document.getElementById('paketPorsi2').value) * 1500;
+                              // var a = number_format(tot2,2,',','.');
+                              document.getElementById('tot_harga').value = tot2;
+
+                              document.getElementById("jmlbumbu21").max = jmlporsi2.value;
+                              document.getElementById("jmlbumbu22").max = jmlporsi2.value;
+                              document.getElementById("jmlkemasan22").max = jmlporsi2.value;
+                              document.getElementById("jmlkemasan23").max = jmlporsi2.value;
+                              hitung2 = parseInt(jmlporsi2.value) * tpng;
+                              document.getElementById("jmlhtpng21").value = hitung2;
+                              document.getElementById("jmlhtpng23").value = hitung2;
+                              document.getElementById("jmlbb21").value = hitung2;
+                              document.getElementById("jmlbb23").value = hitung2;
+                            })
+                          </script>
+                        </tr>
+                        <tr>
+                          <td>
+                            <div id="bahandanbumbu" style="display: none;">
+                            <table class="table table-bordered" id="tablePaket21">
+                              <tr>
+                                <th colspan="2">Bahan</th>
+                                <th colspan="2">Bumbu</th>
+                              </tr>
+                              <tr>
+                                <td width=20%>Tepung</td>
+                                <td><input class="form-control" type="number" name="jmltpng21" id="jmlhtpng21" step="any">kg</td>
+                                <td width=20%>Asin</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlasin21" id="jmlasin21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Cabe Lev 1</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlcabe121" id="jmlcabe121"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Cabe Lev 2</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlcabe221" id="jmlcabe221"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Cabe Lev 3</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlcabe321" id="jmlcabe321"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>BBQ</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlbbq21" id="jmlbbq21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Balado</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlbalado21" id="jmlbalado21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Keju</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlkeju21" id="jmlkeju21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Pizza</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlpizza21" id="jmlpizza21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Jagung Bakar</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmljbakar21" id="jmljbakar21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Ayam Bawang Pedas</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlabp21" id="jmlabp21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Sapi Panggang</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlsp21" id="jmlsp21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Kari Ayam</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlka21" id="jmlka21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Rumput Laut</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmlrl21" id="jmlrl21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Jagung Manis</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmljm21" id="jmljm21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Lada Hitam</td>
+                                <td><input class="form-control 21Cal" type="number" name="jmllh21" id="jmllh21"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%>Total</td>
+                                <td><input class="form-control" type="number" name="jmlbb21" id="jmlbb21">kg</td>
+                                <td width=20%>Total</td>
+                                <td><input class="form-control" type="number" name="jmlbumbu21" id="jmlbumbu21">porsi</td>
+                              </tr>
+                            </table>
+                          </div>
+                          <script>
+                            $(document).ready(function(){
+                              $("#tablePaket21").on('input', '.21Cal', function () {
+                                    var calculated_total_sum = 0;
+                                  
+                                    $("#tablePaket21 .21Cal").each(function () {
+                                        var get_textbox_value = $(this).val();
+                                        if ($.isNumeric(get_textbox_value)) {
+                                            calculated_total_sum += parseFloat(get_textbox_value);
+                                            }                  
+                                          });
+                                            $("#jmlbumbu21").val(calculated_total_sum);
+                                    });
+
+                              });
+                            
+                          </script>
+                          </td>
+                          <td>
+                            <div id="kemasandanbumbu" style="display: none;">
+                            <table class="table table-bordered" id="tablePaket22">
+                              <tr>
+                                <th colspan="2">Kemasan</th>
+                                <th colspan="2">Bumbu</th>
+                              </tr>
+                              <tr>
+                                <td width=20%>Paperbag</td>
+                                <td><input class="form-control 22Kem" type="number" name="jmlpaperbag22" id="jmlpaperbag22"></td>
+                                <td width=20%>Asin</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlasin22" id="jmlasin22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%>Box</td>
+                                <td><input class="form-control 22Kem" type="number" name="jmlbox22" id="jmlbox22"></td>
+                                <td width=20%>Cabe Lev 1</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlcabe122" id="jmlcabe122"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Cabe Lev 2</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlcabe222" id="jmlcabe222"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Cabe Lev 3</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlcabe322" id="jmlcabe322"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>BBQ</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlbbq22" id="jmlbbq22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Balado</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlbalado22" id="jmlbalado22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Keju</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlkeju22" id="jmlkeju22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Pizza</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlpizza22" id="jmlpizza22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Jagung Bakar</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmljbakar22" id="jmljbakar22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Ayam Bawang Pedas</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlabp22" id="jmlabp22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Sapi Panggang</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlsp22" id="jmlsp22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Kari Ayam</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlka22" id="jmlka22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Rumput Laut</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmlrl22" id="jmlrl22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Jagung Manis</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmljm22" id="jmljm22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Lada Hitam</td>
+                                <td><input class="form-control 22Cal" type="number" name="jmllh22" id="jmllh22"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%>Total</td>
+                                <td><input class="form-control" type="number" name="jmlkemasan22" id="jmlkemasan22">pcs</td>
+                                <td width=20%>Total</td>
+                                <td><input class="form-control" type="number" name="jmlbumbu22" id="jmlbumbu22">porsi</td>
+                              </tr>
+                            </table>
+                          </div>
+                          <script>
+                            $(document).ready(function(){
+                            $("#tablePaket22").on('input', '.22Cal', function () {
+                                  var calculated_total_sum = 0;
+                                
+                                  $("#tablePaket22 .22Cal").each(function () {
+                                      var get_textbox_value = $(this).val();
+                                      if ($.isNumeric(get_textbox_value)) {
+                                          calculated_total_sum += parseFloat(get_textbox_value);
+                                          }                  
+                                        });
+                                          $("#jmlbumbu22").val(calculated_total_sum);
+                                  });
+
+                            });
+                            $(document).ready(function(){
+                            $("#tablePaket22").on('input', '.22Kem', function () {
+                                  var calculated_total_sum = 0;
+                                
+                                  $("#tablePaket22 .22Kem").each(function () {
+                                      var get_textbox_value = $(this).val();
+                                      if ($.isNumeric(get_textbox_value)) {
+                                          calculated_total_sum += parseFloat(get_textbox_value);
+                                          }                  
+                                        });
+                                          $("#jmlkemasan22").val(calculated_total_sum);
+                                  });
+
+                            });
+
+                          </script>
+                          </td>
+                          <td>
+                            <div id="bahandankemasan" style="display: none;">
+                            <table class="table table-bordered" id="tablePaket23">
+                              <tr>
+                                <th colspan="2">Bahan</th>
+                                <th colspan="2">Kemasan</th>
+                              </tr>
+                              <tr>
+                                <td width=20%>Tepung</td>
+                                <td><input class="form-control" type="number" name="jmltpng23" id="jmlhtpng23" step="any">kg</td>
+                                <td width=20%>Paperbag</td>
+                                <td><input class="form-control 23Kem" type="number" name="jmlpaperbag23" id="jmlpaperbag23"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%></td>
+                                <td></td>
+                                <td width=20%>Box</td>
+                                <td><input class="form-control 23Kem" type="number" name="jmlbox23" id="jmlbox23"></td>
+                              </tr>
+                              <tr>
+                                <td width=20%>Total</td>
+                                <td><input class="form-control" type="number" name="jmlbb23" id="jmlbb23" step="any">kg</td>
+                                <td width=20%>Total</td>
+                                <td><input class="form-control" type="number" name="jmlkemasan23" id="jmlkemasan23">pcs</td>
+                              </tr>
+                            </table>
+                          </div>
+                          <script>
+                            $(document).ready(function(){
+                              $("#tablePaket23").on('input', '.23Kem', function () {
+                                    var calculated_total_sum = 0;
+                                  
+                                    $("#tablePaket23 .23Kem").each(function () {
+                                        var get_textbox_value = $(this).val();
+                                        if ($.isNumeric(get_textbox_value)) {
+                                            calculated_total_sum += parseFloat(get_textbox_value);
+                                            }                  
+                                          });
+                                            $("#jmlkemasan23").val(calculated_total_sum);
+                                    });
+
+                              });
+                          </script>
+                          </td>
+                          
+                        </tr>
+                      </table>
+                    </div>
+                    <script>
+                      $(document).ready(function(){
+                              $('#bbdanb').on('click', function(){
+                                  if($('#bbdanb').is(':checked')){
+                                      $('#bahandanbumbu').show();
+                                  }else{
+                                    $('#bahandanbumbu').hide();
+                                  }
+                              })
+                          })
+                      $(document).ready(function(){
+                              $('#kdanb').on('click', function(){
+                                  if($('#kdanb').is(':checked')){
+                                      $('#kemasandanbumbu').show();
+                                  }else{
+                                    $('#kemasandanbumbu').hide();
+                                  }
+                              })
+                          })
+                      $(document).ready(function(){
+                              $('#bbdank').on('click', function(){
+                                  if($('#bbdank').is(':checked')){
+                                      $('#bahandankemasan').show();
+                                  }else{
+                                    $('#bahandankemasan').hide();
+                                  }
+                              })
+                          })
+                    </script>
+                    
                 </div>
                 <!-- /.tab-pane -->
                 <div class="tab-pane" id="tab_3">

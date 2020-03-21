@@ -26,6 +26,11 @@
 			text-align: center;
 			color: white;
 		}
+        input[type=number] {
+            -moz-appearance: textfield;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
 	</style>
 	<link rel="stylesheet" href="<?php echo base_url('assets/datepicker/css/ilmudetil.css') ?>">
 	<link rel="stylesheet" href="<?php echo base_url('assets/datepicker/css/bootstrap-datetimepicker.css') ?>" />
@@ -401,6 +406,10 @@
                                                     <input type="checkbox" name="in_penerusan" id="in_penerusan">&nbsp&nbsp Penerusan Alamat
                                                 </div>
                                                 <div class="form-group">
+                                                    <label for="almt_terusan">Atasnama Penerusan</label>
+                                                    <input class="form-control" type="text" name="in_ats_nm_penerusan" id="in_ats_nm_penerusan" style="width: 80%;" disabled>
+                                                </div>
+                                                <div class="form-group">
                                                     <label for="almt_terusan">Penerusan Alamat</label>
                                                     <input class="form-control" type="text" name="in_almt_terusan" id="in_almt_terusan" style="width: 80%;" disabled>
                                                 </div>
@@ -571,7 +580,54 @@
                                                             </table>
                                                         </div>
                                                 </div> -->
-                                                
+                                                <div class="form-group">
+                                                    <input type="checkbox" name="tmbbb" id="tmbb">&nbsp&nbsp Tambah Bahan Baku
+                                                </div>
+                                                <div id="by_tmbb" style="display: none;">
+                                                    <div class="form-group">
+                                                        <label for="biaya_tmbbb">Biaya Tambahan Bahan Baku</label>
+                                                        <input class="form-control" type="text" name="in_by_tmbbb" id="in_by_tmbbb" style="width: 80%;">
+                                                    </div>
+                                                    <table width='80%'>
+                                                        <tr>
+                                                            <td width='20%'>
+                                                                <div class="form-group">
+                                                                    <label for="rekening">Bank</label>
+                                                                    <select class="form-control" name="in_nm_bank_tmbbb" id="in_nm_bank_tmbbb" style="width: 100%;">
+                                                                        <option value="BNI">BNI</option>
+                                                                        <option value="BRI">BRI</option>
+                                                                        <option value="BCA">BCA</option>
+                                                                        <option value="Mandiri">Mandiri</option>
+                                                                    </select>
+                                                                </div>
+                                                            </td>
+                                                            <td width='80%'>
+                                                                <div class="form-group">
+                                                                    <label for="no_rekening">Nomor Rekening</label>
+                                                                    <input class="form-control" type="text" name="in_rekening_tmbbb" id="in_rekening_tmbbb" style="width: 100%">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <div class="form-group">
+                                                        <label for="jml_tarif">Jumlah Transfer</label>
+                                                        <input class="form-control" type="text" name="in_jml_tarif_tmbbb" id="in_jml_tarif_tmbbb" style="width: 80%;">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input class="form-control" type="text" name="in_ats_nm_rekening_tmbbb" id="in_ats_nm_rekening_tmbbb" placeholder="Atas Nama" style="width: 80%;">
+                                                    </div>
+                                                </div>
+                                                    <script>
+                                                        $(document).ready(function(){
+                                                            $('#tmbb').on('click', function(){
+                                                                if($('#tmbb').is(':checked')){
+                                                                    $('#by_tmbb').show();
+                                                                }else{
+                                                                    $('#by_tmbb').hide();
+                                                                }
+                                                            })
+                                                        })
+                                                    </script>
                                                 <table width="80%">
                                                     <tr>
                                                         <td width='50%'>
@@ -692,13 +748,26 @@
                             var rekening = $('#in_rekening').val();
                             var ats_nm_rekening = $('#in_ats_nm_rekening').val();
 
+                            var ats_nm_penerusan = $('#in_ats_nm_penerusan').val();
+                            
+
                             var dataString = 'nm_mitra='+nm_mitra+'&kt_lahir='+kt_lahir+'&tgl_lahir='+tgl_lahir+'&almt_rmh='+almt_rmh+
                             '&almt_prov_rmh='+almt_prov_rmh+'&almt_kt_rmh='+almt_kt_rmh+'&no_hp1='+no_hp1+'&no_hp2='+no_hp2+'&almt_outlet='+almt_outlet+
                             '&almt_prov_outlet='+almt_prov_outlet+'&almt_kt_outlet='+almt_kt_outlet+'&almt_kirim='+almt_kirim+'&almt_prov_kirim='+almt_prov_kirim+
                             '&almt_kt_kirim='+almt_kt_kirim+'&almt_terusan='+almt_terusan+'&almt_prov_terusan='+almt_prov_terusan+'&almt_kt_terusan='+almt_kt_terusan+
                             '&nm_marketing='+nm_marketing+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+
-                            '&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening+'&tambahan='+tambahan;
+                            '&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening+'&tambahan='+tambahan+
+                            '&ats_nm_penerusan='+ats_nm_penerusan;
                             
+                            if($('#tmbb').is(':checked')){
+                                var by_tmbbb = $('#in_by_tmbbb').val();
+                                var nm_bank_tmbb = $('#in_nm_bank_tmbbb').val();
+                                var rekening_tmbb = $('#in_rekening_tmbbb').val();
+                                var jml_tarif_tmbbb = $('#in_jml_tarif_tmbbb').val();
+                                var ats_nm_rekening_tmbbb = $('#in_ats_nm_rekening_tmbbb').val();
+                                dataString += '&by_tmbbb='+by_tmbbb+'&nm_bank_tmbb='+nm_bank_tmbb+'&rekening_tmbb='+rekening_tmbb+'&jml_tarif_tmbbb='+jml_tarif_tmbbb+'&ats_nm_rekening_tmbbb='+ats_nm_rekening_tmbbb;
+                            }
+
                             if($('#in_jml_tarif2').val() !== undefined){
                                 var jml_tarif2 = $('#in_jml_tarif2').val();
                                 var nm_bank2 = $('#in_nm_bank2 option:selected').val();
@@ -753,8 +822,32 @@
                                             document.getElementById('in_nm_produk').value = '0';
                                             document.getElementById('in_paket').value = '0';
                                             document.getElementById('in_ekspedisi').value = '0';
+                                            document.getElementById('in_nm_bank').value = '0';
                                             document.getElementById('in_biaya_kirim').value = '';
-                                            document.getElementById('in_cek3').checked = false;
+                                            document.getElementById('in_rekening').value = '';
+                                            document.getElementById('in_jml_tarif').value = '';
+                                            document.getElementById('in_ats_nm_rekening').value = '';
+                                            if(document.getElementById('in_rekening2') !== null){
+                                                document.getElementById('in_nm_bank2').value = '0';
+                                                document.getElementById('in_rekening2').value = '';
+                                                document.getElementById('in_jml_tarif2').value = '';
+                                                document.getElementById('in_ats_nm_rekening2').value = '';
+                                            }
+                                            if(document.getElementById('in_rekening3') !== null){
+                                                document.getElementById('in_nm_bank3').value = '0';
+                                                document.getElementById('in_rekening3').value = '';
+                                                document.getElementById('in_jml_tarif3').value = '';
+                                                document.getElementById('in_ats_nm_rekening3').value = '';
+                                            }
+                                            if($('#tmbb').is(':checked')){
+                                                $('#by_tmbb').hide();
+                                                document.getElementById('in_by_tmbbb').value = '';
+                                                document.getElementById('in_nm_bank_tmbbb').value = '';
+                                                document.getElementById('in_rekening_tmbbb').value = '';
+                                                document.getElementById('in_jml_tarif_tmbbb').value = '';
+                                                document.getElementById('in_ats_nm_rekening_tmbbb').value = '';
+                                            }
+                                            // document.getElementById('in_cek3').checked = false;
                                             document.getElementById('in_cek1').checked = false;
                                             document.getElementById('in_cekter1').checked = false;
                                             document.getElementById('in_cekter2').checked = false;
@@ -813,6 +906,15 @@
                             document.getElementById('in_cekter2').checked = false;
                             document.getElementById('in_penerusan').checked = false;
                             // bayar.destroy();
+                            if($('#tmbb').is(':checked')){
+                                $('#by_tmbb').hide();
+                                document.getElementById('in_by_tmbbb').value = '';
+                                document.getElementById('in_nm_bank_tmbbb').value = '';
+                                document.getElementById('in_rekening_tmbbb').value = '';
+                                document.getElementById('in_jml_tarif_tmbbb').value = '';
+                                document.getElementById('in_ats_nm_rekening_tmbbb').value = '';
+                                document.getElementById('tmbb').checked = false;
+                            }
                             $('.nav-pillss a:first').tab('show');
                             $('#inputMitra').modal('hide');
                             console.log('as');
@@ -1147,11 +1249,13 @@
                                 $('#in_almt_terusan').prop('disabled', false);
                                 $('#in_prov_terusan').prop('disabled', false);
                                 $('#in_kt_terusan').prop('disabled', false);
+                                $('#in_ats_nm_penerusan').prop('disabled', false);
                                 console.log('a');
                             }else{
                                 $('#in_almt_terusan').prop('disabled', true);
                                 $('#in_prov_terusan').prop('disabled', true);
                                 $('#in_kt_terusan').prop('disabled', true);
+                                $('#in_ats_nm_penerusan').prop('disabled', true);
                                 $('#in_almt_terusan').val('');
                                 $('#in_prov_terusan').val('0');
                                 $('#in_kt_terusan').val('0');
@@ -1266,49 +1370,658 @@
                                             " 
                                             ?>
                                 </select>
-                                <br>
-                                <label for="Barang">Barang</label>
-                                <select class="form-control" name="barang" id="daftarBarang" style="width: 80%;" >
-                                <option value="0">Pilih</option>
-                                            <?php
-                                            // foreach ($dd_bg as $row) {  
-                                            //     echo "<option value='".$row->kd_barang."' >".$row->nm_barang."</option>";
-                                            //     }
-                                            //     echo"
-                                            // </select>
-                                            // " 
-                                            ?>
-                                </select>
-                                <br>
-                                <input class="form-control" name="inputHarga" id="inputHarga" type="text" placeholder="Harga Barang" style="width: 80%" disabled>
-                                <br>
-                                <input class="form-control" name="jml_barang" id="jml_barang" type="text" placeholder="Jumlah barang" style="width: 80%">
-                                <br>
-                                <button class="btn btn-primary" id="tambah" value="tambah" onclick="order()">Tambah</button>
                             </div>
+                            <div id="nav-tahu-gila" style="display: none">
+                                <input type="checkbox" name="paketItem" id="paketItem3"> Eceran
+                                <input type="checkbox" name="paketItem" id="paketItem2"> Paket 3 Item
+                                <input type="checkbox" name="paketItem" id="paketItem1"> Paket 2 Item
+                            </div>
+                            <div id="eceran" style="display: none;">
+                                <div class="form-group">
+                                    <label for="Barang">Barang</label>
+                                    <select class="form-control" name="barang" id="daftarBarang" style="width: 80%;" >
+                                    <option value="0">Pilih</option>
+                                                <?php
+                                                // foreach ($dd_bg as $row) {  
+                                                //     echo "<option value='".$row->kd_barang."' >".$row->nm_barang."</option>";
+                                                //     }
+                                                //     echo"
+                                                // </select>
+                                                // " 
+                                                ?>
+                                    </select>
+                                    <br>
+                                    <input class="form-control" name="inputHarga" id="inputHarga" type="text" placeholder="Harga Barang" style="width: 80%" disabled>
+                                    <br>
+                                    <input class="form-control" name="jml_barang" id="jml_barang" type="text" placeholder="Jumlah barang" style="width: 80%">
+                                    <br>
+                                    <button class="btn btn-primary" id="tambah_ecer" value="tambah" onclick="order()" style="display: none;">Tambah</button>
+                                    <button class="btn btn-primary" id="tambah_tahu" value="tambah" onclick="order_tahu()" style="display: none;">Tambah</button>
+                                </div>
                     
-                            <div class="form-group">
-                                    <label for="almt_outlet">Rincian Order</label> <?php echo form_error('almt_outlet') ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="tableOrder" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                            <th>Name</th>
-                                            <th>Jumlah</th>
-                                            <th>Harga</th>
-                                            <th>Total</th>
-                                            <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tfoot>
+                                <div class="form-group">
+                                        <label for="almt_outlet">Rincian Order</label> <?php echo form_error('almt_outlet') ?>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="tableOrder" width="100%" cellspacing="0">
+                                            <thead>
                                                 <tr>
-                                                    <th colspan="3" style="text-align:right">Total:</th>
-                                                    <th></th>
-                                                    <th></th>
+                                                <th>Name</th>
+                                                <th>Jumlah</th>
+                                                <th>Harga</th>
+                                                <th>Total</th>
+                                                <th>Aksi</th>
                                                 </tr>
-                                            </tfoot>
+                                            </thead>
+                                            <tfoot>
+                                                    <tr>
+                                                        <th colspan="3" style="text-align:right">Total:</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                </div>
+                            </div>
+
+                            <div id="tahu-gila">
+                                    <script>
+                                    $(document).ready(function(){
+                                        $('#paketItem1').on('click', function(){
+                                            if($('#paketItem1').is(':checked')){
+                                                $('#paket2').show();
+                                                $("#tab3").attr("data-toggle", "tab");
+                                                $("#tab4").attr("data-toggle", "tab");
+                                            }else{
+                                                $('#paket2').hide();
+                                                $("#tab3").attr("data-toggle", "");
+                                                $("#tab4").attr("data-toggle", "");
+                                            }
+                                        })
+                                    })
+                                    $(document).ready(function(){
+                                        $('#paketItem2').on('click', function(){
+                                            if($('#paketItem2').is(':checked')){
+                                                $('#paket3').show();
+                                                $("#tab3").attr("data-toggle", "tab");
+                                                $("#tab4").attr("data-toggle", "tab");
+                                            }else{
+                                                $('#paket3').hide();
+                                                $("#tab3").attr("data-toggle", "");
+                                                $("#tab4").attr("data-toggle", "");
+                                            }
+                                        })
+                                    })
+                                    $(document).ready(function(){
+                                        $('#paketItem3').on('click', function(){
+                                            if($('#paketItem3').is(':checked')){
+                                                $('#eceran').show();
+                                                $("#tab3").attr("data-toggle", "tab");
+                                                $("#tab4").attr("data-toggle", "tab");
+                                            }else{
+                                                $('#eceran').hide();
+                                                $("#tab3").attr("data-toggle", "");
+                                                $("#tab4").attr("data-toggle", "");
+                                            }
+                                        })
+                                    })
+                                    </script>
+                                </div>
+
+                                <div id="paket3" style="display: none;">
+                                <div class="form-group">
+                                <label for="paketPorsi">Jumlah Porsi</label>
+                                <input class="form-control" type="number" name="paketPorsi" id="paketPorsi" style="width: 80%;">
+                                </div>
+                                <table class="table table-bordered" id="tablePaket3">
+                                    <tr>
+                                    <th colspan="2" width=30%>Bahan Baku</th>
+                                    <th colspan="2" width=30%>Bumbu</th>
+                                    <th colspan="2" width=30%>Kemasan</th>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%>Tepung</td>
+                                    <td><input class="form-control" type="number" name="jmltpng" id="jmltpng" step="any">kg</td>
+                                    <td width=20%>Asin</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlasin" id="jmlasin"></td>
+                                    <td width=20%>Paperbag</td>
+                                    <td><input class="form-control kemCal" type="number" name="jmlpaperbag" id="jmlpaperbag"></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Cabe Lev 1</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlcabe1" id="jmlcabe1"></td>
+                                    <td width=20%>Box</td>
+                                    <td><input class="form-control kemCal" type="number" name="jmlbox" id="jmlbox"></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Cabe Lev 2</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlcabe2" id="jmlcabe2"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Cabe Lev 3</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlcabe3" id="jmlcabe3"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>BBQ</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlbbq" id="jmlbbq"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Balado</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlbalado" id="jmlbalado"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Keju</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlkeju" id="jmlkeju"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Pizza</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlpizza" id="jmlpizza"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Jagung Bakar</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmljbakar" id="jmljbakar"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Ayam Bawang Pedas</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlabp" id="jmlabp"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Sapi Panggang</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlsp" id="jmlsp"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Kari Ayam</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlka" id="jmlka"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Rumput Laut</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmlrl" id="jmlrl"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Jagung Manis</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmljm" id="jmljm"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    <td width=20%>Lada Hitam</td>
+                                    <td><input class="form-control txtCal" type="number" name="jmllh" id="jmllh"></td>
+                                    <td width=20%></td>
+                                    <td></td>
+                                    </tr>
+                                    <tr>
+                                    <td width=20%>Total</td>
+                                    <td><input class="form-control" type="number" name="jmlbb" id="jmlbb" >kg</td>
+                                    <td width=20%>Total</td>
+                                    <td><input class="form-control" type="number" name="jmlbumbu" id="jmlbumbu" >porsi</td>
+                                    <td width=20%>Total</td>
+                                    <td><input class="form-control" type="number" name="jmlkemasan" id="jmlkemasan" >pcs</td>
+                                    </tr>
+                                </table>
+                                </div>
+                                <script>
+                                var tpng = 0.04;
+                                var hitung = 0;
+                                var jmlporsi = document.getElementById('paketPorsi');
+                                jmlporsi.addEventListener('keyup', function(e){
+                                    var tot = parseInt(document.getElementById('paketPorsi').value) * 1900;
+                                    // document.getElementById('tot_harga').value = number_format(tot,2,',','.');
+                                    
+                                    document.getElementById("jmlbumbu").max = jmlporsi.value;
+                                    document.getElementById("jmlkemasan").max = jmlporsi.value;
+                                    hitung = parseInt(jmlporsi.value) * tpng;
+                                    document.getElementById("jmltpng").value = hitung;
+                                    document.getElementById("jmlbb").value = hitung;
+                                })
+
+                                $(document).ready(function(){
+                                $("#tablePaket3").on('input', '.txtCal', function () {
+                                        var calculated_total_sum = 0;
+                                    
+                                        $("#tablePaket3 .txtCal").each(function () {
+                                            var get_textbox_value = $(this).val();
+                                            if ($.isNumeric(get_textbox_value)) {
+                                                calculated_total_sum += parseFloat(get_textbox_value);
+                                                }                  
+                                            });
+                                                $("#jmlbumbu").val(calculated_total_sum);
+                                        });
+
+                                });
+                                $(document).ready(function(){
+                                $("#tablePaket3").on('input', '.kemCal', function () {
+                                        var calculated_total_sum = 0;
+                                    
+                                        $("#tablePaket3 .kemCal").each(function () {
+                                            var get_textbox_value = $(this).val();
+                                            if ($.isNumeric(get_textbox_value)) {
+                                                calculated_total_sum += parseFloat(get_textbox_value);
+                                                }                  
+                                            });
+                                                $("#jmlkemasan").val(calculated_total_sum);
+                                        });
+
+                                });
+                                </script>
+
+                                <div id="paket2" style="display: none;">
+                                <div class="form-group">
+                                    <label for="paketPorsi">Jumlah Porsi</label>
+                                    <input class="form-control" type="number" name="paketPorsi" id="paketPorsi2" style="width: 80%;">
+                                </div>
+                                <table class="table table-bordered" id="tablePaket2">
+                                    <tr>
+                                    <td align="center"><input type="checkbox" name="bbdanb" id="bbdanb"> Bahan & Bumbu</td>
+                                    <td align="center"><input type="checkbox" name="kdanb" id="kdanb"> Kemasan & Bumbu</td>
+                                    <td align="center"><input type="checkbox" name="bbdank" id="bbdank"> Bahan & Kemasan</td>
+                                    <script>
+                                        var jmlporsi2 = document.getElementById('paketPorsi2');
+                                        var hitung2 = 0;
+                                        jmlporsi2.addEventListener('keyup', function(e){
+                                        var tot2 = parseInt(document.getElementById('paketPorsi2').value) * 1500;
+                                        // var a = number_format(tot2,2,',','.');
+                                        // document.getElementById('tot_harga').value = tot2;
+
+                                        document.getElementById("jmlbumbu21").max = jmlporsi2.value;
+                                        document.getElementById("jmlbumbu22").max = jmlporsi2.value;
+                                        document.getElementById("jmlkemasan22").max = jmlporsi2.value;
+                                        document.getElementById("jmlkemasan23").max = jmlporsi2.value;
+                                        hitung2 = parseInt(jmlporsi2.value) * tpng;
+                                        document.getElementById("jmlhtpng21").value = hitung2;
+                                        document.getElementById("jmlhtpng23").value = hitung2;
+                                        document.getElementById("jmlbb21").value = hitung2;
+                                        document.getElementById("jmlbb23").value = hitung2;
+                                        })
+                                    </script>
+                                    </tr>
+                                    <tr>
+                                    <td>
+                                        <div id="bahandanbumbu" style="display: none;">
+                                        <table class="table table-bordered" id="tablePaket21">
+                                        <tr>
+                                            <th colspan="2">Bahan</th>
+                                            <th colspan="2">Bumbu</th>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%>Tepung</td>
+                                            <td><input class="form-control" type="number" name="jmltpng21" id="jmlhtpng21" step="any">kg</td>
+                                            <td width=20%>Asin</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlasin21" id="jmlasin21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Cabe Lev 1</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlcabe121" id="jmlcabe121"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Cabe Lev 2</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlcabe221" id="jmlcabe221"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Cabe Lev 3</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlcabe321" id="jmlcabe321"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>BBQ</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlbbq21" id="jmlbbq21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Balado</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlbalado21" id="jmlbalado21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Keju</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlkeju21" id="jmlkeju21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Pizza</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlpizza21" id="jmlpizza21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Jagung Bakar</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmljbakar21" id="jmljbakar21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Ayam Bawang Pedas</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlabp21" id="jmlabp21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Sapi Panggang</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlsp21" id="jmlsp21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Kari Ayam</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlka21" id="jmlka21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Rumput Laut</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmlrl21" id="jmlrl21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Jagung Manis</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmljm21" id="jmljm21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Lada Hitam</td>
+                                            <td><input class="form-control 21Cal" type="number" name="jmllh21" id="jmllh21"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%>Total</td>
+                                            <td><input class="form-control" type="number" name="jmlbb21" id="jmlbb21">kg</td>
+                                            <td width=20%>Total</td>
+                                            <td><input class="form-control" type="number" name="jmlbumbu21" id="jmlbumbu21">porsi</td>
+                                        </tr>
                                         </table>
                                     </div>
+                                    <script>
+                                        $(document).ready(function(){
+                                        $("#tablePaket21").on('input', '.21Cal', function () {
+                                                var calculated_total_sum = 0;
+                                            
+                                                $("#tablePaket21 .21Cal").each(function () {
+                                                    var get_textbox_value = $(this).val();
+                                                    if ($.isNumeric(get_textbox_value)) {
+                                                        calculated_total_sum += parseFloat(get_textbox_value);
+                                                        }                  
+                                                    });
+                                                        $("#jmlbumbu21").val(calculated_total_sum);
+                                                });
+
+                                        });
+                                        
+                                    </script>
+                                    </td>
+                                    <td>
+                                        <div id="kemasandanbumbu" style="display: none;">
+                                        <table class="table table-bordered" id="tablePaket22">
+                                        <tr>
+                                            <th colspan="2">Kemasan</th>
+                                            <th colspan="2">Bumbu</th>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%>Paperbag</td>
+                                            <td><input class="form-control 22Kem" type="number" name="jmlpaperbag22" id="jmlpaperbag22"></td>
+                                            <td width=20%>Asin</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlasin22" id="jmlasin22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%>Box</td>
+                                            <td><input class="form-control 22Kem" type="number" name="jmlbox22" id="jmlbox22"></td>
+                                            <td width=20%>Cabe Lev 1</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlcabe122" id="jmlcabe122"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Cabe Lev 2</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlcabe222" id="jmlcabe222"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Cabe Lev 3</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlcabe322" id="jmlcabe322"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>BBQ</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlbbq22" id="jmlbbq22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Balado</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlbalado22" id="jmlbalado22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Keju</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlkeju22" id="jmlkeju22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Pizza</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlpizza22" id="jmlpizza22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Jagung Bakar</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmljbakar22" id="jmljbakar22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Ayam Bawang Pedas</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlabp22" id="jmlabp22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Sapi Panggang</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlsp22" id="jmlsp22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Kari Ayam</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlka22" id="jmlka22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Rumput Laut</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmlrl22" id="jmlrl22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Jagung Manis</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmljm22" id="jmljm22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Lada Hitam</td>
+                                            <td><input class="form-control 22Cal" type="number" name="jmllh22" id="jmllh22"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%>Total</td>
+                                            <td><input class="form-control" type="number" name="jmlkemasan22" id="jmlkemasan22">pcs</td>
+                                            <td width=20%>Total</td>
+                                            <td><input class="form-control" type="number" name="jmlbumbu22" id="jmlbumbu22">porsi</td>
+                                        </tr>
+                                        </table>
+                                    </div>
+                                    <script>
+                                        $(document).ready(function(){
+                                        $("#tablePaket22").on('input', '.22Cal', function () {
+                                            var calculated_total_sum = 0;
+                                            
+                                            $("#tablePaket22 .22Cal").each(function () {
+                                                var get_textbox_value = $(this).val();
+                                                if ($.isNumeric(get_textbox_value)) {
+                                                    calculated_total_sum += parseFloat(get_textbox_value);
+                                                    }                  
+                                                    });
+                                                    $("#jmlbumbu22").val(calculated_total_sum);
+                                            });
+
+                                        });
+                                        $(document).ready(function(){
+                                        $("#tablePaket22").on('input', '.22Kem', function () {
+                                            var calculated_total_sum = 0;
+                                            
+                                            $("#tablePaket22 .22Kem").each(function () {
+                                                var get_textbox_value = $(this).val();
+                                                if ($.isNumeric(get_textbox_value)) {
+                                                    calculated_total_sum += parseFloat(get_textbox_value);
+                                                    }                  
+                                                    });
+                                                    $("#jmlkemasan22").val(calculated_total_sum);
+                                            });
+
+                                        });
+
+                                    </script>
+                                    </td>
+                                    <td>
+                                        <div id="bahandankemasan" style="display: none;">
+                                        <table class="table table-bordered" id="tablePaket23">
+                                        <tr>
+                                            <th colspan="2">Bahan</th>
+                                            <th colspan="2">Kemasan</th>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%>Tepung</td>
+                                            <td><input class="form-control" type="number" name="jmltpng23" id="jmlhtpng23" step="any">kg</td>
+                                            <td width=20%>Paperbag</td>
+                                            <td><input class="form-control 23Kem" type="number" name="jmlpaperbag23" id="jmlpaperbag23"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%></td>
+                                            <td></td>
+                                            <td width=20%>Box</td>
+                                            <td><input class="form-control 23Kem" type="number" name="jmlbox23" id="jmlbox23"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width=20%>Total</td>
+                                            <td><input class="form-control" type="number" name="jmlbb23" id="jmlbb23" step="any">kg</td>
+                                            <td width=20%>Total</td>
+                                            <td><input class="form-control" type="number" name="jmlkemasan23" id="jmlkemasan23">pcs</td>
+                                        </tr>
+                                        </table>
+                                    </div>
+                                    <script>
+                                        $(document).ready(function(){
+                                        $("#tablePaket23").on('input', '.23Kem', function () {
+                                                var calculated_total_sum = 0;
+                                            
+                                                $("#tablePaket23 .23Kem").each(function () {
+                                                    var get_textbox_value = $(this).val();
+                                                    if ($.isNumeric(get_textbox_value)) {
+                                                        calculated_total_sum += parseFloat(get_textbox_value);
+                                                        }                  
+                                                    });
+                                                        $("#jmlkemasan23").val(calculated_total_sum);
+                                                });
+
+                                        });
+                                    </script>
+                                    </td>
+                                    
+                                    </tr>
+                                </table>
+                                </div>
+                                <script>
+                                $(document).ready(function(){
+                                        $('#bbdanb').on('click', function(){
+                                            if($('#bbdanb').is(':checked')){
+                                                $('#bahandanbumbu').show();
+                                            }else{
+                                                $('#bahandanbumbu').hide();
+                                            }
+                                        })
+                                    })
+                                $(document).ready(function(){
+                                        $('#kdanb').on('click', function(){
+                                            if($('#kdanb').is(':checked')){
+                                                $('#kemasandanbumbu').show();
+                                            }else{
+                                                $('#kemasandanbumbu').hide();
+                                            }
+                                        })
+                                    })
+                                $(document).ready(function(){
+                                        $('#bbdank').on('click', function(){
+                                            if($('#bbdank').is(':checked')){
+                                                $('#bahandankemasan').show();
+                                            }else{
+                                                $('#bahandankemasan').hide();
+                                            }
+                                        })
+                                    })
+                                </script>
                             </div>
                             <script>
                                 
@@ -1462,6 +2175,36 @@
                                                     }
                                                 });
                                             }
+                                            function order_tahu(){
+                                                // var poli = $('#inputPoliklinik').val();
+                                                // var diag = $('#inputDiagnosis').val();
+                                                var brg = $('#daftarBarang option:selected').val();
+                                                var harg = document.getElementById('inputHarga').value;
+                                                var jml = $('#jml_barang').val();
+                                                var kd_mitra = $('#kd_mitra').val();
+                                                // var idku = $('#inputIdkunj').val();
+
+                                                // var dataString = 'poli=' + poli + '&diag=' + diag + '&tind=' + tind + '&harg=' + harg +
+                                                //     '&idku=' + idku + '&pers=' + pers + '&jmlh=' + jmlh + '&tambah=' + tambah + '&usin=' + usin;
+                                                
+                                                var dataString = 'brg='+brg+'&harg='+harg+'&jml='+jml+'&kd_mitra='+kd_mitra;
+                                                $.ajax({
+                                                    type: 'post',
+                                                    url: '<?php echo base_url('monitor/tambah_order_tahu')?>',
+                                                    data: dataString,
+                                                    success: function() {
+                                                        $('#tableOrder').DataTable().ajax.reload();
+                                                        document.getElementById('daftarBarang').value = "";
+                                                        // $('.ui-autocomplete-input').focus().val('');
+                                                        document.getElementById('inputHarga').value = "";
+                                                        document.getElementById('jml_barang').value = "1";
+                                                        // document.getElementById('tab3').data-toggle="tab"
+                                                        $("#tab3").attr("data-toggle", "tab");
+                                                        $("#tab4").attr("data-toggle", "tab");
+                                                        console.log('YEEE');
+                                                    }
+                                                });
+                                            }
                             
                                         function hapus_order(val){
                                             var data = 'val='+val;
@@ -1521,7 +2264,7 @@
                                     </td>
                                 </tr>
                             </table>
-                        </div>
+                        
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="tab_3">
                             <div class="form-group">
@@ -1560,6 +2303,86 @@
                                 &nbsp&nbsp
                                 <input type="radio" name="cek" id="cek2" value="2"> Seperti Alamat Outlet
                             </div>
+                            <div class="form-group">
+                                <input type="checkbox" name="in_penerusan" id="penerusan">&nbsp&nbsp Penerusan Alamat
+                            </div>
+                            <div class="form-group">
+                                <label for="almt_terusan">Atasnama Penerusan</label>
+                                <input class="form-control" type="text" name="ats_nm_penerusan" id="ats_nm_penerusan" style="width: 80%;" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="almt_terusan">Penerusan Alamat</label>
+                                <input class="form-control" type="text" name="almt_terusan" id="almt_terusan" style="width: 80%;" disabled>
+                            </div>
+                            <table width="80%">
+                                <tr>
+                                    <td width='50%'>
+                                        <div class="form-group">
+                                            <label for="prov_terusan">Provinsi</label>
+                                            <select class="form-control" name="prov_terusan" id="prov_terusan" style="width: 100%;" disabled>
+                                                <option value="0">Pilih</option>
+                                                <?php
+                                                foreach ($dd_pr as $row) {  
+                                                    echo "<option value='".$row->id_provinsi."' >".$row->nama_provinsi."</option>";
+                                                    }
+                                                    echo"
+                                                </select>"
+                                                ?>
+                                        </div>
+                                    </td>
+                                    <td width='50%'>
+                                    <div class="form-group">
+                                        <label for="kt_terusan">Kota</label> 
+                                        <select class="form-control" name="kt_terusan" id="kt_terusan" disabled>
+                                            <option value="0">Pilih</option>
+                                        </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <script>
+                                $(document).ready(function(){
+                                    $('#penerusan').on('click', function(){
+                                        if($('#penerusan').is(':checked')){
+                                            $('#almt_terusan').prop('disabled', false);
+                                            $('#prov_terusan').prop('disabled', false);
+                                            $('#kt_terusan').prop('disabled', false);
+                                            $('#ats_nm_penerusan').prop('disabled', false);
+                                            console.log('a');
+                                        }else{
+                                            $('#almt_terusan').prop('disabled', true);
+                                            $('#prov_terusan').prop('disabled', true);
+                                            $('#kt_terusan').prop('disabled', true);
+                                            $('#ats_nm_penerusan').prop('disabled', true);
+                                            $('#almt_terusan').val('');
+                                            $('#prov_terusan').val('0');
+                                            $('#kt_terusan').val('0');
+                                            console.log('b');
+                                        }
+                                    })
+                                })
+                                $(document).ready(function(){
+                                    $('#prov_terusan').change(function(){
+                                        var id=$(this).val();
+                                        $.ajax({
+                                            url : "<?php echo base_url();?>monitor/get_kota",
+                                            method : "POST",
+                                            data : {id: id},
+                                            async : false,
+                                            dataType : 'json',
+                                            success: function(data){
+                                                var html = '';
+                                                var i;
+                                                for(i=0; i<data.length; i++){
+                                                    html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                }
+                                                $('#kt_terusan').html(html);
+                                                
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
                         </div>
                         <! /.tab-pane -->
                         <div class="tab-pane" id="tab_4">
@@ -1793,13 +2616,292 @@
                                 var b_barang = $('#b_barang').val();
                                 var biaya_kirim = $('#biaya_kirim').val();
                                 var keterangan = $('#keterangan').val();
+                                var almt_terusan = $('#almt_terusan').val();
+                                var prov_terusan = $('#prov_terusan option:selected').val();
+                                var almt_kt_terusan = $('#kt_terusan option:selected').val();
+                                var nm_produk = $('#daftarProduk option:selected').val();
                                 // var 
                                 var dataString = 'kd_mitra='+kd_mitra+'&nm_mitra='+nm_mitra+'&almt_rmh='+almt_rmh+
                                 '&no_hp1='+no_hp1+'&no_hp2='+no_hp2+'&almt_kirim='+almt_kirim+'&provinsi='+provinsi+
                                 '&almt_kt_kirim='+almt_kt_kirim+'&jml_transfer='+jml_transfer+'&nm_bank='+nm_bank+
                                 '&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening+'&ekspedisi='+ekspedisi+
-                                '&b_barang='+b_barang+'&biaya_kirim='+biaya_kirim+'&keterangan='+keterangan;
+                                '&b_barang='+b_barang+'&biaya_kirim='+biaya_kirim+'&keterangan='+keterangan+
+                                '&almt_terusan='+almt_terusan+'&prov_terusan='+prov_terusan+'&almt_kt_terusan='+almt_kt_terusan+
+                                '&nm_produk='+nm_produk;
 
+                                if(($('#daftarProduk option:selected').val()) === 'PR000001'){
+                                    if($('#paketItem2').is(':checked')){
+                                        var jmlporsi = $('#paketPorsi').val();
+                                        var jmltpng = $('#jmltpng').val();
+                                        var tepung = 'tepung';
+                                        
+                                        var tot_h_paket3 = parseInt(document.getElementById('paketPorsi').value) * 1900;
+                                        dataString += '&jmlporsi='+jmlporsi+'&jmltpng='+jmltpng+'&tot_h_paket3='+tot_h_paket3+'&tepung='+tepung;
+                                        if($('#jmlasin').val() !== ''){
+                                            var jmlasin = $('#jmlasin').val();
+                                            var asin = 'asin';
+                                            dataString += '&jmlasin='+jmlasin+'&asin='+asin
+                                        }
+                                        if($('#jmlpaperbag').val() !== ''){
+                                            var jmlpaperbag = $('#jmlpaperbag').val();
+                                            var paperbag = 'paperbag';
+                                            dataString += '&jmlpaperbag='+jmlpaperbag+'&paperbag='+paperbag;
+                                        }
+                                        if($('#jmlcabe1').val() !== ''){
+                                            var jmlcabe1 = $('#jmlcabe1').val();
+                                            var cabe1 = 'cabe1';
+                                            dataString += '&jmlcabe1='+jmlcabe1+'&cabe1='+cabe1;
+                                        }
+                                        if($('#jmlbox').val() !== ''){
+                                            var jmlbox = $('#jmlbox').val();
+                                            var box ='box';
+                                            dataString += '&jmlbox='+jmlbox+'&box='+box;
+                                        }
+                                        if($('#jmlcabe2').val() !== ''){
+                                            var jmlcabe2 = $('#jmlcabe2').val();
+                                            var cabe2 = 'cabe2';
+                                            dataString += '&jmlcabe2='+jmlcabe2+'&cabe2='+cabe2;
+                                        }
+                                        if($('#jmlcabe3').val() !== ''){
+                                            var jmlcabe3 = $('#jmlcabe3').val();
+                                            var cabe3 = 'cabe3';
+                                            dataString += '&jmlcabe3='+jmlcabe3+'&cabe3='+cabe3;
+                                        }
+                                        if($('#jmlbbq').val() !== ''){
+                                            var jmlbbq = $('#jmlbbq').val();
+                                            var bbq = 'bbq';
+                                            dataString += '&jmlbbq='+jmlbbq+'&bbq='+bbq;
+                                        }
+                                        if($('#jmlbalado').val() !== ''){
+                                            var jmlbalado = $('#jmlbalado').val();
+                                            var balado = 'balado';
+                                            dataString += '&jmlbalado='+jmlbalado+'&balado='+balado;
+                                        }
+                                        if($('#jmlkeju').val() !== ''){
+                                            var jmlkeju = $('#jmlkeju').val();
+                                            var keju = 'keju';
+                                            dataString += '&jmlkeju='+jmlkeju+'&keju='+keju;
+                                        }
+                                        if($('#jmlpizza').val() !== ''){
+                                            var jmlpizza = $('#jmlpizza').val();
+                                            var pizza = 'pizza';
+                                            dataString += '&jmlpizza='+jmlpizza+'&pizza='+pizza;
+                                        }
+                                        if($('#jmljbakar').val() !== ''){
+                                            var jmljbakar = $('#jmljbakar').val();
+                                            var jbakar = 'jagung bakar';
+                                            dataString += '&jmljbakar='+jmljbakar+'&jbakar='+jbakar;
+                                        }
+                                        if($('#jmlabp').val() !== ''){
+                                            var jmlabp = $('#jmlabp').val();
+                                            var abaw = 'ayam bawang';
+                                            dataString += '&jmlabp='+jmlabp+'&abaw='+abaw;
+                                        }
+                                        if($('#jmlsp').val() !== ''){
+                                            var jmlsp = $('#jmlsp').val();
+                                            var sapip = 'sapi panggang';
+                                            dataString += '&jmlsp='+jmlsp+'&sapip='+sapip;
+                                        }
+                                        if($('#jmlka').val() !== ''){
+                                            var jmlka = $('#jmlka').val();
+                                            var kari = 'kari';
+                                            dataString += '&jmlka='+jmlka+'&kari='+kari;
+                                        }
+                                        if($('#jmlrl').val() !== ''){
+                                            var jmlrl = $('#jmlrl').val();
+                                            var rumput = 'rumput';
+                                            dataString += '&jmlrl='+jmlrl+'&rumput='+rumput;
+                                        }
+                                        if($('#jmljm').val() !== ''){
+                                            var jmljm = $('#jmljm').val();
+                                            dataString += '&jmljm='+jmljm
+                                        }
+                                        if($('#jmllh').val() !== ''){
+                                            var jmllh = $('#jmllh').val();
+                                            var jman = 'jagung manis';
+                                            dataString += '&jmllh='+jmllh+'&jman='+jman;
+                                        }
+                                        var jmlbb = $('#jmlbb').val();
+                                        var jmlbumbu = $('#jmlbumbu').val();
+                                        var jmlkemasan = $('#jmlkemasan').val();
+                                        dataString += '&jmlbb='+jmlbb+'&jmlbumbu='+jmlbumbu+'&jmlkemasan='+jmlkemasan;
+                                    }else if($('#paketItem1').is(':checked')){
+                                        var jmlporsi = $('#paketPorsi2').val();
+                                        var tot_h_paket3 = parseInt(document.getElementById('paketPorsi2').value) * 1500;
+                                        dataString += '&jmlporsi='+jmlporsi+'&tot_h_paket3='+tot_h_paket3;
+
+                                        if($('#bbdanb').is(':checked')){
+                                            var jmltpng = $('#jmlhtpng21').val();
+                                            var tepung = 'tepung';
+                                            dataString += '&jmltpng='+jmltpng+'&tepung='+tepung;
+                                            
+                                            if($('#jmlasin21').val() !== ''){
+                                                var jmlasin = $('#jmlasin21').val();
+                                                var asin = 'asin';
+                                                dataString += '&jmlasin='+jmlasin+'&asin='+asin
+                                            }
+                                            if($('#jmlcabe121').val() !== ''){
+                                                var jmlcabe1 = $('#jmlcabe121').val();
+                                                var cabe1 = 'cabe1';
+                                                dataString += '&jmlcabe1='+jmlcabe1+'&cabe1='+cabe1;
+                                            }
+                                            if($('#jmlcabe221').val() !== ''){
+                                                var jmlcabe2 = $('#jmlcabe221').val();
+                                                var cabe2 = 'cabe2';
+                                                dataString += '&jmlcabe2='+jmlcabe2+'&cabe2='+cabe2;
+                                            }
+                                            if($('#jmlcabe321').val() !== ''){
+                                                var jmlcabe3 = $('#jmlcabe321').val();
+                                                var cabe3 = 'cabe3';
+                                                dataString += '&jmlcabe3='+jmlcabe3+'&cabe3='+cabe3;
+                                            }
+                                            if($('#jmlbbq21').val() !== ''){
+                                                var jmlbbq = $('#jmlbbq21').val();
+                                                var bbq = 'bbq';
+                                                dataString += '&jmlbbq='+jmlbbq+'&bbq='+bbq;
+                                            }
+                                            if($('#jmlbalado21').val() !== ''){
+                                                var jmlbalado = $('#jmlbalado21').val();
+                                                var balado = 'balado';
+                                                dataString += '&jmlbalado='+jmlbalado+'&balado='+balado;
+                                            }
+                                            if($('#jmlkeju21').val() !== ''){
+                                                var jmlkeju = $('#jmlkeju21').val();
+                                                var keju = 'keju';
+                                                dataString += '&jmlkeju='+jmlkeju+'&keju='+keju;
+                                            }
+                                            if($('#jmlpizza21').val() !== ''){
+                                                var jmlpizza = $('#jmlpizza21').val();
+                                                var pizza = 'pizza';
+                                                dataString += '&jmlpizza='+jmlpizza+'&pizza='+pizza;
+                                            }
+                                            if($('#jmljbakar21').val() !== ''){
+                                                var jmljbakar = $('#jmljbakar21').val();
+                                                var jbakar = 'jagung bakar';
+                                                dataString += '&jmljbakar='+jmljbakar+'&jbakar='+jbakar;
+                                            }
+                                            if($('#jmlabp21').val() !== ''){
+                                                var jmlabp = $('#jmlabp21').val();
+                                                var abaw = 'ayam bawang';
+                                                dataString += '&jmlabp='+jmlabp+'&abaw='+abaw;
+                                            }
+                                            if($('#jmlsp21').val() !== ''){
+                                                var jmlsp = $('#jmlsp21').val();
+                                                var sapip = 'sapi panggang';
+                                                dataString += '&jmlsp='+jmlsp+'&sapip='+sapip;
+                                            }
+                                            if($('#jmlka21').val() !== ''){
+                                                var jmlka = $('#jmlka21').val();
+                                                var kari = 'kari';
+                                                dataString += '&jmlka='+jmlka+'&kari='+kari;
+                                            }
+                                            if($('#jmlrl21').val() !== ''){
+                                                var jmlrl = $('#jmlrl21').val();
+                                                var rumput = 'rumput';
+                                                dataString += '&jmlrl='+jmlrl+'&rumput='+rumput;
+                                            }
+                                            if($('#jmljm21').val() !== ''){
+                                                var jmljm = $('#jmljm21').val();
+                                                dataString += '&jmljm='+jmljm
+                                            }
+                                            if($('#jmllh21').val() !== ''){
+                                                var jmllh = $('#jmllh21').val();
+                                                var jman = 'jagung manis';
+                                                dataString += '&jmllh='+jmllh+'&jman='+jman;
+                                            }
+                                        }else if($('#kdanb').is(':checked')){
+                                            var jmlporsi = $('#paketPorsi2').val();
+                                            var tot_h_paket3 = parseInt(document.getElementById('paketPorsi2').value) * 1500;
+                                            dataString += '&jmlporsi='+jmlporsi+'&tot_h_paket3='+tot_h_paket3;
+
+                                            if($('#jmlpaperbag22').val() !== ''){
+                                                var jmlpaperbag = $('#jmlpaperbag22').val();
+                                                var paperbag = 'paperbag';
+                                                dataString += '&jmlpaperbag='+jmlpaperbag+'&paperbag='+paperbag;
+                                            }
+                                            if($('#jmlbox22').val() !== ''){
+                                                var jmlbox = $('#jmlbox22').val();
+                                                var box ='box';
+                                                dataString += '&jmlbox='+jmlbox+'&box='+box;
+                                            }
+                                            if($('#jmlasin22').val() !== ''){
+                                                var jmlasin = $('#jmlasin22').val();
+                                                var asin = 'asin';
+                                                dataString += '&jmlasin='+jmlasin+'&asin='+asin
+                                            }
+                                            if($('#jmlcabe122').val() !== ''){
+                                                var jmlcabe1 = $('#jmlcabe122').val();
+                                                var cabe1 = 'cabe1';
+                                                dataString += '&jmlcabe1='+jmlcabe1+'&cabe1='+cabe1;
+                                            }
+                                            if($('#jmlcabe222').val() !== ''){
+                                                var jmlcabe2 = $('#jmlcabe222').val();
+                                                var cabe2 = 'cabe2';
+                                                dataString += '&jmlcabe2='+jmlcabe2+'&cabe2='+cabe2;
+                                            }
+                                            if($('#jmlcabe322').val() !== ''){
+                                                var jmlcabe3 = $('#jmlcabe322').val();
+                                                var cabe3 = 'cabe3';
+                                                dataString += '&jmlcabe3='+jmlcabe3+'&cabe3='+cabe3;
+                                            }
+                                            if($('#jmlbbq22').val() !== ''){
+                                                var jmlbbq = $('#jmlbbq22').val();
+                                                var bbq = 'bbq';
+                                                dataString += '&jmlbbq='+jmlbbq+'&bbq='+bbq;
+                                            }
+                                            if($('#jmlbalado22').val() !== ''){
+                                                var jmlbalado = $('#jmlbalado22').val();
+                                                var balado = 'balado';
+                                                dataString += '&jmlbalado='+jmlbalado+'&balado='+balado;
+                                            }
+                                            if($('#jmlkeju22').val() !== ''){
+                                                var jmlkeju = $('#jmlkeju22').val();
+                                                var keju = 'keju';
+                                                dataString += '&jmlkeju='+jmlkeju+'&keju='+keju;
+                                            }
+                                            if($('#jmlpizza22').val() !== ''){
+                                                var jmlpizza = $('#jmlpizza22').val();
+                                                var pizza = 'pizza';
+                                                dataString += '&jmlpizza='+jmlpizza+'&pizza='+pizza;
+                                            }
+                                            if($('#jmljbakar22').val() !== ''){
+                                                var jmljbakar = $('#jmljbakar22').val();
+                                                var jbakar = 'jagung bakar';
+                                                dataString += '&jmljbakar='+jmljbakar+'&jbakar='+jbakar;
+                                            }
+                                            if($('#jmlabp22').val() !== ''){
+                                                var jmlabp = $('#jmlabp22').val();
+                                                var abaw = 'ayam bawang';
+                                                dataString += '&jmlabp='+jmlabp+'&abaw='+abaw;
+                                            }
+                                            if($('#jmlsp22').val() !== ''){
+                                                var jmlsp = $('#jmlsp22').val();
+                                                var sapip = 'sapi panggang';
+                                                dataString += '&jmlsp='+jmlsp+'&sapip='+sapip;
+                                            }
+                                            if($('#jmlka22').val() !== ''){
+                                                var jmlka = $('#jmlka22').val();
+                                                var kari = 'kari';
+                                                dataString += '&jmlka='+jmlka+'&kari='+kari;
+                                            }
+                                            if($('#jmlrl22').val() !== ''){
+                                                var jmlrl = $('#jmlrl22').val();
+                                                var rumput = 'rumput';
+                                                dataString += '&jmlrl='+jmlrl+'&rumput='+rumput;
+                                            }
+                                            if($('#jmljm22').val() !== ''){
+                                                var jmljm = $('#jmljm22').val();
+                                                dataString += '&jmljm='+jmljm
+                                            }
+                                            if($('#jmllh22').val() !== ''){
+                                                var jmllh = $('#jmllh22').val();
+                                                var jman = 'jagung manis';
+                                                dataString += '&jmllh='+jmllh+'&jman='+jman;
+                                            }
+                                        }
+                                    }
+                                }
+                                
                                 if($('#jml_tarif2').val() !== undefined){
                                 var jml_tarif2 = $('#jml_tarif2').val();
                                 var nm_bank2 = $('#nm_bank2 option:selected').val();
@@ -1844,7 +2946,37 @@
                                             document.getElementById("cek1").checked = false;
                                             document.getElementById("cek2").checked = false;
                                             // $(".nav-item:first-child").addClass("active");
+                                            table.destroy();
                                             $('.nav-pills a:first').tab('show');
+                                            $('#tahu-gila').hide();
+                                            $('#nav-tahu-gila').hide();
+                                            $('#eceran').hide();
+                                            if($('#bbdanb').is(':checked')){
+                                                $('#bahandanbumbu').hide();
+                                                document.getElementById('bbdanb').checked = false;
+                                            }
+                                            if($('#kdanb').is(':checked')){
+                                                $('#kemasandanbumbu').hide();
+                                                document.getElementById('kdanb').checked = false;
+                                            }
+                                            if($('#bbdank').is(':checked')){
+                                                $('#bahandankemasan').hide();
+                                                document.getElementById('bbdank').checked = false;
+                                            }
+                                            if($('#paketItem1').is(':checked')){
+                                                $('#paket2').hide();
+                                                document.getElementById('paketItem1').checked = false;
+                                            }
+                                            if($('#paketItem2').is(':checked')){
+                                                $('#paket3').hide();
+                                                document.getElementById('paketItem2').checked = false;
+                                            }
+                                            if($('#paketItem3').is(':checked')){
+                                                $('#eceran').hide();
+                                                document.getElementById('paketItem3').checked = false;
+                                            }
+                                            $('#tambah_ecer').hide();
+                                            $('#tambah_tahu').hide();
                                             $("#tab3").attr("data-toggle", "");
                                             $("#tab4").attr("data-toggle", "");
                                             $('#exampleModal').modal('hide');
@@ -1859,92 +2991,100 @@
                             }
 
                             $('#exampleModal').on('show.bs.modal', function(event) {
-                                            var button = $(event.relatedTarget)
-                                            var recipient = button.data('whatever')
-                                            var modal = $(this);
-                                            var dataString = 'id=' + recipient;
-
+                                var button = $(event.relatedTarget)
+                                var recipient = button.data('whatever')
+                                var modal = $(this);
+                                var dataString = 'id=' + recipient
+                                $.ajax({
+                                    type: "GET",
+                                    url: "<?php echo base_url('Monitor/get_dtmt_pel')?>",
+                                    dataType: "json",
+                                    data: dataString,
+                                    success: function(data) {
+                                        $('#nm_mitra').val(data[0]['nm_mitra']);
+                                        $('#almt_rmh').val(data[0]['almt_rmh']);
+                                        $('#provinsi3').val(data[0]['provinsi1']);
+                                        if($('#provinsi3').val() !== 0){
+                                            var id = $('#provinsi3').val();
                                             $.ajax({
-                                                type: "GET",
-                                                url: "<?php echo base_url('Monitor/get_dtmt_pel')?>",
-                                                dataType: "json",
-                                                data: dataString,
-                                                success: function(data) {
-                                                    $('#nm_mitra').val(data[0]['nm_mitra']);
-                                                    $('#almt_rmh').val(data[0]['almt_rmh']);
-                                                    $('#provinsi3').val(data[0]['provinsi1']);
-                                                    if($('#provinsi3').val() !== 0){
-                                                        var id = $('#provinsi3').val();
-                                                        $.ajax({
-                                                                url : "<?php echo base_url();?>monitor/get_kota",
-                                                                method : "POST",
-                                                                data : {id: id},
-                                                                async : false,
-                                                                dataType : 'json',
-                                                                success: function(data){
-                                                                    var html = '<option value="0">Pilih</option>';
-                                                                    var i;
-                                                                    for(i=0; i<data.length; i++){
-                                                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
-                                                                    }
-                                                                    $('#almt_kt_rmh').html(html);
-                                                                }
-                                                            });
-                                                    }
-                                                    $('#almt_kt_rmh').val(data[0]['kota1']);
-                                                    $('#almt_outlet').val(data[0]['almt_outlet']);
-                                                    $('#provinsi2').val(data[0]['provinsi2']);
-                                                    if($('#provinsi2').val() !== 0){
-                                                        var id = $('#provinsi2').val();
-                                                        $.ajax({
-                                                                url : "<?php echo base_url();?>monitor/get_kota",
-                                                                method : "POST",
-                                                                data : {id: id},
-                                                                async : false,
-                                                                dataType : 'json',
-                                                                success: function(data){
-                                                                    var html = '<option value="0">Pilih</option>';
-                                                                    var i;
-                                                                    for(i=0; i<data.length; i++){
-                                                                        html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
-                                                                    }
-                                                                    $('#almt_kt_outlet').html(html);
-                                                                }
-                                                            });
-                                                    }
-                                                    $('#almt_kt_outlet').val(data[0]['kota2']);
-                                                    $('#no_hp1').val(data[0]['no_hp1']);
-                                                    $('#no_hp2').val(data[0]['no_hp2']);
-                                                    $('#kd_mitra').val(data[0]['kd_mitra']);
-                                                    $('#almt_outlet').val(data[0]['almt_outlet']);
-                                                    // document.getElementById("daftarProduk").selectedIndex = data[0]['nm_produk'];
-                                                    $('#daftarProduk').val(data[0]['nm_produk']);
-                                                    $('#daftarProduk').prop('disabled', 'disabled');
-                                                        if($('#daftarProduk').val() !== 0){
-                                                            var id=$('#daftarProduk').val();
-                                                            $.ajax({
-                                                                url : "<?php echo base_url();?>monitor/get_jns_barang",
-                                                                method : "POST",
-                                                                data : {id: id},
-                                                                async : false,
-                                                                dataType : 'json',
-                                                                success: function(data){
-                                                                    var html = '<option value="0">Pilih</option>';
-                                                                    var i;
-                                                                    for(i=0; i<data.length; i++){
-                                                                        html += '<option value="'+data[i].kd_barang+'">'+data[i].nm_barang+'</option>';
-                                                                    }
-                                                                    $('#daftarBarang').html(html);
-                                                                    
-                                                                }
-                                                            });
+                                                    url : "<?php echo base_url();?>monitor/get_kota",
+                                                    method : "POST",
+                                                    data : {id: id},
+                                                    async : false,
+                                                    dataType : 'json',
+                                                    success: function(data){
+                                                        var html = '<option value="0">Pilih</option>';
+                                                        var i;
+                                                        for(i=0; i<data.length; i++){
+                                                            html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
                                                         }
-                                                },
-                                                error: function(err) {
-                                                    console.log(err);
-                                                }
-                                            });
-                                        });
+                                                        $('#almt_kt_rmh').html(html);
+                                                    }
+                                                });
+                                        }
+                                        $('#almt_kt_rmh').val(data[0]['kota1']);
+                                        $('#almt_outlet').val(data[0]['almt_outlet']);
+                                        $('#provinsi2').val(data[0]['provinsi2']);
+                                        if($('#provinsi2').val() !== 0){
+                                            var id = $('#provinsi2').val();
+                                            $.ajax({
+                                                    url : "<?php echo base_url();?>monitor/get_kota",
+                                                    method : "POST",
+                                                    data : {id: id},
+                                                    async : false,
+                                                    dataType : 'json',
+                                                    success: function(data){
+                                                        var html = '<option value="0">Pilih</option>';
+                                                        var i;
+                                                        for(i=0; i<data.length; i++){
+                                                            html += '<option value="'+data[i].id_kota+'">'+data[i].nama_kota+'</option>';
+                                                        }
+                                                        $('#almt_kt_outlet').html(html);
+                                                    }
+                                                });
+                                        }
+                                        $('#almt_kt_outlet').val(data[0]['kota2']);
+                                        $('#no_hp1').val(data[0]['no_hp1']);
+                                        $('#no_hp2').val(data[0]['no_hp2']);
+                                        $('#kd_mitra').val(data[0]['kd_mitra']);
+                                        $('#almt_outlet').val(data[0]['almt_outlet']);
+                                        // document.getElementById("daftarProduk").selectedIndex = data[0]['nm_produk'];
+                                        $('#daftarProduk').val(data[0]['nm_produk']);
+                                        $('#daftarProduk').prop('disabled', 'disabled');
+                                            if($('#daftarProduk').val() !== 0){
+                                                var id=$('#daftarProduk').val();
+                                                $.ajax({
+                                                    url : "<?php echo base_url();?>monitor/get_jns_barang",
+                                                    method : "POST",
+                                                    data : {id: id},
+                                                    async : false,
+                                                    dataType : 'json',
+                                                    success: function(data){
+                                                        var html = '<option value="0">Pilih</option>';
+                                                        var i;
+                                                        for(i=0; i<data.length; i++){
+                                                            html += '<option value="'+data[i].kd_barang+'">'+data[i].nm_barang+'</option>';
+                                                        }
+                                                        $('#daftarBarang').html(html);
+                                                        
+                                                    }
+                                                });
+                                            }
+                                        if((data[0]['nm_produk']) === 'PR000001'){
+                                            $('#tahu-gila').show();
+                                            $('#nav-tahu-gila').show();
+                                            $('#tambah_tahu').show();
+                                        }else{
+                                            $('#eceran').show();
+                                            $('#tambah_ecer').show();
+                                        }
+                                    },
+                                    error: function(err) {
+                                        console.log(err);
+                                    }
+                                });
+                            });
+
                                         function tutup() {
                                             table.destroy();
                                             val = $('#kd_mitra').val();
@@ -1986,6 +3126,35 @@
                                             // $(".nav-item:first-child").addClass("active");
                                             // $('.nav-item a[href="#tab1"]').tab('show');
                                             $('.nav-pills a:first').tab('show');
+                                            $('#tahu-gila').hide();
+                                            $('#nav-tahu-gila').hide();
+                                            $('#tambah_ecer').hide();
+                                            $('#tambah_tahu').hide();
+                                            $('#eceran').hide();
+                                            if($('#bbdanb').is(':checked')){
+                                                $('#bahandanbumbu').hide();
+                                                document.getElementById('bbdanb').checked = false;
+                                            }
+                                            if($('#kdanb').is(':checked')){
+                                                $('#kemasandanbumbu').hide();
+                                                document.getElementById('kdanb').checked = false;
+                                            }
+                                            if($('#bbdank').is(':checked')){
+                                                $('#bahandankemasan').hide();
+                                                document.getElementById('bbdank').checked = false;
+                                            }
+                                            if($('#paketItem1').is(':checked')){
+                                                $('#paket2').hide();
+                                                document.getElementById('paketItem1').checked = false;
+                                            }
+                                            if($('#paketItem2').is(':checked')){
+                                                $('#paket3').hide();
+                                                document.getElementById('paketItem2').checked = false;
+                                            }
+                                            if($('#paketItem3').is(':checked')){
+                                                $('#eceran').hide();
+                                                document.getElementById('paketItem3').checked = false;
+                                            }
                                             $("#tab3").attr("data-toggle", "");
                                             $("#tab4").attr("data-toggle", "");
                                             $('#exampleModal').modal('hide');
@@ -2054,14 +3223,14 @@
                                             </table>
                                             <div class="form-group">
                                                 <label for="almt_rmh">Alamat Rumah</label> <?php echo form_error('almt_rmh') ?>
-                                                <input class="form-control" type="text" name="dt_almt_rmh" id="dt_almt_rmh" style="width: 80%;" disabled>
+                                                <input class="form-control" type="text" name="dt_almt_rmh" id="dt_almt_rmh" style="width: 80%;" >
                                             </div>
                                             <table width='80%'>
                                                 <tr>
                                                     <td width='50%'>
                                                         <div class="form-group">
                                                             <label for="provinsi">Provinsi</label>
-                                                            <select class="form-control" name="dt_provinsi" id="dt_provinsi" style="width: 100%;" disabled>
+                                                            <select class="form-control" name="dt_provinsi" id="dt_provinsi" style="width: 100%;" >
                                                                 <option value="0">Pilih</option>
                                                             <?php
                                                             foreach ($dd_pr as $row) {  
@@ -2075,7 +3244,7 @@
                                                     <td width='50%'>
                                                         <div class="form-group">
                                                             <label for="almt_kt_rmh">Kota</label> <?php echo form_error('almt_kt_rmh') ?>
-                                                                <select class="form-control" name="dt_almt_kt_rmh" id="dt_almt_kt_rmh" style="width: 100%;" disabled>
+                                                                <select class="form-control" name="dt_almt_kt_rmh" id="dt_almt_kt_rmh" style="width: 100%;" >
                                                                     <option value="0">Pilih</option>
                                                                 </select>
                                                         </div>
@@ -2085,13 +3254,13 @@
                                                     <td width='50%'>
                                                         <div class="form-group">
                                                             <label for="no_hp1">Nomor Handphone</label>
-                                                            <input class="form-control" name="dt_no_hp1" id="dt_no_hp1" style="width: 100%" disabled>
+                                                            <input class="form-control" name="dt_no_hp1" id="dt_no_hp1" style="width: 100%" >
                                                         </div>
                                                     </td>
                                                     <td width='50%'>
                                                         <div class="form-group">
                                                             <label for="no_hp2">Nomor Handphone</label>
-                                                            <input class="form-control" name="dt_no_hp2" id="dt_no_hp2" style="width: 100%" disabled>
+                                                            <input class="form-control" name="dt_no_hp2" id="dt_no_hp2" style="width: 100%" >
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -2538,6 +3707,9 @@
                       function update_byr(){
                         // var byr = $('#dt_sts_pmby').val();
                         var kd_mitra = $('#dt_kd_mitra').val();
+                        var almt_rmh = $('#dt_almt_rmh').val();
+                        var almt_prov_rmh = $('#dt_provinsi option:selected').val();
+                        var almt_kt_rmh = $('#dt_almt_kt_rmh option:selected').val();
                         var sts_pmby = $('#dt_sts_pmby option:selected').val();
                         var nm_produk = $('#dt_nm_produk option:selected').val();
                         var paket = $('#dt_paket option:selected').val();
@@ -2550,7 +3722,7 @@
                         var rekening = $('#dt_rekening').val();
                         var ats_nm_rekening = $('#dt_ats_nm_rekening').val();
 
-                        var dataString = 'kd_mitra='+kd_mitra+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+
+                        var dataString = 'kd_mitra='+kd_mitra+'&almt_rmh='+almt_rmh+'&almt_kt_rmh='+almt_kt_rmh+'&sts_pmby='+sts_pmby+'&nm_produk='+nm_produk+'&paket='+paket+'&ekspedisi='+ekspedisi+'&biaya_kirim='+biaya_kirim+
                         '&tambahan='+tambahan+'&pembayaran='+pembayaran+'&jml_tarif='+jml_tarif+'&nm_bank='+nm_bank+'&rekening='+rekening+'&ats_nm_rekening='+ats_nm_rekening;
                         if($('#dt_almt_outlet_prb').val() !== ''){
                             var almt_outlet = $('#dt_almt_outlet_prb').val();

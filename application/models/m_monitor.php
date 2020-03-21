@@ -77,6 +77,11 @@ class M_monitor extends CI_Model{
 		return $query->row();
 	}
 
+	function cek_kd($idp, $nm){
+		$query = $this->db->query("SELECT kd_barang FROM a_barang WHERE nm_barang like '%".$nm."%' AND id_produk = '".$idp."'");
+		return $query->row();
+	}
+
 	function get_by_id_read($id){
 		$query =$this->db->query("SELECT adilaya_dt_mitra.nm_mitra as nm_mitra, adilaya_dt_mitra.kt_lahir as kt_lahir, adilaya_dt_mitra.tgl_lahir as tgl_lahir, 
 		adilaya_dt_mitra.dt_create as tgl_join, adilaya_dt_mitra.almt_rmh as almt_rmh, provinsi1.nama_provinsi as provinsi1, kota1.nama_kota as kota1 , 
@@ -98,6 +103,11 @@ class M_monitor extends CI_Model{
 		FROM adilaya_dt_mitra 
 		JOIN adilaya_pembayaran ON adilaya_dt_mitra.pembayaran = adilaya_pembayaran.kd_pmby 
 		WHERE adilaya_dt_mitra.kd_mitra = '".$id."'");
+		return $query->result();
+	}
+
+	function get_tmp_tahu(){
+		$query = $this->db->query("SELECT * FROM tmp_order");
 		return $query->result();
 	}
 	
@@ -266,7 +276,8 @@ class M_monitor extends CI_Model{
 		CASE
     	WHEN DATEADD(month, 3, dt_last_order) <= GETDATE() THEN 'Di atas 3 bulan'
     	ELSE 'Kurang dari 3 bulan'
-		END AS last
+		END AS last, 
+		sts_vakum
 		FROM adilaya_dt_mitra 
 		JOIN kota on almt_kt_rmh = id_kota
 		LEFT JOIN adilaya_paket on paket = kd_paket
