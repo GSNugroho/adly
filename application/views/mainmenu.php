@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <link rel="shortcut icon" href="../../logo_new.png" type="image/x-icon">
+   <link rel="icon" href="<?php echo base_url('assets/bootstrap/image/logo_a.png')?>" type="image/png" sizes="16x16"> 
   <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -26,23 +26,21 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Isi -->
 		<a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('dashboard');?>">
-        <div class="sidebar-brand-icon rotate-n-15">
-        <i class="fas fa-warehouse"></i>
+        <div class="sidebar-brand-icon">
+        <!--<i class="fas fa-warehouse"></i>-->
+		<img src="<?php echo base_url('assets/bootstrap/image/logo_a.png')?>">
         </div>
         <div class="sidebar-brand-text mx-3">
-          <?php
-            if($this->session->userdata('level')=='1'){
-              echo "Administrator";
-            }elseif($this->session->userdata('level')=='2'){
-              echo "Admin Marketing";
-            }elseif($this->session->userdata('level')=='3'){
-              echo "Admin CS";
-            }
-          ?>
+        <?php if($this->session->userdata('level')=='2'):?>
+		<img src="<?php echo base_url('assets/bootstrap/image/logo_adminmrt.png')?>">
+		<?php endif;?>
+		<?php if($this->session->userdata('level')=='3'):?>
+		<img src="<?php echo base_url('assets/bootstrap/image/logo_admincs.png')?>">
+		<?php endif;?>
         </div>
 		</a>
 		

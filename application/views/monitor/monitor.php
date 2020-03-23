@@ -46,7 +46,7 @@
 
 				<div class="card shadow mb-4">
 					<div class="card-header py-3">
-              			<h6 class="m-0 font-weight-bold text-primary">Data Mitra</h6>
+              			<h6 class="m-0 font-weight-bold text-dark">Data Mitra</h6>
 					</div>
 					<div class="col-md-12 text-center">
 						<?php 
@@ -59,7 +59,7 @@
 						?>
 					</div>
 					<p>&nbsp;&nbsp;&nbsp;</p>
-					<table style="margin-left: 10px">
+					<table style="margin-left: 20px">
 						<tr>
 						<td>
 						<input type="text" class="form-control" name="rtm_waktu" id="tgl1"placeholder="dd-mm-yyyy"/>
@@ -77,7 +77,7 @@
 					<!-- <a href="<?php //echo base_url('monitor/create')?>" class="btn btn-primary btn-icon-split">
                     	<span class="text">Input Data Mitra</span>
                     </a> -->
-                    <button style="height: 36px" class="btn btn-primary" data-toggle="modal" data-target="#inputMitra"  data-keyboard="false" data-backdrop="static" onclick="load()">Input Data Mitra</button>
+                    <button style="height: 36px" class="btn btn-dark" data-toggle="modal" data-target="#inputMitra"  data-keyboard="false" data-backdrop="static" onclick="load()">Input Data Mitra</button>
                     <?php endif;?>
 					<br>
                     <br>
@@ -2725,6 +2725,7 @@
                                         var jmlbumbu = $('#jmlbumbu').val();
                                         var jmlkemasan = $('#jmlkemasan').val();
                                         dataString += '&jmlbb='+jmlbb+'&jmlbumbu='+jmlbumbu+'&jmlkemasan='+jmlkemasan;
+
                                     }else if($('#paketItem1').is(':checked')){
                                         var jmlporsi = $('#paketPorsi2').val();
                                         var tot_h_paket3 = parseInt(document.getElementById('paketPorsi2').value) * 1500;
@@ -2809,6 +2810,7 @@
                                                 var jman = 'jagung manis';
                                                 dataString += '&jmllh='+jmllh+'&jman='+jman;
                                             }
+
                                         }else if($('#kdanb').is(':checked')){
                                             var jmlporsi = $('#paketPorsi2').val();
                                             var tot_h_paket3 = parseInt(document.getElementById('paketPorsi2').value) * 1500;
@@ -2897,6 +2899,21 @@
                                                 var jmllh = $('#jmllh22').val();
                                                 var jman = 'jagung manis';
                                                 dataString += '&jmllh='+jmllh+'&jman='+jman;
+                                            }
+                                        }else if($('#bbdank').is(':checked')){
+                                            var jmltpng = $('#jmlhtpng23').val();
+                                            var tepung = 'tepung';
+                                            dataString += '&jmltpng='+jmltpng+'&tepung='+tepung;
+
+                                            if($('#jmlpaperbag23').val() !== ''){
+                                                var jmlpaperbag = $('#jmlpaperbag23').val();
+                                                var paperbag = 'paperbag';
+                                                dataString += '&jmlpaperbag='+jmlpaperbag+'&paperbag='+paperbag;
+                                            }
+                                            if($('#jmlbox23').val() !== ''){
+                                                var jmlbox = $('#jmlbox23').val();
+                                                var box ='box';
+                                                dataString += '&jmlbox='+jmlbox+'&box='+box;
                                             }
                                         }
                                     }

@@ -37,7 +37,7 @@
 
 				<div class="card shadow mb-4">
 					<div class="card-header py-3">
-              			<h6 class="m-0 font-weight-bold text-primary">Data Order</h6>
+              			<h6 class="m-0 font-weight-bold text-dark">Data Order</h6>
 					</div>
 					<div class="col-md-12 text-center">
 						<?php 

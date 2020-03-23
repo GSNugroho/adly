@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-
+ <link rel="icon" href="<?php echo base_url('assets/bootstrap/image/logo_a.png')?>" type="image/png" sizes="16x16"> 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,7 +20,7 @@
 
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-dark">
 
   <div class="container">
 
@@ -34,25 +34,27 @@
             <!-- Nested Row within Card Body -->
             <div class="row">
               <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-              <div class="col-lg-6">
+              <div class="col-lg-6" style="background: black;">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                    <h1 class="h4 mb-4" style="color: black">Login</h1>
                   </div>
-                  <form class="user" method="POST" action="<?php echo base_url().'Login/auth'?>">
+                  <form class="user" method="POST" action="<?php echo base_url().'Login/auth'?>" autocomplete="off">
                     <div class="form-group">
                       <input type="text" class="form-control form-control-user" id="username" name="username" placeholder="Username">
                     </div>
                     <div class="form-group">
                       <input type="password" class="form-control form-control-user" id="pass" name="pass" placeholder="Password">
                     </div>
-                    <button class="btn btn-primary btn-user btn-block" type="submit">Login</button>
+                    <button class="btn btn-dark btn-user btn-block" type="submit">Login</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
+		<script>
+			document.getElementById('username').focus();
+		</script>
       </div>
 
     </div>
