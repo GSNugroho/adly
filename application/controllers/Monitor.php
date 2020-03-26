@@ -1724,6 +1724,58 @@ class Monitor extends CI_Controller {
 		$this->load->view('monitor/history', $data);
 	}
 
+	function update_notif(){
+		if(isset($_POST['view'])){
+			
+			if($_POST["view"] != '')
+			{
+				$data = array(
+					"notif_status" => 1
+				);
+				$id = 0;
+				$this->M_monitor->update_notif($id, $data);
+			}
+			
+			$result = $this->M_monitor->get_all_notif();
+			$output = '';
+			if($result > 0){
+				foreach($result as $row){
+					$output .= '
+					<a class="dropdown-item d-flex align-items-center" href="#">
+					<div class="mr-3">
+					  <div class="icon-circle bg-dark">
+						<i class="fas fa-file-alt text-white"></i>
+					  </div>
+					</div>
+					<div>
+					  <div class="small text-gray-500">'.date('d-m-Y H:i:s', strtotime($row->notif_date)).'</div>
+					  <span class="font-weight-bold">'.$row->notif_nm_mitra.'</span><br>
+					  <span>'.$row->notif_text.'</span>
+					</div>
+					';
+				}
+			}else{
+				$output .= '
+				<div>
+					<span class="font-weight-bold">Tidak Ada Notif</span>
+			  	</div>
+				';
+			}
+			
+			
+			$count = $this->M_monitor->count_notif();
+			if($count){
+				$jml = $count->total;
+			}
+			$data = array(
+				'notification' => $output,
+				'unseen_notification'  => $jml
+			);
+			
+			echo json_encode($data);
+			
+			}
+	}
 	
 }
 ?>

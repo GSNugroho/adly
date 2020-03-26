@@ -321,5 +321,20 @@ class M_monitor extends CI_Model{
 		WHERE 1=1 ".$searchQuery." order by ".$columnName." ".$columnSortOrder);
 		return $query->result();
 	}
+
+	function update_notif($id, $data){
+		$this->db->where('notif_status', $id);
+		$this->db->update('a_notif', $data);
+	}
+
+	function get_all_notif(){
+		$query = $this->db->query("SELECT TOP 5 * FROM a_notif ORDER BY notif_id DESC ");
+		return $query->result();
+	}
+
+	function count_notif(){
+		$query = $this->db->query("SELECT COUNT(*) as total FROM a_notif WHERE notif_status=0");
+		return $query->row();
+	}
 }
 ?>

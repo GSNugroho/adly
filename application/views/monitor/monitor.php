@@ -36,7 +36,7 @@
 	<link rel="stylesheet" href="<?php echo base_url('assets/datepicker/css/bootstrap-datetimepicker.css') ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/jquery-ui/themes/blitzer/jquery-ui.min.css') ?>" />
     <!-- <script src="<?php //echo base_url('assets/vendor/jquery/jquery.min.js')?>"></script> -->
-    <script src="<?php echo base_url('assets/datepicker/js/jquery-1.11.3.min.js') ?>"></script>
+    
     <script src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js')?>"></script>
     <script src="<?php echo base_url('assets/swal/sweetalert2.all.min.js')?>"></script>
     <script src="<?php echo base_url('assets/vendor/datatables/jquery.dataTables.min.js')?>"></script>
@@ -74,9 +74,6 @@
 					</table>
 					<div class="card-body">
                     <?php if($this->session->userdata('level')=='2'):?>
-					<!-- <a href="<?php //echo base_url('monitor/create')?>" class="btn btn-primary btn-icon-split">
-                    	<span class="text">Input Data Mitra</span>
-                    </a> -->
                     <button style="height: 36px" class="btn btn-dark" data-toggle="modal" data-target="#inputMitra"  data-keyboard="false" data-backdrop="static" onclick="load()">Input Data Mitra</button>
                     <?php endif;?>
 					<br>
