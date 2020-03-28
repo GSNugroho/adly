@@ -26,13 +26,14 @@
     
 			<div class="card shadow mb-4">
 			<div class="card-header py-3">
-           	<h6 class="m-0 font-weight-bold text-primary">History Order</h6>
+           	<h6 class="m-0 font-weight-bold text-dark">History Order</h6>
 		</div>
     <div class="card-body">
     <h2></h2>
     <!-- <a href="<?php echo site_url('monitor')?>" class="btn btn-danger">Kembali</a> -->
     Nama Mitra : <?php echo $nm_mitra?> <br>
-    Alamat Rumah : <?php echo $almt_rmh?>
+    Alamat Rumah : <?php echo $almt_rmh?> <br>
+    Produk : <?php echo $produk?> <br>
     <table class="table table-bordered dataTable">
         <tr>
             <th>Tanggal Order</th>

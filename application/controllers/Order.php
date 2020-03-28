@@ -11,10 +11,25 @@ class Order extends CI_Controller{
 	}
 	
 	public function read($id){
-		$data = array(
-			"mitra" => $this->M_order->dt_mitra_order($id),
-			"drior" => $this->M_order->rincian_order($id)
-		);
+		$row = $this->M_order->dt_mitra_order($id);
+		if($row){
+			if($row->nm_produk == 'PR000001'){
+				$data = array(
+					"mitra" => $this->M_order->dt_mitra_order($id),
+					"tigaitem" => $this->M_order->rincian_order_tahu3($id),
+					"duasitem" => $this->M_order->rincian_order_tahu21($id),
+					"duaditem" => $this->M_order->rincian_order_tahu22($id),
+					"duatitem" => $this->M_order->rincian_order_tahu23($id),
+					"ecer" => $this->M_order->rincian_order_ecer($id),
+				);
+			}else{
+				$data = array(
+					"mitra" => $this->M_order->dt_mitra_order($id),
+					"drior" => $this->M_order->rincian_order($id)
+				);
+			}
+		}
+		
 		$this->load->view('order/order_rincian', $data);
 	}
 

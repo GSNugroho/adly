@@ -224,6 +224,29 @@
               </div>
             </li>
             <script>
+            $(document).ready(function() {
+                  if (Notification.permission !== "granted")
+                    Notification.requestPermission();
+            });
+             
+            function notifikasi() {
+                if (!Notification) {
+                    alert('Browsermu tidak mendukung Web Notification.'); 
+                    return;
+                }
+                if (Notification.permission !== "granted")
+                    Notification.requestPermission();
+                else {
+                    var notifikasi = new Notification('Adilaya Marketing', {
+                        icon: '<?php echo base_url('assets/bootstrap/image/logo_notif.png')?>',
+                        body: "Mengirimkan Notifikasi Baru \nSilahkan cek rincian notifikasi.",
+                    });
+                    
+                    setTimeout(function(){
+                        notifikasi.close();
+                    }, 4000);
+                }
+            };
               $(document).ready(function(){
  
               function load_unseen_notification(view = '')
@@ -239,6 +262,7 @@
                     if(data.unseen_notification > 0)
                     {
                     $('.badge-counter').html(data.unseen_notification);
+                    notifikasi()
                     }
                   }
                 });

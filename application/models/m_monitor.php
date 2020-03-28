@@ -38,6 +38,10 @@ class M_monitor extends CI_Model{
 		$this->db->insert('adilaya_pembayaran', $data);
 	}
 
+	function insert_notif($notif){
+		$this->db->insert('a_notif', $notif);
+	}
+
 	function tmp_order_insert($data){
 		$this->db->insert($this->table2, $data);
 	}
@@ -73,7 +77,7 @@ class M_monitor extends CI_Model{
 	}
 
 	function get_by_id($id){
-		$query = $this->db->query("SELECT * FROM adilaya_dt_mitra WHERE kd_mitra = '".$id."'");
+		$query = $this->db->query("SELECT * FROM adilaya_dt_mitra JOIN adilaya_produk ON adilaya_dt_mitra.nm_produk = adilaya_produk.kd_produk WHERE kd_mitra = '".$id."'");
 		return $query->row();
 	}
 

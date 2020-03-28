@@ -39,8 +39,29 @@ class M_order extends CI_Model{
         $query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order_detail JOIN a_barang ON adilaya_dt_mitra_order_detail.kd_barang = a_barang.kd_barang WHERE kd_order = '".$id."'");
         return $query->result();
     }
+    function rincian_order_tahu3($id){
+        $query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order_detail JOIN a_barang ON adilaya_dt_mitra_order_detail.kd_barang = a_barang.kd_barang WHERE paket_tahu = '3Item' AND kd_order = '".$id."'");
+        return $query->result();
+    }
+    function rincian_order_tahu21($id){
+        $query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order_detail JOIN a_barang ON adilaya_dt_mitra_order_detail.kd_barang = a_barang.kd_barang WHERE paket_tahu = '2Item1' AND kd_order = '".$id."'");
+        return $query->result();
+    }
+    function rincian_order_tahu22($id){
+        $query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order_detail JOIN a_barang ON adilaya_dt_mitra_order_detail.kd_barang = a_barang.kd_barang WHERE paket_tahu = '2Item2' AND kd_order = '".$id."'");
+        return $query->result();
+    }
+    function rincian_order_tahu23($id){
+        $query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order_detail JOIN a_barang ON adilaya_dt_mitra_order_detail.kd_barang = a_barang.kd_barang WHERE paket_tahu = '2Item3' AND kd_order = '".$id."'");
+        return $query->result();
+    }
+    function rincian_order_ecer($id){
+        $query = $this->db->query("SELECT * FROM adilaya_dt_mitra_order_detail JOIN a_barang ON adilaya_dt_mitra_order_detail.kd_barang = a_barang.kd_barang WHERE paket_tahu IS NULL AND kd_order = '".$id."'");
+        return $query->result();
+    }
     function dt_mitra_order($id){
-        $query = $this->db->query("SELECT nm_mitra, adilaya_dt_mitra_order.almt_kirim as almt_kirim, kota.nama_kota as nama_kota, a_ekspedisi.nama_ekspedisi as ekspedisi, adilaya_dt_mitra_order.b_barang as b_barang, adilaya_dt_mitra_order.biaya_kirim as biaya_kirim, ket FROM adilaya_dt_mitra_order
+        $query = $this->db->query("SELECT nm_mitra, adilaya_dt_mitra_order.almt_kirim as almt_kirim, kota.nama_kota as nama_kota, a_ekspedisi.nama_ekspedisi as ekspedisi, adilaya_dt_mitra_order.b_barang as b_barang, adilaya_dt_mitra_order.biaya_kirim as biaya_kirim, ket, adilaya_dt_mitra.nm_produk as nm_produk, porsi
+         FROM adilaya_dt_mitra_order
         JOIN adilaya_dt_mitra ON adilaya_dt_mitra_order.kd_mitra = adilaya_dt_mitra.kd_mitra
         JOIN kota ON adilaya_dt_mitra_order.almt_kt_kirim = kota.id_kota
         JOIN a_ekspedisi ON adilaya_dt_mitra_order.ekspedisi = a_ekspedisi.kd_ekspedisi

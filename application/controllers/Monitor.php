@@ -83,20 +83,6 @@ class Monitor extends CI_Controller {
 			'dt_create' => date('Y-m-d')
 		);
 
-		// $dtl_pmby = $this->M_monitor->get_all_pmby();
-		// foreach($dtl_pmby as $row){
-		// 	$kd_pmby = $row->kd_pmby;
-		// 	$datapmby = array(
-		// 		'kd_pmby' => $row->kd_pmby,
-		// 		'jml_transfer' => $row->jml_transfer,
-		// 		'nm_bank' => $row->nm_bank,
-		// 		'no_rekening' => $row->no_rekening,
-		// 		'ats_nm' => $row->ats_nm,
-		// 		'dt_trans' => date('Y-m-d')
-		// 	);
-		// 	$this->M_monitor->insertpmby($datapmby);
-		// 	$this->M_monitor->tmp_pmby_delete($kd_pmby);
-		// }
 		$datapmby = array(
 			'kd_pmby' => $kode,
 			'jml_transfer' => $this->input->post('jml_tarif', true),
@@ -129,6 +115,17 @@ class Monitor extends CI_Controller {
 				'dt_trans' => date('Y-m-d')
 			);
 			$this->M_monitor->insertpmby($datapmby);
+		}
+
+		if($this->input->post('cek_tmbb', true) == 'tambah'){
+			$notif = array(
+				"notif_subject" => 'Tambah Bahan Baku',
+				"notif_text" => '+ '.$this->input->post('nm_tb', true),
+				"notif_status" => 0,
+				"notif_date" => date('Y-m-d H:i:s'),
+				"notif_nm_mitra" => 'Mitra '.$this->input->post('nm_mitra', TRUE)
+			);
+			$this->M_monitor->insert_notif($notif);
 		}
 		
 		$this->M_monitor->insert($data);
@@ -236,20 +233,6 @@ class Monitor extends CI_Controller {
 				// 'dt_pelunasan' => date('Y-m-d')
 			);
 		}
-		// $dtl_pmby = $this->M_monitor->get_all_pmby();
-		// foreach($dtl_pmby as $row){
-		// 	$kd_pmby = $row->kd_pmby;
-		// 	$datapmby = array(
-		// 		'kd_pmby' => $row->kd_pmby,
-		// 		'jml_transfer' => $row->jml_transfer,
-		// 		'nm_bank' => $row->nm_bank,
-		// 		'no_rekening' => $row->no_rekening,
-		// 		'ats_nm' => $row->ats_nm,
-		// 		'dt_trans' => date('Y-m-d')
-		// 	);
-		// 	$this->M_monitor->insertpmby($datapmby);
-		// 	$this->M_monitor->tmp_pmby_delete($kd_pmby);
-		// }
 
 		$datapmby = array(
 			'kd_pmby' => $kode,
@@ -404,101 +387,7 @@ class Monitor extends CI_Controller {
 		$kodebaru = $char.sprintf("%06s", $noUrut);
 		return $kodebaru;
 	}
-	function no_aset($no_gol, $id_rng, $tgl_m, $merk, $urut){
-		 
-		 $g_no_aset = $this->M_monitor->get_no_aset();
-		 foreach($g_no_aset as $row){
-			 $data = $row->maxkode;
-		 }
-		 $no_aset = (int) $data;
-		 $th_aset = date('Y');
-		 $gp = $this->M_monitor->get_p($id_rng, $tgl_m, $merk);
-		 $da_ruang ='';
-		 $d_tgl = '';
-		 $d_merk = '';
-		 foreach($gp as $row){
-			 $da_ruang = $row->id_ruang;
-			 $d_tgl = $row->tgl_terima;
-			 $d_merk = $row->merk;
-		 }
-		 if(($id_rng != $da_ruang) && ($tgl_m != $d_tgl) && ($merk != $d_merk)){
-			$no_aset++;
-		 }
-		 $kd_aset = $no_gol.'-'.$th_aset.'-'.$no_aset.'-'.$urut;
-		 return $kd_aset;
-	}
-
-	function urut($rng, $tgl_m, $merk){
-		$id_u = $this->M_monitor->get_urut_brg($rng, $tgl_m, $merk);
-		$data='';
-		foreach($id_u as $row){
-			$data = $row->maxkode;
-		}
-		$urut = (int) $data;
-		$urut++;
-		return $urut;
-	}
-
-	function kode_aset($id)
-	{
-		$th = date('Y');
-		$k_aset = $this->M_monitor->get_k_aset($id, $th);
-		foreach($k_aset as $row){
-			$data = $row->maxkode;
-		}
-		$kodeaset = $data;
-		$noUrut = (int) substr($kodeaset, 12, 3);
-		$noUrut++;
-		$char = $id;
-		$bl = date('m');
-		$kodebaru = $char.'-'.$th.'-'.$bl.'-'.$noUrut;
-		return $kodebaru;
-	}
-
-	function no_as($no_gol, $id_rng, $tgl_m, $merk){
-		
-		 $g_no_aset = $this->M_monitor->get_no_aset();
-		 foreach($g_no_aset as $row){
-			 $no_aset = $row->maxkode;
-		 }
-		 
-		 $gp = $this->M_monitor->get_p($id_rng, $tgl_m, $merk);
-		 $da_ruang ='';
-		 $d_tgl = '';
-		 $d_merk = '';
-		 foreach($gp as $row){
-			 $da_ruang = $row->id_ruang;
-			 $d_tgl = $row->tgl_terima;
-			 $d_merk = $row->merk;
-		 }
-		 if(($id_rng != $da_ruang) && ($tgl_m != $d_tgl) && ($merk != $d_merk)){
-			$no_aset++;
-		 }
-		 return $no_aset;
-	}
 	
-	function kode_urut($id)
-	{
-		$th = date('Y');
-		$k_aset = $this->M_monitor->get_k_aset($id, $th);
-		foreach($k_aset as $row){
-			$data = $row->maxkode;
-		}
-		$kodeaset = $data;
-		$noUrut = (int) substr($kodeaset, 12, 3);
-		$noUrut++;
-		return $noUrut;
-	}
-
-	function in_kd_barang(){
-		$in_kd_barang =  $this->M_monitor->get_in_kd_barang();
-		foreach($in_kd_barang as $row){
-			$data = $row->maxkode;
-		}
-		$kd_barang = (int) $data;
-		$kd_barang++;
-		return $kd_barang;
-	}
 	function dt_tbl(){
 		## Read value
 		$draw = $_POST['draw'];
@@ -1347,13 +1236,40 @@ class Monitor extends CI_Controller {
 				);
 				$this->M_monitor->update_dtmitra_order($kd_o, $data);
 			}
+
+			//dt_barang
 			if($this->input->post('jmltpng') != ''){
 				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('tepung'));
 				if($row){
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmltpng', true)
+						"jml_barang" => $this->input->post('jmltpng', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmltpng21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('tepung'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmltpng21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmltpng23') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('tepung'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmltpng23', true),
+						"paket_tahu" => '2Item3'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1364,7 +1280,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlasin', true)
+						"jml_barang" => $this->input->post('jmlasin', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlasin21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('asin'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlasin21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlasin22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('asin'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlasin22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1375,7 +1316,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlpaperbag', true)
+						"jml_barang" => $this->input->post('jmlpaperbag', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlpaperbag22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('paperbag'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlpaperbag22', true),
+						"paket_tahu" => '2Item2'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlpaperbag23') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('paperbag'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlpaperbag23', true),
+						"paket_tahu" => '2Item3'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1386,7 +1352,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlcabe1', true)
+						"jml_barang" => $this->input->post('jmlcabe1', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe121') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe1'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe121', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe122') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe1'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe122', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1397,7 +1388,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlbox', true)
+						"jml_barang" => $this->input->post('jmlbox', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbox22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('box'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbox22', true),
+						"paket_tahu" => '2Item2'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbox23') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('box'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbox23', true),
+						"paket_tahu" => '2Item3'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1408,7 +1424,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlcabe2', true)
+						"jml_barang" => $this->input->post('jmlcabe2', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe221') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe2'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe221', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe222') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe2'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe222', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1419,7 +1460,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlcabe3', true)
+						"jml_barang" => $this->input->post('jmlcabe3', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe321') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe3'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe321', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlcabe322') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('cabe3'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlcabe322', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1430,7 +1496,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlbbq', true)
+						"jml_barang" => $this->input->post('jmlbbq', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbbq21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('bbq'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbbq21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbbq22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('bbq'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbbq22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1441,7 +1532,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlbalado', true)
+						"jml_barang" => $this->input->post('jmlbalado', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbalado21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('balado'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbalado21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlbalado22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('balado'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlbalado22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1452,7 +1568,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlkeju', true)
+						"jml_barang" => $this->input->post('jmlkeju', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlkeju21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('keju'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlkeju21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlkeju22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('keju'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlkeju22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1463,7 +1604,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlpizza', true)
+						"jml_barang" => $this->input->post('jmlpizza', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlpizza21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('pizza'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlpizza21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlpizza22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('pizza'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlpizza22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1474,7 +1640,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmljbakar', true)
+						"jml_barang" => $this->input->post('jmljbakar', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmljbakar21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jbakar'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmljbakar21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmljbakar22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jbakar'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmljbakar22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1485,7 +1676,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlabp', true)
+						"jml_barang" => $this->input->post('jmlabp', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlabp21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('abaw'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlabp21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlabp22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('abaw'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlabp22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1496,7 +1712,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlsp', true)
+						"jml_barang" => $this->input->post('jmlsp', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlsp21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('sapip'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlsp21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlsp22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('sapip'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlsp22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1507,7 +1748,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlka', true)
+						"jml_barang" => $this->input->post('jmlka', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlka21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('kari'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlka21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlka22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('kari'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlka22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1518,7 +1784,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmlrl', true)
+						"jml_barang" => $this->input->post('jmlrl', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlrl21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('rumput'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlrl21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmlrl22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('rumput'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmlrl22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1529,7 +1820,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmljm', true)
+						"jml_barang" => $this->input->post('jmljm', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmljm21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jmljm'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmljm21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmljm22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jmljm'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmljm22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1540,7 +1856,32 @@ class Monitor extends CI_Controller {
 					$detail = array(
 						"kd_order" => $kd_o,
 						"kd_barang" => $row->kd_barang,
-						"jml_barang" => $this->input->post('jmllh', true)
+						"jml_barang" => $this->input->post('jmllh', true),
+						"paket_tahu" => '3Item'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmllh21') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('jman'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmllh21', true),
+						"paket_tahu" => '2Item1'
+					);
+					$this->M_monitor->insertdetail($detail);
+				}
+			}
+			if($this->input->post('jmllh22') != ''){
+				$row = $this->M_monitor->cek_kd($nm_p, $this->input->post('ladah'));
+				if($row){
+					$detail = array(
+						"kd_order" => $kd_o,
+						"kd_barang" => $row->kd_barang,
+						"jml_barang" => $this->input->post('jmllh22', true),
+						"paket_tahu" => '2Item2'
 					);
 					$this->M_monitor->insertdetail($detail);
 				}
@@ -1718,6 +2059,7 @@ class Monitor extends CI_Controller {
 				'dthis' => $this->M_monitor->get_history($id),
 				'nm_mitra' => set_value('nm_mitra', $row->nm_mitra),
 				'almt_rmh' => set_value('almt_rmh', $row->almt_rmh),
+				'produk' => set_value('produk', $row->nm_produk)
 			);
 		}
 		

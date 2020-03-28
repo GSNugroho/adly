@@ -582,6 +582,10 @@
                                                 </div>
                                                 <div id="by_tmbb" style="display: none;">
                                                     <div class="form-group">
+                                                        <label for="barang_tambah">Nama Barang</label>
+                                                        <input class="form-control" type="text" name="in_nmb_tmbb" id="in_nmb_tmbb" style="width: 80%;">
+                                                    </div>
+                                                    <div class="form-group">
                                                         <label for="biaya_tmbbb">Biaya Tambahan Bahan Baku</label>
                                                         <input class="form-control" type="text" name="in_by_tmbbb" id="in_by_tmbbb" style="width: 80%;">
                                                     </div>
@@ -762,7 +766,10 @@
                                 var rekening_tmbb = $('#in_rekening_tmbbb').val();
                                 var jml_tarif_tmbbb = $('#in_jml_tarif_tmbbb').val();
                                 var ats_nm_rekening_tmbbb = $('#in_ats_nm_rekening_tmbbb').val();
-                                dataString += '&by_tmbbb='+by_tmbbb+'&nm_bank_tmbb='+nm_bank_tmbb+'&rekening_tmbb='+rekening_tmbb+'&jml_tarif_tmbbb='+jml_tarif_tmbbb+'&ats_nm_rekening_tmbbb='+ats_nm_rekening_tmbbb;
+                                var nm_tb = $('#in_nmb_tmbb').val();
+                                var cek_tmbb = 'tambah';
+                                dataString += '&by_tmbbb='+by_tmbbb+'&nm_bank_tmbb='+nm_bank_tmbb+'&rekening_tmbb='+rekening_tmbb+'&jml_tarif_tmbbb='+jml_tarif_tmbbb+'&ats_nm_rekening_tmbbb='+ats_nm_rekening_tmbbb+
+                                '&cek_tmbb='+cek_tmbb+'&nm_tb='+nm_tb;
                             }
 
                             if($('#in_jml_tarif2').val() !== undefined){
@@ -1303,6 +1310,7 @@
                     <div class="card-body">
                         <div class="tab-content">
                         <div class="tab-pane active" id="tab_1">
+                        <form id="form_order_identitas">
                             <div class="form-group">
                                 <label for="nm_mitra">Nama Mitra </label> 
                                 <input class="form-control" type="text" name="nm_mitra" id="nm_mitra" style="width: 80%;" disabled>
@@ -1351,6 +1359,7 @@
                                     </td>
                                 </tr>
                             </table>
+                        </form>
                         </div>
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="tab_2">
@@ -1378,14 +1387,6 @@
                                     <label for="Barang">Barang</label>
                                     <select class="form-control" name="barang" id="daftarBarang" style="width: 80%;" >
                                     <option value="0">Pilih</option>
-                                                <?php
-                                                // foreach ($dd_bg as $row) {  
-                                                //     echo "<option value='".$row->kd_barang."' >".$row->nm_barang."</option>";
-                                                //     }
-                                                //     echo"
-                                                // </select>
-                                                // " 
-                                                ?>
                                     </select>
                                     <br>
                                     <input class="form-control" name="inputHarga" id="inputHarga" type="text" placeholder="Harga Barang" style="width: 80%" disabled>
@@ -1464,7 +1465,7 @@
                                     })
                                     </script>
                                 </div>
-
+                                <form id="form_order_order">
                                 <div id="paket3" style="display: none;">
                                 <div class="form-group">
                                 <label for="paketPorsi">Jumlah Porsi</label>
@@ -2019,6 +2020,7 @@
                                         })
                                     })
                                 </script>
+                            </form>
                             </div>
                             <script>
                                 
@@ -2058,21 +2060,11 @@
                                                             return intVal(a) + intVal(b);
                                                         }, 0);
 
-                                                    // if (($('#pilDiskon option:selected').val()) == "Rp") {
-                                                    //     totalbyr = pageTotal - diskon;
-                                                    // } else {
-                                                    //     diskon = pageTotal * (diskon / 100);
-                                                    //     totalbyr = pageTotal - diskon;
-                                                    // }
-
                                                     // Update footer
                                                     var numformat = $.fn.dataTable.render.number('.', ',', 2, 'Rp ').display;
                                                     $('tr:eq(0) th:eq(1)', api.table().footer()).html(
                                                         numformat(pageTotal)
                                                     );
-                                                    // $('tr:eq(2) th:eq(1)', api.table().footer()).html(
-                                                    //     numformat(totalbyr)
-                                                    // );
                                                 },
                                                 "bLengthChange": false,
                                                 "bFilter": false,
@@ -2264,6 +2256,7 @@
                         
                         <!-- /.tab-pane -->
                         <div class="tab-pane" id="tab_3">
+                        <form id="form_order_kirim">
                             <div class="form-group">
                                     <label for="almt_kirim">Alamat Kirim</label> 
                                     <input class="form-control" type="text" name="almt_kirim" id="almt_kirim" style="width: 80%;">
@@ -2380,9 +2373,11 @@
                                     });
                                 });
                             </script>
+                        </form>
                         </div>
-                        <! /.tab-pane -->
+                        <!--tab-pane -->
                         <div class="tab-pane" id="tab_4">
+                        <form id="form_order_bayar">
                             <div class="or_bank">
                                 <table width='80%'>
                                     <tr>
@@ -2523,6 +2518,7 @@
                             </div>
                             <input type="hidden" id="kd_mitra">
                             <input type="hidden" id="almt_outlet">
+                            </form>
                             <button id="submit" type="submit" class="btn btn-success" >Simpan</button>
                             <button type="button" class="btn btn-secondary" onclick="tutup()">Batal</button>
                         <script>
@@ -2553,20 +2549,254 @@
                                     success: function(data){
                                         var rinci = '';
                                         var i;
-                                        for(i=0; i<data.length; i++){
-                                            rinci += '<tr><td>'+data[i].nm_barang+'</td><td>'+data[i].jml_barang+'</td></tr>';
-                                            //   rinci += 'a';
-                                        };
+                                        if(data.length !== 0){
+                                            rinci += '<table border="1"><tr><th>Nama Barang</th><th>Jumlah Barang</th></tr>';
+                                            for(i=0; i<data.length; i++){
+                                            rinci += '<tr><td>'+data[i].nm_barang+'</td><td>'+data[i].jml_barang+' kg</td></tr>';
+                                            };
+                                            rinci += '</table>';
+                                        }
+                                        if(($('#daftarProduk option:selected').val()) === 'PR000001'){
+                                            if($('#paketItem2').is(':checked')){
+                                                rinci += '<b>Paket 3 Item</b><table border="1"><tr><th>Nama Barang</th><th>Jumlah Barang</th></tr>';
+                                                var jmltpng = $('#jmltpng').val();
+                                                rinci += '<tr><td>Tepung</td><td>'+jmltpng+' kg</td></tr>';
+
+                                                if($('#jmlpaperbag').val() !== ''){
+                                                    var jmlpaperbag = $('#jmlpaperbag').val();
+                                                    rinci += '<tr><td>Paperbag</td><td>'+jmlpaperbag+' pcs</td></tr>';
+                                                }
+                                                if($('#jmlbox').val() !== ''){
+                                                    var jmlbox = $('#jmlbox').val();
+                                                    rinci += '<tr><td>Box</td><td>'+jmlbox+' pcs</td></tr>';
+                                                }
+                                                if($('#jmlasin').val() !== ''){
+                                                    var jmlasin = $('#jmlasin').val();
+                                                    rinci += '<tr><td>Asin</td><td>'+jmlasin+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlcabe1').val() !== ''){
+                                                    var jmlcabe1 = $('#jmlcabe1').val();
+                                                    rinci += '<tr><td>Cabe Level 1</td><td>'+jmlcabe1+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlcabe2').val() !== ''){
+                                                    var jmlcabe2 = $('#jmlcabe2').val();
+                                                    rinci += '<tr><td>Cabe Level 2</td><td>'+jmlcabe2+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlcabe3').val() !== ''){
+                                                    var jmlcabe3 = $('#jmlcabe3').val();
+                                                    rinci += '<tr><td>Cabe Level 3</td><td>'+jmlcabe3+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlbbq').val() !== ''){
+                                                    var jmlbbq = $('#jmlbbq').val();
+                                                    rinci += '<tr><td>BBQ</td><td>'+jmlbbq+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlbalado').val() !== ''){
+                                                    var jmlbalado = $('#jmlbalado').val();
+                                                    rinci += '<tr><td>Balado</td><td>'+jmlbalado+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlkeju').val() !== ''){
+                                                    var jmlkeju = $('#jmlkeju').val();
+                                                    rinci += '<tr><td>Keju</td><td>'+jmlkeju+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlpizza').val() !== ''){
+                                                    var jmlpizza = $('#jmlpizza').val();
+                                                    rinci += '<tr><td>Pizza</td><td>'+jmlpizza+' porsi</td></tr>';
+                                                }
+                                                if($('#jmljbakar').val() !== ''){
+                                                    var jmljbakar = $('#jmljbakar').val();
+                                                    rinci += '<tr><td>Jagung Bakar</td><td>'+jmljbakar+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlabp').val() !== ''){
+                                                    var jmlabp = $('#jmlabp').val();
+                                                    rinci += '<tr><td>Ayam Bawang Pedas</td><td>'+jmlabp+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlsp').val() !== ''){
+                                                    var jmlsp = $('#jmlsp').val();
+                                                    rinci += '<tr><td>Sapi Panggang</td><td>'+jmlsp+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlka').val() !== ''){
+                                                    var jmlka = $('#jmlka').val();
+                                                    rinci += '<tr><td>Kari Ayam</td><td>'+jmlka+' porsi</td></tr>';
+                                                }
+                                                if($('#jmlrl').val() !== ''){
+                                                    var jmlrl = $('#jmlrl').val();
+                                                    rinci += '<tr><td>Rumput Laut</td><td>'+jmlrl+' porsi</td></tr>';
+                                                }
+                                                if($('#jmljm').val() !== ''){
+                                                    var jmljm = $('#jmljm').val();
+                                                    rinci += '<tr><td>Jagung Manis</td><td>'+jmljm+' porsi</td></tr>';
+                                                }
+                                                if($('#jmllh').val() !== ''){
+                                                    var jmllh = $('#jmllh').val();
+                                                    rinci += '<tr><td>Lada Hitam</td><td>'+jmllh+' porsi</td></tr>';
+                                                }
+                                                rinci += '</table>';
+                                            }else if($('#paketItem1').is(':checked')){
+                                                if($('#bbdanb').is(':checked')){
+                                                    rinci += '<b>Paket 2 Item (Tepung & Bumbu)</b><table border="1"><tr><th>Nama Barang</th><th>Jumlah Barang</th></tr>';
+                                                    var jmltpng21 = $('#jmlhtpng21').val();
+                                                    rinci += '<tr><td>Tepung</td><td>'+jmltpng21+' kg</td></tr>';
+                                                    
+                                                    if($('#jmlasin21').val() !== ''){
+                                                        var jmlasin21 = $('#jmlasin21').val();
+                                                        rinci += '<tr><td>Tepung</td><td>'+jmltpng21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlcabe121').val() !== ''){
+                                                        var jmlcabe121 = $('#jmlcabe121').val();
+                                                        rinci += '<tr><td>Cabe Level 1</td><td>'+jmlcabe121+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlcabe221').val() !== ''){
+                                                        var jmlcabe221 = $('#jmlcabe221').val();
+                                                        rinci += '<tr><td>Cabe Level 2</td><td>'+jmlcabe221+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlcabe321').val() !== ''){
+                                                        var jmlcabe321 = $('#jmlcabe321').val();
+                                                        rinci += '<tr><td>Cabe Level 3</td><td>'+jmlcabe321+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlbbq21').val() !== ''){
+                                                        var jmlbbq21 = $('#jmlbbq21').val();
+                                                        rinci += '<tr><td>BBQ</td><td>'+jmlbbq21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlbalado21').val() !== ''){
+                                                        var jmlbalado21 = $('#jmlbalado21').val();
+                                                        rinci += '<tr><td>Balado</td><td>'+jmlbalado21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlkeju21').val() !== ''){
+                                                        var jmlkeju21 = $('#jmlkeju21').val();
+                                                        rinci += '<tr><td>Keju</td><td>'+jmlkeju21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlpizza21').val() !== ''){
+                                                        var jmlpizza21 = $('#jmlpizza21').val();
+                                                        rinci += '<tr><td>Pizza</td><td>'+jmlpizza21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmljbakar21').val() !== ''){
+                                                        var jmljbakar21 = $('#jmljbakar21').val();
+                                                        rinci += '<tr><td>Jagung Bakar</td><td>'+jmljbakar21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlabp21').val() !== ''){
+                                                        var jmlabp21 = $('#jmlabp21').val();
+                                                        rinci += '<tr><td>Ayam Bawang Pedas</td><td>'+jmlabp21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlsp21').val() !== ''){
+                                                        var jmlsp21 = $('#jmlsp21').val();
+                                                        rinci += '<tr><td>Sapi Panggang</td><td>'+jmlsp21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlka21').val() !== ''){
+                                                        var jmlka21 = $('#jmlka21').val();
+                                                        rinci += '<tr><td>Kari Ayam</td><td>'+jmlka21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlrl21').val() !== ''){
+                                                        var jmlrl21 = $('#jmlrl21').val();
+                                                        rinci += '<tr><td>Rumput Laut</td><td>'+jmlrl21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmljm21').val() !== ''){
+                                                        var jmljm21 = $('#jmljm21').val();
+                                                        rinci += '<tr><td>Jagung Manis</td><td>'+jmljm21+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmllh21').val() !== ''){
+                                                        var jmllh21 = $('#jmllh21').val();
+                                                        rinci += '<tr><td>Lada Hitam</td><td>'+jmllh21+' porsi</td></tr>';
+                                                    }
+                                                    rinci += '</table>';
+                                                }else if($('#kdanb').is(':checked')){
+                                                    rinci += '<b>Paket 2 Item (Kemasan & Bumbu)</b><table border="1"><tr><th>Nama Barang</th><th>Jumlah Barang</th></tr>';
+
+                                                    if($('#jmlpaperbag22').val() !== ''){
+                                                        var jmlpaperbag22 = $('#jmlpaperbag22').val();
+                                                        rinci += '<tr><td>Paperbag</td><td>'+jmlpaperbag22+' pcs</td></tr>';
+                                                    }
+                                                    if($('#jmlbox22').val() !== ''){
+                                                        var jmlbox22 = $('#jmlbox22').val();
+                                                        rinci += '<tr><td>Box</td><td>'+jmlbox22+' pcs</td></tr>';
+                                                    }
+                                                    if($('#jmlasin22').val() !== ''){
+                                                        var jmlasin22 = $('#jmlasin22').val();
+                                                        rinci += '<tr><td>Asin</td><td>'+jmlasin22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlcabe122').val() !== ''){
+                                                        var jmlcabe122 = $('#jmlcabe122').val();
+                                                        rinci += '<tr><td>Cabe Level 1</td><td>'+jmlcabe122+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlcabe222').val() !== ''){
+                                                        var jmlcabe222 = $('#jmlcabe222').val();
+                                                        rinci += '<tr><td>Cabe Level 2</td><td>'+jmlcabe222+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlcabe322').val() !== ''){
+                                                        var jmlcabe322 = $('#jmlcabe322').val();
+                                                        rinci += '<tr><td>Cabe Level 3</td><td>'+jmlcabe322+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlbbq22').val() !== ''){
+                                                        var jmlbbq22 = $('#jmlbbq22').val();
+                                                        rinci += '<tr><td>BBQ</td><td>'+jmlbbq22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlbalado22').val() !== ''){
+                                                        var jmlbalado22 = $('#jmlbalado22').val();
+                                                        rinci += '<tr><td>Balado</td><td>'+jmlbalado22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlkeju22').val() !== ''){
+                                                        var jmlkeju22 = $('#jmlkeju22').val();
+                                                        rinci += '<tr><td>Keju</td><td>'+jmlkeju22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlpizza22').val() !== ''){
+                                                        var jmlpizza22 = $('#jmlpizza22').val();
+                                                        rinci += '<tr><td>Pizza</td><td>'+jmlpizza22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmljbakar22').val() !== ''){
+                                                        var jmljbakar22 = $('#jmljbakar22').val();
+                                                        rinci += '<tr><td>Jagung Bakar</td><td>'+jmljbakar22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlabp22').val() !== ''){
+                                                        var jmlabp22 = $('#jmlabp22').val();
+                                                        rinci += '<tr><td>Ayam Bawang Pedas</td><td>'+jmlabp22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlsp22').val() !== ''){
+                                                        var jmlsp22 = $('#jmlsp22').val();
+                                                        rinci += '<tr><td>Sapi Panggang</td><td>'+jmlsp22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlka22').val() !== ''){
+                                                        var jmlka22 = $('#jmlka22').val();
+                                                        rinci += '<tr><td>Kari Ayam</td><td>'+jmlka22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmlrl22').val() !== ''){
+                                                        var jmlrl22 = $('#jmlrl22').val();
+                                                        rinci += '<tr><td>Rumput Laut</td><td>'+jmlrl22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmljm22').val() !== ''){
+                                                        var jmljm22 = $('#jmljm22').val();
+                                                        rinci += '<tr><td>Jagung Manis</td><td>'+jmljm22+' porsi</td></tr>';
+                                                    }
+                                                    if($('#jmllh22').val() !== ''){
+                                                        var jmllh22 = $('#jmllh22').val();
+                                                        rinci += '<tr><td>Lada Hitam</td><td>'+jmllh22+' porsi</td></tr>';
+                                                    }
+                                                    rinci += '</table>';
+                                                }else if($('#bbdank').is(':checked')){
+                                                    rinci += '<b>Paket 2 Item (Tepung & Kemasan)</b><table border="1"><tr><th>Nama Barang</th><th>Jumlah Barang</th></tr>';
+                                                    var jmltpng23 = $('#jmlhtpng23').val();
+                                                    rinci += '<tr><td>Tepung</td><td>'+jmltpng23+' kg</td></tr>';
+
+                                                    if($('#jmlpaperbag23').val() !== ''){
+                                                        var jmlpaperbag23 = $('#jmlpaperbag23').val();
+                                                        rinci += '<tr><td>Paperbag</td><td>'+jmlpaperbag23+' pcs</td></tr>';
+                                                    }
+                                                    if($('#jmlbox23').val() !== ''){
+                                                        var jmlbox23 = $('#jmlbox23').val();
+                                                        rinci += '<tr><td>Box</td><td>'+jmlbox23+' pcs</td></tr>';
+                                                    }
+                                                }
+                                            }
+                                        }
                                         //   console.log(rinci);
                                         Swal.fire({
                                                 title: "Rincian Order",
                                                 html: '<table><tr><td align="left">Nama Mitra</td><td>:</td><td align="left">'+document.getElementById('nm_mitra').value+
-                                                '</td></tr><tr><td align="left">Alamat Kirim</td><td>:</td><td align="left">'+document.getElementById('almt_rmh').value+
+                                                '</td></tr><tr><td align="left">Alamat Kirim</td><td>:</td><td align="left">'+document.getElementById('almt_kirim').value+
                                                 '</td></tr><tr><td align="left">No. HP</td><td>:</td><td align="left"> '+document.getElementById('no_hp1').value+
                                                 '</td></tr><tr><td align="left">No. HP</td><td>:</td><td align="left"> '+document.getElementById('no_hp2').value+
                                                 '</td></tr><tr><td align="left">Produk</td><td>:</td><td align="left"> '+$('#daftarProduk option:selected').html()+
                                                 '</td></tr><tr><td align="left">Rincian Order</td><td>:</td><td align="left"> '+
-                                                '<table border="1"><tr><td>Nama</td><td>Jumlah</td></tr>'+rinci+'</table></td></tr><tr><td align="left">Keterangan</td><td>:</td><td align="left">'+
+                                                rinci+
+                                                '</td></tr><tr><td align="left">Keterangan</td><td>:</td><td align="left">'+
                                                 document.getElementById('keterangan').value+'</td></tr><tr><td align="left">Ekspedisi</td><td>:</td><td align="left"> '+$('#ekspedisi option:selected').text()+
                                                 '</td></tr></table>',
                                                 showCancelButton: true,
@@ -2711,12 +2941,13 @@
                                         }
                                         if($('#jmljm').val() !== ''){
                                             var jmljm = $('#jmljm').val();
-                                            dataString += '&jmljm='+jmljm
+                                            var jman = 'jagung manis';                                            
+                                            dataString += '&jmljm='+jmljm+'&jman='+jman;
                                         }
                                         if($('#jmllh').val() !== ''){
                                             var jmllh = $('#jmllh').val();
-                                            var jman = 'jagung manis';
-                                            dataString += '&jmllh='+jmllh+'&jman='+jman;
+                                            var ladah = 'lada hitam';
+                                            dataString += '&jmllh='+jmllh+'&ladah='+ladah;
                                         }
                                         var jmlbb = $('#jmlbb').val();
                                         var jmlbumbu = $('#jmlbumbu').val();
@@ -2729,83 +2960,84 @@
                                         dataString += '&jmlporsi='+jmlporsi+'&tot_h_paket3='+tot_h_paket3;
 
                                         if($('#bbdanb').is(':checked')){
-                                            var jmltpng = $('#jmlhtpng21').val();
+                                            var jmltpng21 = $('#jmlhtpng21').val();
                                             var tepung = 'tepung';
-                                            dataString += '&jmltpng='+jmltpng+'&tepung='+tepung;
+                                            dataString += '&jmltpng21='+jmltpng21+'&tepung='+tepung;
                                             
                                             if($('#jmlasin21').val() !== ''){
-                                                var jmlasin = $('#jmlasin21').val();
+                                                var jmlasin21 = $('#jmlasin21').val();
                                                 var asin = 'asin';
-                                                dataString += '&jmlasin='+jmlasin+'&asin='+asin
+                                                dataString += '&jmlasin21='+jmlasin21+'&asin='+asin
                                             }
                                             if($('#jmlcabe121').val() !== ''){
-                                                var jmlcabe1 = $('#jmlcabe121').val();
+                                                var jmlcabe121 = $('#jmlcabe121').val();
                                                 var cabe1 = 'cabe1';
-                                                dataString += '&jmlcabe1='+jmlcabe1+'&cabe1='+cabe1;
+                                                dataString += '&jmlcabe121='+jmlcabe121+'&cabe1='+cabe1;
                                             }
                                             if($('#jmlcabe221').val() !== ''){
-                                                var jmlcabe2 = $('#jmlcabe221').val();
+                                                var jmlcabe221 = $('#jmlcabe221').val();
                                                 var cabe2 = 'cabe2';
-                                                dataString += '&jmlcabe2='+jmlcabe2+'&cabe2='+cabe2;
+                                                dataString += '&jmlcabe221='+jmlcabe221+'&cabe2='+cabe2;
                                             }
                                             if($('#jmlcabe321').val() !== ''){
-                                                var jmlcabe3 = $('#jmlcabe321').val();
+                                                var jmlcabe321 = $('#jmlcabe321').val();
                                                 var cabe3 = 'cabe3';
-                                                dataString += '&jmlcabe3='+jmlcabe3+'&cabe3='+cabe3;
+                                                dataString += '&jmlcabe321='+jmlcabe321+'&cabe3='+cabe3;
                                             }
                                             if($('#jmlbbq21').val() !== ''){
-                                                var jmlbbq = $('#jmlbbq21').val();
+                                                var jmlbbq21 = $('#jmlbbq21').val();
                                                 var bbq = 'bbq';
-                                                dataString += '&jmlbbq='+jmlbbq+'&bbq='+bbq;
+                                                dataString += '&jmlbbq21='+jmlbbq21+'&bbq='+bbq;
                                             }
                                             if($('#jmlbalado21').val() !== ''){
-                                                var jmlbalado = $('#jmlbalado21').val();
+                                                var jmlbalado21 = $('#jmlbalado21').val();
                                                 var balado = 'balado';
-                                                dataString += '&jmlbalado='+jmlbalado+'&balado='+balado;
+                                                dataString += '&jmlbalado21='+jmlbalado21+'&balado='+balado;
                                             }
                                             if($('#jmlkeju21').val() !== ''){
-                                                var jmlkeju = $('#jmlkeju21').val();
+                                                var jmlkeju21 = $('#jmlkeju21').val();
                                                 var keju = 'keju';
-                                                dataString += '&jmlkeju='+jmlkeju+'&keju='+keju;
+                                                dataString += '&jmlkeju21='+jmlkeju21+'&keju='+keju;
                                             }
                                             if($('#jmlpizza21').val() !== ''){
-                                                var jmlpizza = $('#jmlpizza21').val();
+                                                var jmlpizza21 = $('#jmlpizza21').val();
                                                 var pizza = 'pizza';
-                                                dataString += '&jmlpizza='+jmlpizza+'&pizza='+pizza;
+                                                dataString += '&jmlpizza21='+jmlpizza21+'&pizza='+pizza;
                                             }
                                             if($('#jmljbakar21').val() !== ''){
-                                                var jmljbakar = $('#jmljbakar21').val();
+                                                var jmljbakar21 = $('#jmljbakar21').val();
                                                 var jbakar = 'jagung bakar';
-                                                dataString += '&jmljbakar='+jmljbakar+'&jbakar='+jbakar;
+                                                dataString += '&jmljbakar21='+jmljbakar21+'&jbakar='+jbakar;
                                             }
                                             if($('#jmlabp21').val() !== ''){
-                                                var jmlabp = $('#jmlabp21').val();
+                                                var jmlabp21 = $('#jmlabp21').val();
                                                 var abaw = 'ayam bawang';
-                                                dataString += '&jmlabp='+jmlabp+'&abaw='+abaw;
+                                                dataString += '&jmlabp21='+jmlabp21+'&abaw='+abaw;
                                             }
                                             if($('#jmlsp21').val() !== ''){
-                                                var jmlsp = $('#jmlsp21').val();
+                                                var jmlsp21 = $('#jmlsp21').val();
                                                 var sapip = 'sapi panggang';
-                                                dataString += '&jmlsp='+jmlsp+'&sapip='+sapip;
+                                                dataString += '&jmlsp21='+jmlsp21+'&sapip='+sapip;
                                             }
                                             if($('#jmlka21').val() !== ''){
-                                                var jmlka = $('#jmlka21').val();
+                                                var jmlka21 = $('#jmlka21').val();
                                                 var kari = 'kari';
-                                                dataString += '&jmlka='+jmlka+'&kari='+kari;
+                                                dataString += '&jmlka21='+jmlka21+'&kari='+kari;
                                             }
                                             if($('#jmlrl21').val() !== ''){
-                                                var jmlrl = $('#jmlrl21').val();
+                                                var jmlrl21 = $('#jmlrl21').val();
                                                 var rumput = 'rumput';
-                                                dataString += '&jmlrl='+jmlrl+'&rumput='+rumput;
+                                                dataString += '&jmlrl21='+jmlrl21+'&rumput='+rumput;
                                             }
                                             if($('#jmljm21').val() !== ''){
-                                                var jmljm = $('#jmljm21').val();
-                                                dataString += '&jmljm='+jmljm
+                                                var jmljm21 = $('#jmljm21').val();
+                                                var jman = 'jagung manis';
+                                                dataString += '&jmljm21='+jmljm21+'&jman='+jman;
                                             }
                                             if($('#jmllh21').val() !== ''){
-                                                var jmllh = $('#jmllh21').val();
-                                                var jman = 'jagung manis';
-                                                dataString += '&jmllh='+jmllh+'&jman='+jman;
+                                                var jmllh21 = $('#jmllh21').val();
+                                                var ladah = 'lada hitam';
+                                                dataString += '&jmllh21='+jmllh21+'&ladah='+ladah;
                                             }
 
                                         }else if($('#kdanb').is(':checked')){
@@ -2814,103 +3046,104 @@
                                             dataString += '&jmlporsi='+jmlporsi+'&tot_h_paket3='+tot_h_paket3;
 
                                             if($('#jmlpaperbag22').val() !== ''){
-                                                var jmlpaperbag = $('#jmlpaperbag22').val();
+                                                var jmlpaperbag22 = $('#jmlpaperbag22').val();
                                                 var paperbag = 'paperbag';
-                                                dataString += '&jmlpaperbag='+jmlpaperbag+'&paperbag='+paperbag;
+                                                dataString += '&jmlpaperbag22='+jmlpaperbag22+'&paperbag='+paperbag;
                                             }
                                             if($('#jmlbox22').val() !== ''){
-                                                var jmlbox = $('#jmlbox22').val();
+                                                var jmlbox22 = $('#jmlbox22').val();
                                                 var box ='box';
-                                                dataString += '&jmlbox='+jmlbox+'&box='+box;
+                                                dataString += '&jmlbox22='+jmlbox22+'&box='+box;
                                             }
                                             if($('#jmlasin22').val() !== ''){
-                                                var jmlasin = $('#jmlasin22').val();
+                                                var jmlasin22 = $('#jmlasin22').val();
                                                 var asin = 'asin';
-                                                dataString += '&jmlasin='+jmlasin+'&asin='+asin
+                                                dataString += '&jmlasin22='+jmlasin22+'&asin='+asin
                                             }
                                             if($('#jmlcabe122').val() !== ''){
-                                                var jmlcabe1 = $('#jmlcabe122').val();
+                                                var jmlcabe122 = $('#jmlcabe122').val();
                                                 var cabe1 = 'cabe1';
-                                                dataString += '&jmlcabe1='+jmlcabe1+'&cabe1='+cabe1;
+                                                dataString += '&jmlcabe122='+jmlcabe122+'&cabe1='+cabe1;
                                             }
                                             if($('#jmlcabe222').val() !== ''){
-                                                var jmlcabe2 = $('#jmlcabe222').val();
+                                                var jmlcabe222 = $('#jmlcabe222').val();
                                                 var cabe2 = 'cabe2';
-                                                dataString += '&jmlcabe2='+jmlcabe2+'&cabe2='+cabe2;
+                                                dataString += '&jmlcabe222='+jmlcabe222+'&cabe2='+cabe2;
                                             }
                                             if($('#jmlcabe322').val() !== ''){
-                                                var jmlcabe3 = $('#jmlcabe322').val();
+                                                var jmlcabe322 = $('#jmlcabe322').val();
                                                 var cabe3 = 'cabe3';
-                                                dataString += '&jmlcabe3='+jmlcabe3+'&cabe3='+cabe3;
+                                                dataString += '&jmlcabe322='+jmlcabe322+'&cabe3='+cabe3;
                                             }
                                             if($('#jmlbbq22').val() !== ''){
-                                                var jmlbbq = $('#jmlbbq22').val();
+                                                var jmlbbq22 = $('#jmlbbq22').val();
                                                 var bbq = 'bbq';
-                                                dataString += '&jmlbbq='+jmlbbq+'&bbq='+bbq;
+                                                dataString += '&jmlbbq22='+jmlbbq22+'&bbq='+bbq;
                                             }
                                             if($('#jmlbalado22').val() !== ''){
-                                                var jmlbalado = $('#jmlbalado22').val();
+                                                var jmlbalado22 = $('#jmlbalado22').val();
                                                 var balado = 'balado';
-                                                dataString += '&jmlbalado='+jmlbalado+'&balado='+balado;
+                                                dataString += '&jmlbalado22='+jmlbalado22+'&balado='+balado;
                                             }
                                             if($('#jmlkeju22').val() !== ''){
-                                                var jmlkeju = $('#jmlkeju22').val();
+                                                var jmlkeju22 = $('#jmlkeju22').val();
                                                 var keju = 'keju';
-                                                dataString += '&jmlkeju='+jmlkeju+'&keju='+keju;
+                                                dataString += '&jmlkeju22='+jmlkeju22+'&keju='+keju;
                                             }
                                             if($('#jmlpizza22').val() !== ''){
-                                                var jmlpizza = $('#jmlpizza22').val();
+                                                var jmlpizza22 = $('#jmlpizza22').val();
                                                 var pizza = 'pizza';
-                                                dataString += '&jmlpizza='+jmlpizza+'&pizza='+pizza;
+                                                dataString += '&jmlpizza22='+jmlpizza22+'&pizza='+pizza;
                                             }
                                             if($('#jmljbakar22').val() !== ''){
-                                                var jmljbakar = $('#jmljbakar22').val();
+                                                var jmljbakar22 = $('#jmljbakar22').val();
                                                 var jbakar = 'jagung bakar';
-                                                dataString += '&jmljbakar='+jmljbakar+'&jbakar='+jbakar;
+                                                dataString += '&jmljbakar22='+jmljbakar22+'&jbakar='+jbakar;
                                             }
                                             if($('#jmlabp22').val() !== ''){
-                                                var jmlabp = $('#jmlabp22').val();
+                                                var jmlabp22 = $('#jmlabp22').val();
                                                 var abaw = 'ayam bawang';
-                                                dataString += '&jmlabp='+jmlabp+'&abaw='+abaw;
+                                                dataString += '&jmlabp22='+jmlabp22+'&abaw='+abaw;
                                             }
                                             if($('#jmlsp22').val() !== ''){
-                                                var jmlsp = $('#jmlsp22').val();
+                                                var jmlsp22 = $('#jmlsp22').val();
                                                 var sapip = 'sapi panggang';
-                                                dataString += '&jmlsp='+jmlsp+'&sapip='+sapip;
+                                                dataString += '&jmlsp22='+jmlsp22+'&sapip='+sapip;
                                             }
                                             if($('#jmlka22').val() !== ''){
-                                                var jmlka = $('#jmlka22').val();
+                                                var jmlka22 = $('#jmlka22').val();
                                                 var kari = 'kari';
-                                                dataString += '&jmlka='+jmlka+'&kari='+kari;
+                                                dataString += '&jmlka22='+jmlka22+'&kari='+kari;
                                             }
                                             if($('#jmlrl22').val() !== ''){
-                                                var jmlrl = $('#jmlrl22').val();
+                                                var jmlrl22 = $('#jmlrl22').val();
                                                 var rumput = 'rumput';
-                                                dataString += '&jmlrl='+jmlrl+'&rumput='+rumput;
+                                                dataString += '&jmlrl22='+jmlrl22+'&rumput='+rumput;
                                             }
                                             if($('#jmljm22').val() !== ''){
-                                                var jmljm = $('#jmljm22').val();
-                                                dataString += '&jmljm='+jmljm
+                                                var jmljm22 = $('#jmljm22').val();
+                                                var jman = 'jagung manis';
+                                                dataString += '&jmljm22='+jmljm22+'&jman='+jman;
                                             }
                                             if($('#jmllh22').val() !== ''){
                                                 var jmllh = $('#jmllh22').val();
-                                                var jman = 'jagung manis';
-                                                dataString += '&jmllh='+jmllh+'&jman='+jman;
+                                                var ladah = 'lada hitam';
+                                                dataString += '&jmllh22='+jmllh+'&ladah='+ladah;
                                             }
                                         }else if($('#bbdank').is(':checked')){
-                                            var jmltpng = $('#jmlhtpng23').val();
+                                            var jmltpng23 = $('#jmlhtpng23').val();
                                             var tepung = 'tepung';
-                                            dataString += '&jmltpng='+jmltpng+'&tepung='+tepung;
+                                            dataString += '&jmltpng23='+jmltpng23+'&tepung='+tepung;
 
                                             if($('#jmlpaperbag23').val() !== ''){
-                                                var jmlpaperbag = $('#jmlpaperbag23').val();
+                                                var jmlpaperbag23 = $('#jmlpaperbag23').val();
                                                 var paperbag = 'paperbag';
-                                                dataString += '&jmlpaperbag='+jmlpaperbag+'&paperbag='+paperbag;
+                                                dataString += '&jmlpaperbag23='+jmlpaperbag23+'&paperbag='+paperbag;
                                             }
                                             if($('#jmlbox23').val() !== ''){
-                                                var jmlbox = $('#jmlbox23').val();
+                                                var jmlbox23 = $('#jmlbox23').val();
                                                 var box ='box';
-                                                dataString += '&jmlbox='+jmlbox+'&box='+box;
+                                                dataString += '&jmlbox23='+jmlbox23+'&box='+box;
                                             }
                                         }
                                     }
@@ -2993,6 +3226,10 @@
                                             $('#tambah_tahu').hide();
                                             $("#tab3").attr("data-toggle", "");
                                             $("#tab4").attr("data-toggle", "");
+                                            form_order_identitas.reset();
+                                            form_order_order.reset();
+                                            form_order_kirim.reset();
+                                            form_order_bayar.reset();
                                             $('#exampleModal').modal('hide');
                                             Swal.fire(
                                                 'Sukses',
@@ -3171,6 +3408,10 @@
                                             }
                                             $("#tab3").attr("data-toggle", "");
                                             $("#tab4").attr("data-toggle", "");
+                                            form_order_identitas.reset();
+                                            form_order_order.reset();
+                                            form_order_kirim.reset();
+                                            form_order_bayar.reset();
                                             $('#exampleModal').modal('hide');
                                         }
                         </script>
